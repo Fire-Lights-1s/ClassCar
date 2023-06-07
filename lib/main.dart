@@ -1,4 +1,4 @@
-import 'package:classcar/screens/start_screen.dart';
+import 'screens/start_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

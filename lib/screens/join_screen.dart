@@ -1,4 +1,4 @@
-import 'package:classcar/screens/certified_screen.dart';
+import 'certified_screen.dart';
 import 'package:flutter/material.dart';
 
 class JoinScreen extends StatefulWidget {

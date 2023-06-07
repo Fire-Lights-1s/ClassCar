@@ -1,5 +1,5 @@
-import 'package:classcar/screens/join_screen.dart';
-import 'package:classcar/screens/login_screen.dart';
+import 'join_screen.dart';
+import 'login_screen.dart';
 import 'package:flutter/material.dart';
 
 class StartScreen extends StatelessWidget {
