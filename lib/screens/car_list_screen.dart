@@ -17,6 +17,7 @@ class _CarListScreenState extends State<CarListScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
         title: const Text(
           '차량 관리',
           style: TextStyle(
@@ -27,42 +28,32 @@ class _CarListScreenState extends State<CarListScreen> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-              ),
-              child: const SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CarListItem(
-                      carName: "소나타",
-                      shareCount: 2,
-                      park: true,
-                    ),
-                    CarListItem(
-                      carName: "소나타",
-                      shareCount: 3,
-                      park: false,
-                    ),
-                    CarListItem(
-                      carName: "소나타",
-                      shareCount: 4,
-                      park: true,
-                    ),
-                    CarListItem(
-                      carName: "소나타",
-                      shareCount: 5,
-                      park: true,
-                    ),
-                  ],
-                ),
-              ),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            CarListItem(
+              carName: "소나타",
+              shareCount: 2,
+              park: true,
             ),
-          ),
-        ],
+            CarListItem(
+              carName: "소나타",
+              shareCount: 3,
+              park: false,
+            ),
+            CarListItem(
+              carName: "소나타",
+              shareCount: 4,
+              park: true,
+            ),
+            CarListItem(
+              carName: "소나타",
+              shareCount: 5,
+              park: true,
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(
