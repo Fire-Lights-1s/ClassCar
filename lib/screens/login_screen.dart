@@ -1,4 +1,4 @@
-import 'package:classcar/screens/join_screen.dart';
+import "join_screen.dart";
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
