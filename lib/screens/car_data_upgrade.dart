@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/car_item.dart';
 import '../widgets/underbar_icon.dart';
 
-class CarListScreen extends StatefulWidget {
-  const CarListScreen({super.key});
+class CarDataUpgrade extends StatelessWidget {
+  const CarDataUpgrade({super.key});
 
-  @override
-  State<CarListScreen> createState() => _CarListScreenState();
-}
-
-class _CarListScreenState extends State<CarListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +13,7 @@ class _CarListScreenState extends State<CarListScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         title: const Text(
-          '차량 관리',
+          '차량정보 수정',
           style: TextStyle(
             color: Colors.black,
             fontSize: 24,
@@ -29,38 +23,7 @@ class _CarListScreenState extends State<CarListScreen> {
         centerTitle: true,
       ),
       body: const SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            //CarListItem() 매개변수 firestore 연결하면 문서 아이디로 바꿀 계획임
-            CarListItem(
-              carName: "소나타",
-              shareCount: 2,
-              park: true,
-            ),
-            CarListItem(
-              carName: "소나타",
-              shareCount: 3,
-              park: false,
-            ),
-            CarListItem(
-              carName: "소나타",
-              shareCount: 4,
-              park: true,
-            ),
-            CarListItem(
-              carName: "소나타",
-              shareCount: 5,
-              park: true,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(
-          Icons.add,
-        ),
-        onPressed: () {},
+        child: Column(),
       ),
       bottomNavigationBar: const BottomAppBar(
         color: Colors.amber,

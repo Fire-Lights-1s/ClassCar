@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:classcar/screens/car_data_upgrade.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/underbar_icon.dart';
@@ -69,7 +70,6 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -84,15 +84,139 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: const BoxDecoration(),
+              decoration: const BoxDecoration(
+                color: Color(0xffE7E7E7),
+              ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.carName,
-                    style: const TextStyle(
+                  const Text(
+                    "기본 정보",
+                    style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w600,
                     ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 20,
+                    ),
+                    decoration: const BoxDecoration(color: Color(0xffD1E4FF)),
+                    child: Column(
+                      children: [
+                        NameValue(name: "모델", value: widget.carName),
+                        NameValue(name: "차량번호", value: widget.carName),
+                        NameValue(name: "차종", value: widget.carName),
+                        NameValue(name: "연료", value: widget.carName),
+                        NameValue(name: "연비", value: widget.carName),
+                        NameValue(name: "승차인원", value: widget.carName),
+                        NameValue(name: "제조사", value: widget.carName),
+                        NameValue(name: "구동방식", value: widget.carName),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    "ClassCar 정보",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 20,
+                    ),
+                    decoration: const BoxDecoration(color: Color(0xffD1E4FF)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        NameValue(name: "평점", value: widget.carName),
+                        NameValue(name: "대여횟수", value: widget.carName),
+                        const NameContent(
+                            name: "기타사항",
+                            content: "기타사항 내용 기타사항 내용 기타사항 내용 기타사항 내용 기타사항 내용"),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    "옵션 정보",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 20,
+                    ),
+                    decoration: const BoxDecoration(color: Color(0xffD1E4FF)),
+                    child: Column(
+                      children: [
+                        NameValue(name: "모델", value: widget.carName),
+                        NameValue(name: "차량번호", value: widget.carName),
+                        NameValue(name: "차종", value: widget.carName),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                var begin = const Offset(1.0, 0.0);
+                                var end = Offset.zero;
+                                var curve = Curves.ease;
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const CarDataUpgrade()),
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: const Color(0xff74B2F2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        minimumSize: const Size.fromHeight(50),
+                      ),
+                      child: const Text(
+                        "수정하기",
+                        style: TextStyle(color: Colors.white, fontSize: 30),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
                   ),
                 ],
               ),
@@ -129,7 +253,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
     );
   }
 
-  Align imgIndicator() {
+  Widget imgIndicator() {
     return Align(
       alignment: AlignmentDirectional.bottomStart,
       child: Row(
@@ -179,6 +303,81 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
             _currentImgIdx = index;
           });
         },
+      ),
+    );
+  }
+}
+
+class NameValue extends StatelessWidget {
+  const NameValue({
+    super.key,
+    required this.name,
+    required this.value,
+  });
+
+  final String name, value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 1,
+            child: CarInfoText(text: name),
+          ),
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 1,
+            child: CarInfoText(text: value),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NameContent extends StatelessWidget {
+  const NameContent({
+    super.key,
+    required this.name,
+    required this.content,
+  });
+
+  final String name, content;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CarInfoText(text: name),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: CarInfoText(text: content),
+        ),
+      ],
+    );
+  }
+}
+
+class CarInfoText extends StatelessWidget {
+  final String text;
+
+  const CarInfoText({
+    super.key,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
