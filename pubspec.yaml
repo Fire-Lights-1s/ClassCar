@@ -10,6 +10,8 @@ dependencies:
   carousel_slider: ^4.2.1
   flutter:
     sdk: flutter
+  daum_postcode_search: ^0.0.2
+  flutter_inappwebview: ^5.7.2+3
 
 dev_dependencies:
   flutter_test:
