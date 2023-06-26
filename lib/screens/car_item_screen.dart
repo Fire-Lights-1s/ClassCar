@@ -199,7 +199,9 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                               },
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      const CarDataUpgrade()),
+                                      CarDataUpgrade(
+                                        carName: widget.carName,
+                                      )),
                         );
                       },
                       style: TextButton.styleFrom(

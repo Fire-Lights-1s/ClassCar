@@ -34,22 +34,22 @@ class _CarListScreenState extends State<CarListScreen> {
           children: [
             //CarListItem() 매개변수 firestore 연결하면 문서 아이디로 바꿀 계획임
             CarListItem(
-              carName: "소나타",
+              carName: "소나타1",
               shareCount: 2,
               park: true,
             ),
             CarListItem(
-              carName: "소나타",
+              carName: "소나타2",
               shareCount: 3,
               park: false,
             ),
             CarListItem(
-              carName: "소나타",
+              carName: "소나타3",
               shareCount: 4,
               park: true,
             ),
             CarListItem(
-              carName: "소나타",
+              carName: "소나타4",
               shareCount: 5,
               park: true,
             ),
