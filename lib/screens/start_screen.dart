@@ -1,4 +1,5 @@
-import 'join_screen.dart';
+import 'package:classcar/screens/join_main_screen.dart';
+
 import 'login_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -95,7 +96,7 @@ class StartScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const JoinScreen()));
+                              builder: (context) => const JoinMainScreen()));
                     },
                     child: Container(
                       decoration: const BoxDecoration(

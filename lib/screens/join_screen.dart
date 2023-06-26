@@ -1,8 +1,8 @@
-import 'certified_screen.dart';
 import 'package:flutter/material.dart';
 
 class JoinScreen extends StatefulWidget {
-  const JoinScreen({super.key});
+  const JoinScreen({super.key, this.onPress});
+  final onPress;
 
   @override
   State<JoinScreen> createState() => _JoinScreenState();
@@ -15,6 +15,8 @@ class _JoinScreenState extends State<JoinScreen> {
   final ScrollController controllerOne = ScrollController();
 
   final ScrollController controllerTwo = ScrollController();
+
+  final bool _trigger = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,55 @@ class _JoinScreenState extends State<JoinScreen> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Column(
+          // MainAxisSize.min 이 있어야 BottomAppBar 에서 Column을 사용하며 최소값을 지정해
+          // 아래에 지정할 수 있음.
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                AnimatedContainer(
+                  width: _trigger
+                      ? (MediaQuery.of(context).size.width / 4) * 2
+                      : (MediaQuery.of(context).size.width / 4) * 1,
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.easeIn,
+                  child: Container(
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF74B2F2),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color(0xFFD0D0D0),
+              ),
+              child: InkWell(
+                onTap: widget.onPress,
+                child: const Padding(
+                  padding: EdgeInsets.only(
+                    top: 30,
+                    bottom: 31,
+                  ),
+                  child: Text(
+                    '가입 계속하기',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -187,58 +238,6 @@ class _JoinScreenState extends State<JoinScreen> {
             ),
             const SizedBox(
               height: 30,
-            ),
-            Row(
-              children: [
-                Flexible(
-                  fit: FlexFit.tight,
-                  flex: 1,
-                  child: Container(
-                    height: 10,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF74B2F2),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  flex: 3,
-                  child: Container(
-                    height: 10,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF9FBFF),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Color(0xFFD0D0D0),
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const CertifiedScreen()));
-                },
-                child: const Padding(
-                  padding: EdgeInsets.only(
-                    top: 30,
-                    bottom: 31,
-                  ),
-                  child: Text(
-                    '회원가입',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 22,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
             ),
           ],
         ),
