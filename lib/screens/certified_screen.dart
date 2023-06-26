@@ -1,8 +1,11 @@
-import 'package:classcar/screens/personal_screen.dart';
 import 'package:flutter/material.dart';
 
 class CertifiedScreen extends StatefulWidget {
-  const CertifiedScreen({super.key});
+  const CertifiedScreen({
+    super.key,
+    this.onPress,
+  });
+  final onPress;
 
   @override
   State<CertifiedScreen> createState() => _CertifiedScreenState();
@@ -37,6 +40,62 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Column(
+          // MainAxisSize.min 이 있어야 BottomAppBar 에서 Column을 사용하며 최소값을 지정해
+          // 아래에 지정할 수 있음.
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 2,
+                  child: Container(
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF74B2F2),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 2,
+                  child: Container(
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFF9FBFF),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color(0xFFD0D0D0),
+              ),
+              child: InkWell(
+                onTap: widget.onPress,
+                child: const Padding(
+                  padding: EdgeInsets.only(
+                    top: 30,
+                    bottom: 31,
+                  ),
+                  child: Text(
+                    '인증완료',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: GestureDetector(
         onTap: () {
@@ -430,58 +489,6 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
               ),
               const SizedBox(
                 height: 50,
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 2,
-                    child: Container(
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF74B2F2),
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 2,
-                    child: Container(
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFF9FBFF),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFD0D0D0),
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const PersonalScreen()));
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.only(
-                      top: 30,
-                      bottom: 31,
-                    ),
-                    child: Text(
-                      '인증완료',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 22,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
               ),
             ],
           ),
