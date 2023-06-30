@@ -15,7 +15,15 @@ class CarDataUpgrade extends StatefulWidget {
 }
 
 class _CarDataUpgradeState extends State<CarDataUpgrade> {
-  static TextEditingController carNameTextfiled = TextEditingController();
+  late TextEditingController carNameTextfiled, carNumTextfiled;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    carNameTextfiled = TextEditingController(text: "${widget.carName} 기종 초기값");
+    carNumTextfiled = TextEditingController(text: "번호 초기값");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +53,14 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
           child: Column(
             children: [
               CarInfoInput(
-                fractionationInfo: '기종선택',
+                fractionationInfo: '차량기종',
                 hintText: '차량 기종(모델명)',
                 textControll: carNameTextfiled,
+              ),
+              CarInfoInput(
+                fractionationInfo: '차량 번호',
+                hintText: '차량 번호',
+                textControll: carNumTextfiled,
               ),
               TextButton(
                 onPressed: () {
