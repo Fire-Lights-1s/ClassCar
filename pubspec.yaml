@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
   daum_postcode_search: ^0.0.2
   flutter_inappwebview: ^5.7.2+3
+  firebase_core: ^2.14.0
 
 dev_dependencies:
   flutter_test:
