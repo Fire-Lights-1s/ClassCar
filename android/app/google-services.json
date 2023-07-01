@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "439982033780",
+    "project_id": "class-car-test",
+    "storage_bucket": "class-car-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:439982033780:android:7b3cf46b6e4f556b903a21",
+        "android_client_info": {
+          "package_name": "com.example.classcar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "439982033780-554higuu6n3nluro8cvb0h2bug5gk8q8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF6SHQZdGM9btlbQgtg_SMARRXBCCR_-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439982033780-554higuu6n3nluro8cvb0h2bug5gk8q8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
