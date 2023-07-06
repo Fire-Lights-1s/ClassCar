@@ -5,6 +5,9 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
+        //구글 플랫폼에서 지도 이용하려면 필요해서 추가함
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyDCx0q_CxVUpZ2Bq_JjlHAPNW2P1AoyRfM"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

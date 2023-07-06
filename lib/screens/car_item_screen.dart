@@ -17,6 +17,7 @@ class CarDetailScreen extends StatefulWidget {
 
 class _CarDetailScreenState extends State<CarDetailScreen> {
   int _currentImgIdx = 0;
+  var optionText = ['옵션 텍스트', '옵션 텍스트', '옵션 텍스트'];
   final CarouselController _controller = CarouselController();
   List<Widget> conList = [
     Container(
@@ -168,10 +169,14 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                     ),
                     decoration: const BoxDecoration(color: Color(0xffD1E4FF)),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        NameValue(name: "모델", value: widget.carName),
-                        NameValue(name: "차량번호", value: widget.carName),
-                        NameValue(name: "차종", value: widget.carName),
+                        OptionValue(
+                          name: "내장",
+                          valueList: optionText,
+                        ),
+                        NameValue(name: "안전", value: widget.carName),
+                        NameValue(name: "편의", value: widget.carName),
                       ],
                     ),
                   ),
@@ -323,6 +328,7 @@ class NameValue extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Flexible(
             fit: FlexFit.tight,
@@ -333,6 +339,41 @@ class NameValue extends StatelessWidget {
             fit: FlexFit.tight,
             flex: 1,
             child: CarInfoText(text: value),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class OptionValue extends StatelessWidget {
+  const OptionValue({
+    super.key,
+    required this.name,
+    required this.valueList,
+  });
+
+  final String name;
+  final List<String> valueList;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 1,
+            child: CarInfoText(text: name),
+          ),
+          Flexible(
+            child: Column(
+              children: [
+                for (String text in valueList) CarInfoText(text: text),
+              ],
+            ),
           ),
         ],
       ),

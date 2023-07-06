@@ -16,13 +16,14 @@ class CarDataUpgrade extends StatefulWidget {
 
 class _CarDataUpgradeState extends State<CarDataUpgrade> {
   late TextEditingController carNameTextfiled, carNumTextfiled;
-
+  late TextEditingController carLocTextfiled;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     carNameTextfiled = TextEditingController(text: "${widget.carName} 기종 초기값");
     carNumTextfiled = TextEditingController(text: "번호 초기값");
+    carLocTextfiled = TextEditingController(text: "차량 위치 초기값");
   }
 
   @override
@@ -61,6 +62,11 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                 fractionationInfo: '차량 번호',
                 hintText: '차량 번호',
                 textControll: carNumTextfiled,
+              ),
+              CarLocationInput(
+                fractionationInfo: '차량 위치',
+                hintText: '차량 상세 위치를 입력해주세요',
+                textControll: carLocTextfiled,
               ),
               TextButton(
                 onPressed: () {
@@ -128,24 +134,97 @@ class CarInfoInput extends StatelessWidget {
             height: 10,
           ),
           TextFormField(
-              controller: textControll,
-              maxLength: 50,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                counterText: '',
-                filled: true,
-                fillColor: const Color(0xFFE9F1FF),
-                hintText: hintText,
-                enabledBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                  ),
+            controller: textControll,
+            maxLength: 50,
+            keyboardType: TextInputType.text,
+            decoration: InputDecoration(
+              counterText: '',
+              filled: true,
+              fillColor: const Color(0xFFE9F1FF),
+              hintText: hintText,
+              enabledBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+                borderSide: BorderSide(
+                  color: Colors.transparent,
                 ),
               ),
-              onChanged: (text) {}),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CarLocationInput extends StatelessWidget {
+  final String fractionationInfo, hintText;
+  final TextEditingController textControll;
+
+  const CarLocationInput({
+    super.key,
+    required this.fractionationInfo,
+    required this.hintText,
+    required this.textControll,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            fractionationInfo,
+            style: const TextStyle(fontSize: 25),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+                top: 20,
+                bottom: 20,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE9F1FF),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: const Row(
+                children: [
+                  Text("주소 api 이용해서 수정하도록 해야함"),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+            controller: textControll,
+            maxLength: 50,
+            keyboardType: TextInputType.text,
+            decoration: InputDecoration(
+              counterText: '',
+              filled: true,
+              fillColor: const Color(0xFFE9F1FF),
+              hintText: hintText,
+              enabledBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
