@@ -30,7 +30,7 @@ class StartScreen extends StatelessWidget {
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/car.png'),
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                 ),
               ),
               child: const Column(
@@ -43,6 +43,7 @@ class StartScreen extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,
+                      fontWeight: FontWeight.w800,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -51,6 +52,7 @@ class StartScreen extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,
+                      fontWeight: FontWeight.w800,
                     ),
                     textAlign: TextAlign.center,
                   ),
