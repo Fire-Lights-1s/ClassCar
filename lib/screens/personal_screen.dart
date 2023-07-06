@@ -1,9 +1,8 @@
-import 'package:classcar/Api/daum_post_view.dart';
-import 'package:classcar/Api/widget.dart';
+import 'package:classcar/Api/daum_post_screen_view.dart';
 import 'package:classcar/screens/main_screen.dart';
+import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
-
-import '../Api/data_model.dart';
+import 'package:flutter/services.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({super.key});
@@ -13,28 +12,10 @@ class PersonalScreen extends StatefulWidget {
 }
 
 class _PersonalScreenState extends State<PersonalScreen> {
-  bool _isError = false;
-  String? errorMessage;
   DataModel? _dataModel;
 
   @override
   Widget build(BuildContext context) {
-    DaumPostcodeSearch daumPostcodeSearch = DaumPostcodeSearch(
-      onConsoleMessage: (_, message) => print(message),
-      onLoadError: (controller, uri, errorCode, message) => setState(
-        () {
-          _isError = true;
-          errorMessage = message;
-        },
-      ),
-      onLoadHttpError: (controller, uri, errorCode, message) => setState(
-        () {
-          _isError = true;
-          errorMessage = message;
-        },
-      ),
-    );
-
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -358,116 +339,76 @@ class _PersonalScreenState extends State<PersonalScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Container(
-                        padding: const EdgeInsets.only(
-                          left: 15,
-                          right: 15,
-                          top: 20,
-                          bottom: 20,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE9F1FF),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Column(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LibraryDaumPostcodeScreen()));
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '주소를 입력하세요',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey.shade600,
+                    Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            HapticFeedback.mediumImpact();
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return const LibraryDaumPostcodeScreen();
+                            })).then((value) {
+                              if (value != null) {
+                                setState(() {
+                                  _dataModel = value;
+                                });
+                              }
+                            });
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE9F1FF),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15, right: 15, top: 15, bottom: 15),
+                              child: Center(
+                                child: Row(
+                                  children: [
+                                    if (_dataModel != null) ...[
+                                      _text("Address", _dataModel!.address),
+                                    ],
+                                    const Expanded(
+                                      flex: 1,
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Icon(Icons.search),
+                                      ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: ListView(
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      children: [
-                                        if (_dataModel != null) ...[
-                                          _text("Address", _dataModel!.address),
-                                          _text("Road Address",
-                                              _dataModel!.roadAddress),
-                                          _text("Jibun Address",
-                                              _dataModel!.jibunAddress),
-                                          _text("Sido", _dataModel!.sido),
-                                          _text("Sigungu", _dataModel!.sigungu),
-                                          _text("B Name", _dataModel!.bname),
-                                          _text("Road Name",
-                                              _dataModel!.roadname),
-                                          _text("Building Name",
-                                              _dataModel!.buildingName),
-                                          _text("Address(EN)",
-                                              _dataModel!.addressEnglish),
-                                          _text("Road Address(EN)",
-                                              _dataModel!.roadAddressEnglish),
-                                          _text("Jibun Address(EN)",
-                                              _dataModel!.jibunAddressEnglish),
-                                          _text("Sido(EN)",
-                                              _dataModel!.sidoEnglish),
-                                          _text("Sigungu(EN)",
-                                              _dataModel!.sigunguEnglish),
-                                          _text("B Name(EN)",
-                                              _dataModel!.bnameEnglish),
-                                          _text("Road Name(EN)",
-                                              _dataModel!.roadnameEnglish),
-                                          _text(
-                                              "Zonecode", _dataModel!.zonecode),
-                                          _text("Sigungu Code",
-                                              _dataModel!.sigunguCode),
-                                          _text("B Code", _dataModel!.bcode),
-                                          _text("Building Code",
-                                              _dataModel!.buildingCode),
-                                          _text("Roadname Code",
-                                              _dataModel!.roadnameCode),
-                                          _text("Address Type",
-                                              _dataModel!.addressType),
-                                          _text("Apertment",
-                                              _dataModel!.apartment),
-                                          _text("User Language Type",
-                                              _dataModel!.userLanguageType),
-                                          _text("User Selected Type",
-                                              _dataModel!.userSelectedType),
-                                        ],
-                                      ],
-                                    ),
-                                  ),
-                                  const Icon(Icons.search_rounded),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: _isError,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(errorMessage ?? ""),
-                          ElevatedButton(
-                            child: const Text("Refresh"),
-                            onPressed: () {
-                              daumPostcodeSearch.controller?.reload();
-                            },
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.only(
+                            left: 15,
+                            right: 15,
+                            top: 5,
+                            bottom: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE9F1FF),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: TextFormField(
+                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(
+                              counterText: '',
+                              hintText: '상세주소 입력',
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -482,12 +423,16 @@ class _PersonalScreenState extends State<PersonalScreen> {
     );
   }
 
-  Flexible _text(String title, String expain) {
-    return Flexible(
+  Expanded _text(String title, String expain) {
+    return Expanded(
+      flex: 4,
       child: Text(
         expain,
-        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
   }
