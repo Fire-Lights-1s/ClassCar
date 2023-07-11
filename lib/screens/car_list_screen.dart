@@ -56,6 +56,7 @@ class _CarListScreenState extends State<CarListScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.amber,
         child: const Icon(
           Icons.add,
         ),
