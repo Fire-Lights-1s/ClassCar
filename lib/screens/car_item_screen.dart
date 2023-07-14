@@ -116,6 +116,9 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                         NameValue(name: "승차인원", value: widget.carName),
                         NameValue(name: "제조사", value: widget.carName),
                         NameValue(name: "구동방식", value: widget.carName),
+                        const NameContent(
+                            name: "차량 위치",
+                            content: "차량 주소 차량 주소 차량 주소 차량 주소 차량 주소 차량 주소"),
                       ],
                     ),
                   ),

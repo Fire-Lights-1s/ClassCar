@@ -21,8 +21,16 @@ class CarDataUpgrade extends StatefulWidget {
 }
 
 class _CarDataUpgradeState extends State<CarDataUpgrade> {
-  late TextEditingController carNameTextfiled, carNumTextfiled;
-  late TextEditingController carLocTextfiled;
+  late TextEditingController carNameTextfiled, carNumTextfiled, carLocTextfiled;
+  final List<String> _casList = [
+    '휘발유-가솔린',
+    '경유-디젤',
+    '천연가스-CNG',
+    '액화석유가스-LPG',
+    '전기-EV',
+    '수소전기-FCEV',
+  ];
+  String _selctCas = '휘발유-가솔린';
 
   DataModel? _dataModel;
   late GoogleMapController mapController;
@@ -85,108 +93,54 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      '차량 위치',
+                      "연료와 연비",
                       style: TextStyle(fontSize: 25),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        HapticFeedback.mediumImpact();
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return const LibraryDaumPostcodeScreen();
-                        })).then((value) {
-                          if (value != null) {
-                            setState(() {
-                              _dataModel = value;
-                            });
-                          }
-                        });
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE9F1FF),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, top: 15, bottom: 15),
-                          child: Center(
-                            child: Row(
-                              children: [
-                                if (_dataModel != null) ...[
-                                  Expanded(
-                                    flex: 4,
-                                    child: Text(
-                                      _dataModel!.address,
-                                      style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                                const Expanded(
-                                  flex: 1,
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Icon(Icons.search),
-                                  ),
-                                ),
-                              ],
+                    Row(
+                      children: [
+                        DecoratedBox(
+                          decoration: const ShapeDecoration(
+                            color: Color(0xFFE9F1FF),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(25.0)),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      controller: carLocTextfiled,
-                      maxLength: 50,
-                      keyboardType: TextInputType.text,
-                      decoration: const InputDecoration(
-                        counterText: '',
-                        filled: true,
-                        fillColor: Color(0xFFE9F1FF),
-                        hintText: '차량 상세 위치를 입력해주세요',
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15.0, vertical: 5),
+                            child: DropdownButton(
+                              underline: const SizedBox(),
+                              dropdownColor: const Color(0xFFE9F1FF),
+                              value: _selctCas,
+                              items: _casList.map(
+                                (value) {
+                                  return DropdownMenuItem(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                },
+                              ).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _selctCas = value.toString();
+                                });
+                              },
+                            ),
                           ),
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    SizedBox(
-                      height: 300,
-                      child: GoogleMap(
-                        gestureRecognizers: <Factory<
-                            OneSequenceGestureRecognizer>>{
-                          Factory<OneSequenceGestureRecognizer>(
-                            () => EagerGestureRecognizer(),
-                          ),
-                        },
-                        zoomGesturesEnabled: true,
-                        onMapCreated: _onMapCreated,
-                        initialCameraPosition: CameraPosition(
-                          target: _center,
-                          zoom: 11.0,
-                        ),
-                      ),
-                    ),
+                        )
+                      ],
+                    )
                   ],
                 ),
+              ),
+              CarInfoLocation(
+                context: context,
+                title: '차량 위치',
+                textfiledController: carLocTextfiled,
               ),
               TextButton(
                 onPressed: () {
@@ -223,6 +177,123 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Container CarInfoLocation({
+    required BuildContext context,
+    required TextEditingController textfiledController,
+    required String title,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 25),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          GestureDetector(
+            onTap: () {
+              HapticFeedback.mediumImpact();
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return const LibraryDaumPostcodeScreen();
+              })).then((value) {
+                if (value != null) {
+                  setState(() {
+                    _dataModel = value;
+                  });
+                }
+              });
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE9F1FF),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 15, right: 15, top: 15, bottom: 15),
+                child: Center(
+                  child: Row(
+                    children: [
+                      if (_dataModel != null) ...[
+                        Expanded(
+                          flex: 4,
+                          child: Text(
+                            _dataModel!.address,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
+                      ],
+                      const Expanded(
+                        flex: 1,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Icon(Icons.search),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+            controller: textfiledController,
+            maxLength: 50,
+            keyboardType: TextInputType.text,
+            decoration: const InputDecoration(
+              counterText: '',
+              filled: true,
+              fillColor: Color(0xFFE9F1FF),
+              hintText: '차량 상세 위치를 입력해주세요',
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            height: 300,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              child: GoogleMap(
+                gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                  Factory<OneSequenceGestureRecognizer>(
+                    () => EagerGestureRecognizer(),
+                  ),
+                },
+                zoomGesturesEnabled: true,
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 11.0,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

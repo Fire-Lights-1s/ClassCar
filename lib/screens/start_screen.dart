@@ -20,13 +20,13 @@ class StartScreen extends StatelessWidget {
           centerTitle: true,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              width: 100,
-              height: 500,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Flexible(
+            flex: 8,
+            child: Container(
+              height: MediaQuery.of(context).size.height,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/car.png'),
@@ -59,10 +59,13 @@ class StartScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Row(
+          ),
+          Expanded(
+            flex: 1,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Flexible(
-                  fit: FlexFit.tight,
+                Expanded(
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -74,11 +77,7 @@ class StartScreen extends StatelessWidget {
                       decoration: const BoxDecoration(
                         color: Color(0xFFE3A72F),
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.only(
-                          top: 30,
-                          bottom: 31,
-                        ),
+                      child: const Center(
                         child: Text(
                           '로그인',
                           style: TextStyle(
@@ -91,8 +90,7 @@ class StartScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Flexible(
-                  fit: FlexFit.tight,
+                Expanded(
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -104,11 +102,7 @@ class StartScreen extends StatelessWidget {
                       decoration: const BoxDecoration(
                         color: Color(0xFFD9D9D9),
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.only(
-                          top: 30,
-                          bottom: 31,
-                        ),
+                      child: const Center(
                         child: Text(
                           '회원가입',
                           style: TextStyle(
@@ -123,8 +117,8 @@ class StartScreen extends StatelessWidget {
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
