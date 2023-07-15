@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/car_item.dart';
-import '../widgets/underbar_icon.dart';
 
 class CarListScreen extends StatefulWidget {
   const CarListScreen({super.key});
@@ -61,32 +60,6 @@ class _CarListScreenState extends State<CarListScreen> {
           Icons.add,
         ),
         onPressed: () {},
-      ),
-      bottomNavigationBar: const BottomAppBar(
-        color: Colors.amber,
-        child: SizedBox(
-          height: 80,
-          child: Row(
-            children: [
-              UnderBarIcon(
-                icon: Icons.home_rounded,
-                iconColor: Colors.grey,
-              ),
-              UnderBarIcon(
-                icon: Icons.directions_car_rounded,
-                iconColor: Colors.black,
-              ),
-              UnderBarIcon(
-                icon: Icons.description,
-                iconColor: Colors.grey,
-              ),
-              UnderBarIcon(
-                icon: Icons.person_rounded,
-                iconColor: Colors.grey,
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

@@ -70,10 +70,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
               ),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MainScreen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MainScreen()));
                 },
                 child: const Padding(
                   padding: EdgeInsets.only(

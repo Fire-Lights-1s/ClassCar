@@ -1,6 +1,5 @@
 import 'package:classcar/screens/account_list_screen.dart';
 import 'package:classcar/widgets/recent_list.dart';
-import 'package:classcar/widgets/underbar_icon.dart';
 import 'package:flutter/material.dart';
 
 class MyWalletScreen extends StatefulWidget {
@@ -43,32 +42,6 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-      ),
-      bottomNavigationBar: const BottomAppBar(
-        color: Colors.amber,
-        child: SizedBox(
-          height: 80,
-          child: Row(
-            children: [
-              UnderBarIcon(
-                icon: Icons.home_rounded,
-                iconColor: Colors.grey,
-              ),
-              UnderBarIcon(
-                icon: Icons.directions_car_rounded,
-                iconColor: Colors.grey,
-              ),
-              UnderBarIcon(
-                icon: Icons.description,
-                iconColor: Colors.grey,
-              ),
-              UnderBarIcon(
-                icon: Icons.person_rounded,
-                iconColor: Colors.black,
-              ),
-            ],
-          ),
-        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -325,6 +298,8 @@ class OutMoneyModel extends StatefulWidget {
 
 class _OutMoneyModelState extends State<OutMoneyModel> {
   var inputMoney = TextEditingController();
+  int countMoney = 0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -422,7 +397,41 @@ class _OutMoneyModelState extends State<OutMoneyModel> {
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
-                        inputMoney.text = "10000";
+                        countMoney = int.parse(inputMoney.text) + 5000;
+                        inputMoney.text = countMoney.toString();
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                      ),
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                        right: 10,
+                        top: 15,
+                        bottom: 15,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD0D0D0),
+                      ),
+                      child: const Text(
+                        '+ 5천원',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        countMoney = int.parse(inputMoney.text) + 10000;
+                        inputMoney.text = countMoney.toString();
                       });
                     },
                     child: Container(
@@ -454,7 +463,8 @@ class _OutMoneyModelState extends State<OutMoneyModel> {
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
-                        inputMoney.text = "50000";
+                        countMoney = int.parse(inputMoney.text) + 50000;
+                        inputMoney.text = countMoney.toString();
                       });
                     },
                     child: Container(
@@ -473,38 +483,6 @@ class _OutMoneyModelState extends State<OutMoneyModel> {
                       ),
                       child: const Text(
                         '+ 5만원',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        inputMoney.text = "100000";
-                      });
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        left: 15,
-                        right: 15,
-                      ),
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                        top: 15,
-                        bottom: 15,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD0D0D0),
-                      ),
-                      child: const Text(
-                        '+ 10만원',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
