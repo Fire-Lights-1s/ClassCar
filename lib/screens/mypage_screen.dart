@@ -1,4 +1,6 @@
 import 'package:classcar/screens/login_screen.dart';
+import 'package:classcar/screens/mywallet_screen.dart';
+import 'package:classcar/screens/notice_screen.dart';
 import 'package:classcar/widgets/underbar_icon.dart';
 import 'package:flutter/material.dart';
 
@@ -131,42 +133,51 @@ class _MyPageScreenState extends State<MyPageScreen> {
                             flex: 1,
                             child: Stack(
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Row(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          left: 10,
-                                          right: 10,
-                                          top: 5,
-                                          bottom: 5,
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '내 지갑',
-                                              style: TextStyle(
-                                                fontSize: 24,
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const MyWalletScreen()));
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: const Row(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 10,
+                                            right: 10,
+                                            top: 5,
+                                            bottom: 5,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '내 지갑',
+                                                style: TextStyle(
+                                                  fontSize: 24,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: 20),
-                                            Text(
-                                              '35,000원',
-                                              style: TextStyle(
-                                                color: Color(0xFF74B2F2),
-                                                fontSize: 20,
+                                              SizedBox(height: 20),
+                                              Text(
+                                                '35,000원',
+                                                style: TextStyle(
+                                                  color: Color(0xFF74B2F2),
+                                                  fontSize: 20,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 const Positioned(
@@ -244,42 +255,51 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           flex: 1,
                           child: Stack(
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: const Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 10,
-                                        right: 10,
-                                        top: 5,
-                                        bottom: 5,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '공지사항',
-                                            style: TextStyle(
-                                              fontSize: 24,
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const NoticeScreen()));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                          top: 5,
+                                          bottom: 5,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '공지사항',
+                                              style: TextStyle(
+                                                fontSize: 24,
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(height: 20),
-                                          Text(
-                                            '텍스트 없음',
-                                            style: TextStyle(
-                                              color: Colors.transparent,
-                                              fontSize: 20,
+                                            SizedBox(height: 20),
+                                            Text(
+                                              '텍스트 없음',
+                                              style: TextStyle(
+                                                color: Colors.transparent,
+                                                fontSize: 20,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                               const Positioned(

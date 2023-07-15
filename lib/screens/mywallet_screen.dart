@@ -1,3 +1,4 @@
+import 'package:classcar/screens/account_list_screen.dart';
 import 'package:classcar/widgets/recent_list.dart';
 import 'package:classcar/widgets/underbar_icon.dart';
 import 'package:flutter/material.dart';
@@ -161,47 +162,68 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              top: 10,
-                              bottom: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 1,
-                                color: const Color(0xFFD0D0D0),
+                          child: GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (BuildContext context) {
+                                    return const SingleChildScrollView(
+                                      child: OutMoneyModel(),
+                                    );
+                                  });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                top: 10,
+                                bottom: 10,
                               ),
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                            ),
-                            child: const Text(
-                              '출금 하기',
-                              style: TextStyle(
-                                fontSize: 20,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: const Color(0xFFD0D0D0),
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
                               ),
-                              textAlign: TextAlign.center,
+                              child: const Text(
+                                '출금 하기',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
                         const SizedBox(width: 20),
                         Expanded(
                           flex: 1,
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              top: 10,
-                              bottom: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: const Color(0xFF003257),
-                            ),
-                            child: const Text(
-                              '계좌 관리',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AccountListScreen()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                top: 10,
+                                bottom: 10,
                               ),
-                              textAlign: TextAlign.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color(0xFF003257),
+                              ),
+                              child: const Text(
+                                '계좌 관리',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
@@ -289,6 +311,213 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class OutMoneyModel extends StatefulWidget {
+  const OutMoneyModel({super.key});
+
+  @override
+  State<OutMoneyModel> createState() => _OutMoneyModelState();
+}
+
+class _OutMoneyModelState extends State<OutMoneyModel> {
+  var inputMoney = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                    bottom: 20,
+                  ),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFD0D0D0),
+                  ),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    '출금하기',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          //출금 금액입력 텍스트필드
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      top: 5,
+                      bottom: 5,
+                      left: 8,
+                      right: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE9F1FF),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: TextFormField(
+                      controller: inputMoney,
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        wordSpacing: 20,
+                      ),
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        hintText: '출금할 금액을 입력하세요',
+                        hintStyle: TextStyle(
+                          fontSize: 22,
+                          color: Colors.grey,
+                        ),
+                        counterText: '',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          //금액 입력 버튼
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        inputMoney.text = "10000";
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                      ),
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                        right: 10,
+                        top: 15,
+                        bottom: 15,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD0D0D0),
+                      ),
+                      child: const Text(
+                        '+ 1만원',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        inputMoney.text = "50000";
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                      ),
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                        right: 10,
+                        top: 15,
+                        bottom: 15,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD0D0D0),
+                      ),
+                      child: const Text(
+                        '+ 5만원',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        inputMoney.text = "100000";
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                      ),
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                        right: 10,
+                        top: 15,
+                        bottom: 15,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD0D0D0),
+                      ),
+                      child: const Text(
+                        '+ 10만원',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 30),
+        ],
       ),
     );
   }
