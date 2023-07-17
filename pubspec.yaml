@@ -14,9 +14,12 @@ dependencies:
   flutter_inappwebview: ^5.7.2+3
   firebase_core: ^2.14.0
   google_maps_flutter: ^2.3.0
+<<<<<<< HEAD
   url_launcher: ^6.1.12
   cloud_firestore: ^4.8.3
   firebase_auth: ^4.7.0
+=======
+>>>>>>> 3c6db6074a35a5bdff360cfe25d0b9c7c58ffb74
 
 dev_dependencies:
   flutter_test:
