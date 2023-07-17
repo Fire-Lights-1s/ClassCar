@@ -29,6 +29,13 @@
             {
               "client_id": "439982033780-554higuu6n3nluro8cvb0h2bug5gk8q8.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "439982033780-ckcgj5vf271avgcbn2ad7oehftb2jksm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.classcar"
+              }
             }
           ]
         }

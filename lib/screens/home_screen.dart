@@ -64,49 +64,6 @@ class HomeScreenState extends State<HomeScreen> {
                 children: [
                   Flexible(
                     flex: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE9F1FF),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                        top: 5,
-                        bottom: 5,
-                      ),
-                      child: const Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                '요청 내역',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 36,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Icon(
-                                Icons.phone_iphone_rounded,
-                                size: 80,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Flexible(
-                    flex: 1,
                     child: InkWell(
                       onTap: () {
                         Navigator.push(
