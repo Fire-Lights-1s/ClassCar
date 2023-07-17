@@ -51,7 +51,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const LoginScreen()));
+                              builder: (context) => LoginScreen()));
                     },
                     child: Container(
                       padding: const EdgeInsets.only(

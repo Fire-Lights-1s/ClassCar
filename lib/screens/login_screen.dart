@@ -1,10 +1,24 @@
+import 'package:classcar/module/user_info_model.dart';
+import 'package:classcar/module/user_model.dart';
 import 'package:classcar/screens/join_screen.dart';
 import 'package:classcar/screens/main_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _idController = TextEditingController();
+
+  final _passwordController = TextEditingController();
+
+  final firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +62,9 @@ class LoginScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const TextField(
-                  decoration: InputDecoration(
+                TextFormField(
+                  controller: _idController,
+                  decoration: const InputDecoration(
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.black,
@@ -62,13 +77,21 @@ class LoginScreen extends StatelessWidget {
                       color: Color(0xFFD3D3D3),
                     ),
                   ),
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      // == null or isEmpty
+                      return '아이디를 입력해주세요.';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                const TextField(
+                TextFormField(
+                  controller: _passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.black,
@@ -81,6 +104,13 @@ class LoginScreen extends StatelessWidget {
                       color: Color(0xFFD3D3D3),
                     ),
                   ),
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      // == null or isEmpty
+                      return '비밀번호를 입력해주세요.';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -116,9 +146,16 @@ class LoginScreen extends StatelessWidget {
                   height: 40,
                 ),
                 InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MainScreen()));
+                  onTap: () async {
+                    final List<UserInfoModel> userData =
+                        await UserInfoUpdate.getData();
+                    if (_idController.text == userData[0].userId &&
+                        _passwordController.text == userData[0].passWord) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MainScreen()));
+                    }
                   },
                   child: Container(
                     width: 400,
