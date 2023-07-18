@@ -19,7 +19,7 @@ void firebase() async {
 
   final firestore = FirebaseFirestore.instance;
   print('firebase 가져오기 시작');
-  var result = await firestore.collection('userINFO').get().then((event) {
+  await firestore.collection('userINFO').get().then((event) {
     for (var doc in event.docs) {
       print("결과확인 = ${doc.data()['userId']};");
     }

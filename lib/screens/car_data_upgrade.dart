@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../Api/daum_post_screen_view.dart';
-import '../widgets/underbar_icon.dart';
 
 class CarDataUpgrade extends StatefulWidget {
   final String carName;
@@ -21,7 +20,13 @@ class CarDataUpgrade extends StatefulWidget {
 }
 
 class _CarDataUpgradeState extends State<CarDataUpgrade> {
-  late TextEditingController carNameTextfiled, carNumTextfiled, carLocTextfiled;
+  late TextEditingController carNameTF,
+      carNumTF,
+      carLocTF,
+      carCasTF,
+      carSeatsTF,
+      carMakerTF;
+  String _selctCas = '휘발유-가솔린';
   final List<String> _casList = [
     '휘발유-가솔린',
     '경유-디젤',
@@ -30,7 +35,12 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
     '전기-EV',
     '수소전기-FCEV',
   ];
-  String _selctCas = '휘발유-가솔린';
+  String _selctCarTpye = '소형차';
+  final List<String> _carTpye = [
+    '소형차',
+    '중형차',
+    '대형차',
+  ];
 
   DataModel? _dataModel;
   late GoogleMapController mapController;
@@ -45,9 +55,12 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    carNameTextfiled = TextEditingController(text: "${widget.carName} 기종 초기값");
-    carNumTextfiled = TextEditingController(text: "번호 초기값");
-    carLocTextfiled = TextEditingController(text: "차량 위치 초기값");
+    carNameTF = TextEditingController(text: "${widget.carName} 기종 값");
+    carNumTF = TextEditingController(text: "번호 값");
+    carLocTF = TextEditingController(text: "차량 위치 값");
+    carCasTF = TextEditingController(text: '연비 값');
+    carSeatsTF = TextEditingController(text: '승차인원 값');
+    carMakerTF = TextEditingController(text: '제조사 현대');
   }
 
   @override
@@ -76,16 +89,19 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
             horizontal: 20,
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CarInfoInput(
+                maxLength: 20,
                 fractionationInfo: '차량기종',
                 hintText: '차량 기종(모델명)',
-                textControll: carNameTextfiled,
+                textControll: carNameTF,
               ),
               CarInfoInput(
+                maxLength: 10,
                 fractionationInfo: '차량 번호',
                 hintText: '차량 번호',
-                textControll: carNumTextfiled,
+                textControll: carNumTF,
               ),
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -93,7 +109,7 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "연료와 연비",
+                      "연료/ 연비",
                       style: TextStyle(fontSize: 25),
                     ),
                     const SizedBox(
@@ -101,37 +117,128 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                     ),
                     Row(
                       children: [
-                        DecoratedBox(
-                          decoration: const ShapeDecoration(
-                            color: Color(0xFFE9F1FF),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(25.0)),
+                        Flexible(
+                          flex: 1,
+                          fit: FlexFit.tight,
+                          child: DecoratedBox(
+                            decoration: const ShapeDecoration(
+                              color: Color(0xFFE9F1FF),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                              ),
                             ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15.0, vertical: 5),
-                            child: DropdownButton(
-                              underline: const SizedBox(),
-                              dropdownColor: const Color(0xFFE9F1FF),
-                              value: _selctCas,
-                              items: _casList.map(
-                                (value) {
-                                  return DropdownMenuItem(
-                                    value: value,
-                                    child: Text(value),
-                                  );
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 7),
+                              child: DropdownButton(
+                                underline: const SizedBox(),
+                                dropdownColor: const Color(0xFFE9F1FF),
+                                value: _selctCas,
+                                items: _casList.map(
+                                  (value) {
+                                    return DropdownMenuItem(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  },
+                                ).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selctCas = value.toString();
+                                  });
                                 },
-                              ).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selctCas = value.toString();
-                                });
-                              },
+                              ),
                             ),
                           ),
-                        )
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: TextFormFieldDecoration(
+                            maxLength: 5,
+                            textfiledController: carCasTF,
+                            hintText: '연비를 입력해주세요',
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "차량 종류/ 제조사/ 승차인원",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          fit: FlexFit.tight,
+                          child: DecoratedBox(
+                            decoration: const ShapeDecoration(
+                              color: Color(0xFFE9F1FF),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 7),
+                              child: DropdownButton(
+                                underline: const SizedBox(),
+                                dropdownColor: const Color(0xFFE9F1FF),
+                                value: _selctCarTpye,
+                                items: _carTpye.map(
+                                  (value) {
+                                    return DropdownMenuItem(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  },
+                                ).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selctCarTpye = value.toString();
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: TextFormFieldDecoration(
+                            maxLength: 10,
+                            textfiledController: carMakerTF,
+                            hintText: '제조사을 입력해주세요',
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: TextFormFieldDecoration(
+                            maxLength: 5,
+                            textfiledController: carSeatsTF,
+                            hintText: '승차인원을 입력해주세요',
+                          ),
+                        ),
                       ],
                     )
                   ],
@@ -140,40 +247,14 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
               CarInfoLocation(
                 context: context,
                 title: '차량 위치',
-                textfiledController: carLocTextfiled,
+                textfiledController: carLocTF,
               ),
               TextButton(
                 onPressed: () {
-                  print(carNameTextfiled.text);
+                  print(carNameTF.text);
                 },
                 child: const Text('test'),
               )
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: const BottomAppBar(
-        color: Colors.amber,
-        child: SizedBox(
-          height: 80,
-          child: Row(
-            children: [
-              UnderBarIcon(
-                icon: Icons.home_rounded,
-                iconColor: Colors.grey,
-              ),
-              UnderBarIcon(
-                icon: Icons.directions_car_rounded,
-                iconColor: Colors.black,
-              ),
-              UnderBarIcon(
-                icon: Icons.description,
-                iconColor: Colors.grey,
-              ),
-              UnderBarIcon(
-                icon: Icons.person_rounded,
-                iconColor: Colors.grey,
-              ),
             ],
           ),
         ),
@@ -252,24 +333,10 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
           const SizedBox(
             height: 10,
           ),
-          TextFormField(
-            controller: textfiledController,
+          TextFormFieldDecoration(
             maxLength: 50,
-            keyboardType: TextInputType.text,
-            decoration: const InputDecoration(
-              counterText: '',
-              filled: true,
-              fillColor: Color(0xFFE9F1FF),
-              hintText: '차량 상세 위치를 입력해주세요',
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-                borderSide: BorderSide(
-                  color: Colors.transparent,
-                ),
-              ),
-            ),
+            textfiledController: textfiledController,
+            hintText: '차량 상세 위치를 입력해주세요',
           ),
           const SizedBox(
             height: 10,
@@ -299,15 +366,54 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
   }
 }
 
+class TextFormFieldDecoration extends StatelessWidget {
+  final TextEditingController textfiledController;
+  final String hintText;
+  final int maxLength;
+
+  const TextFormFieldDecoration({
+    super.key,
+    required this.textfiledController,
+    required this.hintText,
+    required this.maxLength,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: textfiledController,
+      maxLength: maxLength,
+      keyboardType: TextInputType.text,
+      decoration: InputDecoration(
+        counterText: '',
+        border: InputBorder.none,
+        filled: true,
+        fillColor: const Color(0xFFE9F1FF),
+        hintText: hintText,
+        enabledBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
+          borderSide: BorderSide(
+            color: Colors.transparent,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class CarInfoInput extends StatelessWidget {
   final String fractionationInfo, hintText;
   final TextEditingController textControll;
+  final int maxLength;
 
   const CarInfoInput({
     super.key,
     required this.fractionationInfo,
     required this.hintText,
     required this.textControll,
+    required this.maxLength,
   });
 
   @override
@@ -324,97 +430,10 @@ class CarInfoInput extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          TextFormField(
-            controller: textControll,
-            maxLength: 50,
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              counterText: '',
-              filled: true,
-              fillColor: const Color(0xFFE9F1FF),
-              hintText: hintText,
-              enabledBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-                borderSide: BorderSide(
-                  color: Colors.transparent,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CarLocationInput extends StatelessWidget {
-  final String fractionationInfo, hintText;
-  final TextEditingController textControll;
-
-  const CarLocationInput({
-    super.key,
-    required this.fractionationInfo,
-    required this.hintText,
-    required this.textControll,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            fractionationInfo,
-            style: const TextStyle(fontSize: 25),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              padding: const EdgeInsets.only(
-                left: 15,
-                right: 15,
-                top: 20,
-                bottom: 20,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE9F1FF),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: const Row(
-                children: [
-                  Text("주소 api 이용해서 수정하도록 해야함"),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          TextFormField(
-            controller: textControll,
-            maxLength: 50,
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              counterText: '',
-              filled: true,
-              fillColor: const Color(0xFFE9F1FF),
-              hintText: hintText,
-              enabledBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-                borderSide: BorderSide(
-                  color: Colors.transparent,
-                ),
-              ),
-            ),
+          TextFormFieldDecoration(
+            maxLength: maxLength,
+            textfiledController: textControll,
+            hintText: hintText,
           ),
         ],
       ),
