@@ -1,11 +1,16 @@
 import 'package:classcar/Api/daum_post_screen_view.dart';
-import 'package:classcar/screens/main_screen.dart';
+import 'package:classcar/module/user_model.dart';
+import 'package:classcar/screens/login_screen.dart';
 import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class PersonalScreen extends StatefulWidget {
-  const PersonalScreen({super.key});
+  late Map<String, dynamic> NBTN;
+  PersonalScreen({
+    super.key,
+    required this.NBTN,
+  });
 
   @override
   State<PersonalScreen> createState() => _PersonalScreenState();
@@ -13,6 +18,13 @@ class PersonalScreen extends StatefulWidget {
 
 class _PersonalScreenState extends State<PersonalScreen> {
   DataModel? _dataModel;
+
+  final _userIdController = TextEditingController();
+  final _userPasswordController = TextEditingController();
+  final _userEmailController = TextEditingController();
+  final _detailAddressController = TextEditingController();
+
+  late String adress = '';
 
   @override
   Widget build(BuildContext context) {
@@ -36,32 +48,20 @@ class _PersonalScreenState extends State<PersonalScreen> {
           // 아래에 지정할 수 있음.
           mainAxisSize: MainAxisSize.min,
           children: [
-            Hero(
-              tag: "bluebar",
-              child: Row(
-                children: [
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 3,
-                    child: Container(
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF74B2F2),
-                      ),
+            Row(
+              children: [
+                AnimatedContainer(
+                  width: (MediaQuery.of(context).size.width / 1.5),
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.easeIn,
+                  child: Container(
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF74B2F2),
                     ),
                   ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 1,
-                    child: Container(
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFF9FBFF),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
             Container(
               width: double.infinity,
@@ -70,8 +70,27 @@ class _PersonalScreenState extends State<PersonalScreen> {
               ),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MainScreen()));
+                  widget.NBTN['userId'] = _userIdController.text;
+                  widget.NBTN['passWord'] = _userPasswordController.text;
+                  widget.NBTN['email'] = _userEmailController.text;
+                  widget.NBTN['address'] = adress;
+                  widget.NBTN['detailAddress'] = _detailAddressController.text;
+
+                  if (_userIdController.text.isNotEmpty &&
+                      _userPasswordController.text.isNotEmpty &&
+                      _userEmailController.text.isNotEmpty &&
+                      _dataModel!.address.isNotEmpty &&
+                      _detailAddressController.text.isNotEmpty) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()));
+
+                    UserInfoUpdate.addData(widget.NBTN);
+                    print("데이터확인 = ${widget.NBTN}");
+                  } else {
+                    showToast('입력칸을 확인 해주세요');
+                  }
                 },
                 child: const Padding(
                   padding: EdgeInsets.only(
@@ -108,7 +127,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           '회원가입',
@@ -157,6 +175,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: TextFormField(
+                        controller: _userIdController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           counterText: '',
@@ -193,6 +212,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: TextFormField(
+                        controller: _userPasswordController,
+                        obscureText: true,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           counterText: '',
@@ -232,88 +253,11 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: TextFormField(
+                        controller: _userEmailController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           counterText: '',
                           hintText: '예) Hongildong123@gmail.com',
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-
-                    //이름 입력칸
-                    const Text(
-                      '이름',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(
-                        left: 15,
-                        right: 15,
-                        top: 5,
-                        bottom: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE9F1FF),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          counterText: '',
-                          hintText: '예) 홍길동',
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-
-                    //생년월일 입력칸
-                    const Text(
-                      '생년월일',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(
-                        left: 15,
-                        right: 15,
-                        top: 5,
-                        bottom: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE9F1FF),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          counterText: '',
-                          hintText: '예) 950101',
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.transparent,
@@ -349,6 +293,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                               if (value != null) {
                                 setState(() {
                                   _dataModel = value;
+                                  adress = _dataModel!.address;
                                 });
                               }
                             });
@@ -394,6 +339,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: TextFormField(
+                            controller: _detailAddressController,
                             keyboardType: TextInputType.text,
                             decoration: const InputDecoration(
                               counterText: '',

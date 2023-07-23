@@ -5,6 +5,7 @@ import 'package:classcar/screens/main_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -155,6 +156,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => const MainScreen()));
+                    } else {
+                      //showToast 는 밑에 만들어뒀습니다.
+                      showToast('아이디 또는 비밀번호를 확인하세요');
                     }
                   },
                   child: Container(
@@ -187,4 +191,14 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+void showToast(String message) {
+  Fluttertoast.showToast(
+    msg: message,
+    backgroundColor: const Color(0xFFD0D0D0),
+    fontSize: 18,
+    textColor: Colors.black,
+    gravity: ToastGravity.CENTER,
+  );
 }

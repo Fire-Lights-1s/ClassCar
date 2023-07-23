@@ -297,7 +297,7 @@ class OutMoneyModel extends StatefulWidget {
 }
 
 class _OutMoneyModelState extends State<OutMoneyModel> {
-  var inputMoney = TextEditingController();
+  var inputMoney = TextEditingController(text: '0');
   int countMoney = 0;
 
   @override
