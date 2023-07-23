@@ -1,3 +1,4 @@
+import 'package:classcar/module/car_data_state_controll.dart';
 import 'package:daum_postcode_search/data_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -26,21 +27,35 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
       carCasTF,
       carSeatsTF,
       carMakerTF;
-  String _selctCas = '휘발유-가솔린';
-  final List<String> _casList = [
-    '휘발유-가솔린',
-    '경유-디젤',
-    '천연가스-CNG',
-    '액화석유가스-LPG',
-    '전기-EV',
-    '수소전기-FCEV',
-  ];
-  String _selctCarTpye = '소형차';
-  final List<String> _carTpye = [
-    '소형차',
-    '중형차',
-    '대형차',
-  ];
+  final _carState = CarInfoStateControll.format();
+
+  void selectYear(context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Select Year"),
+          content: SizedBox(
+            // Need to use container to add size constraint.
+            width: 300,
+            height: 300,
+            child: YearPicker(
+              firstDate: DateTime(DateTime.now().year - 100, 1),
+              lastDate: DateTime(DateTime.now().year, 1),
+              initialDate: _carState.selectedDate,
+              selectedDate: _carState.selectedDate,
+              onChanged: (DateTime dateTime) {
+                setState(() {
+                  _carState.selectedDate = dateTime;
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   DataModel? _dataModel;
   late GoogleMapController mapController;
@@ -118,45 +133,23 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                     Row(
                       children: [
                         Flexible(
-                          flex: 1,
+                          flex: 3,
                           fit: FlexFit.tight,
-                          child: DecoratedBox(
-                            decoration: const ShapeDecoration(
-                              color: Color(0xFFE9F1FF),
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15.0, vertical: 7),
-                              child: DropdownButton(
-                                underline: const SizedBox(),
-                                dropdownColor: const Color(0xFFE9F1FF),
-                                value: _selctCas,
-                                items: _casList.map(
-                                  (value) {
-                                    return DropdownMenuItem(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  },
-                                ).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selctCas = value.toString();
-                                  });
-                                },
-                              ),
-                            ),
+                          child: dropDownCarInfo(
+                            list: _carState.gasList,
+                            select: _carState.selctGas,
+                            onTap: (value) {
+                              setState(() {
+                                _carState.selctGas = value.toString();
+                              });
+                            },
                           ),
                         ),
                         const SizedBox(
                           width: 10,
                         ),
                         Flexible(
-                          flex: 1,
+                          flex: 2,
                           child: TextFormFieldDecoration(
                             maxLength: 5,
                             textfiledController: carCasTF,
@@ -174,7 +167,7 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "차량 종류/ 제조사/ 승차인원",
+                      "차량 종류/ 승차인원",
                       style: TextStyle(fontSize: 25),
                     ),
                     const SizedBox(
@@ -185,34 +178,80 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                         Flexible(
                           flex: 1,
                           fit: FlexFit.tight,
-                          child: DecoratedBox(
-                            decoration: const ShapeDecoration(
-                              color: Color(0xFFE9F1FF),
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
+                          child: dropDownCarInfo(
+                            list: _carState.carTpye,
+                            select: _carState.selctCarTpye,
+                            onTap: (value) {
+                              setState(() {
+                                _carState.selctCarTpye = value.toString();
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: TextFormFieldDecoration(
+                            maxLength: 5,
+                            textfiledController: carSeatsTF,
+                            hintText: '승차인원',
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "연식/ 제조사",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          fit: FlexFit.tight,
+                          child: GestureDetector(
+                            onTap: () {
+                              selectYear(context);
+                            },
+                            child: DecoratedBox(
+                              decoration: const ShapeDecoration(
+                                color: Color(0xFFE9F1FF),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                ),
                               ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15.0, vertical: 7),
-                              child: DropdownButton(
-                                underline: const SizedBox(),
-                                dropdownColor: const Color(0xFFE9F1FF),
-                                value: _selctCarTpye,
-                                items: _carTpye.map(
-                                  (value) {
-                                    return DropdownMenuItem(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  },
-                                ).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selctCarTpye = value.toString();
-                                  });
-                                },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 4),
+                                child: Container(
+                                  padding: const EdgeInsets.all(15),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        _carState.selectedDate.year.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const Icon(Icons.calendar_month_outlined),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -225,25 +264,72 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                           child: TextFormFieldDecoration(
                             maxLength: 10,
                             textfiledController: carMakerTF,
-                            hintText: '제조사을 입력해주세요',
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: TextFormFieldDecoration(
-                            maxLength: 5,
-                            textfiledController: carSeatsTF,
-                            hintText: '승차인원을 입력해주세요',
+                            hintText: '제조사',
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "내장/ 안전/ 편의 옵션",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          fit: FlexFit.tight,
+                          child: GestureDetector(
+                            onTap: () {
+                              selectYear(context);
+                            },
+                            child: DecoratedBox(
+                              decoration: const ShapeDecoration(
+                                color: Color(0xFFE9F1FF),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 4),
+                                child: Container(
+                                  padding: const EdgeInsets.all(15),
+                                  child: const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '내장',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const Text('연식/ 기타사항 만들어야함 '),
+              const Text('내장, 안전, 편의 옵션 모달창 만들어야함 '),
               CarInfoLocation(
                 context: context,
                 title: '차량 위치',
@@ -256,6 +342,52 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                 child: const Text('test'),
               )
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  DecoratedBox dropDownCarInfo({
+    required List<String> list,
+    required String select,
+    required onTap(value),
+  }) {
+    return DecoratedBox(
+      decoration: const ShapeDecoration(
+        color: Color(0xFFE9F1FF),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4),
+        child: PopupMenuButton(
+          itemBuilder: (BuildContext context) {
+            return list
+                .map((value) => PopupMenuItem(
+                      value: value,
+                      onTap: () {
+                        onTap(value);
+                      },
+                      child: Text(value),
+                    ))
+                .toList();
+          },
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  select,
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                const Icon(Icons.arrow_drop_down),
+              ],
+            ),
           ),
         ),
       ),
@@ -299,8 +431,8 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 15, right: 15, top: 15, bottom: 15),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 18, horizontal: 15),
                 child: Center(
                   child: Row(
                     children: [
