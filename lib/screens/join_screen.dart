@@ -1,3 +1,5 @@
+import 'package:classcar/screens/certified_screen.dart';
+import 'package:classcar/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class JoinScreen extends StatefulWidget {
@@ -8,15 +10,21 @@ class JoinScreen extends StatefulWidget {
   State<JoinScreen> createState() => _JoinScreenState();
 }
 
+// ignore: constant_identifier_names
+enum Choice { No, Yes }
+
 class _JoinScreenState extends State<JoinScreen> {
-  final String _agreement = 'Yes';
-  final String _adagreement = 'AgreeYes';
+  Choice? _agreement1 = Choice.No; // 첫번째 동의
+  Choice? _agreement2 = Choice.No; // 두번쨰 동의
+  Choice? _agreement3 = Choice.No; // 광고성 동의
 
   final ScrollController controllerOne = ScrollController();
 
   final ScrollController controllerTwo = ScrollController();
 
-  final bool _trigger = false;
+  final bool _trigger = false; //밑에 파란색 애니메이션 바 크기 조절
+
+  Map<String, dynamic> NBTN = {};
 
   @override
   Widget build(BuildContext context) {
@@ -57,25 +65,43 @@ class _JoinScreenState extends State<JoinScreen> {
                 ),
               ],
             ),
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Color(0xFFD0D0D0),
-              ),
-              child: InkWell(
-                onTap: widget.onPress,
-                child: const Padding(
-                  padding: EdgeInsets.only(
-                    top: 30,
-                    bottom: 31,
-                  ),
-                  child: Text(
-                    '가입 계속하기',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 22,
+            InkWell(
+              onTap: () {
+                NBTN['isCheckedAgreement'] =
+                    _agreement1 == Choice.Yes ? true : false;
+                NBTN['isCheckedAgreement2'] =
+                    _agreement2 == Choice.Yes ? true : false;
+                NBTN['isCheckedAgreementAD'] =
+                    _agreement3 == Choice.Yes ? true : false;
+                if (_agreement1 == Choice.Yes && _agreement2 == Choice.Yes) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CertifiedScreen(NBTN: NBTN)));
+                } else {
+                  showToast('약관동의를 확인하세요');
+                }
+              },
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFD0D0D0),
+                ),
+                child: InkWell(
+                  onTap: widget.onPress,
+                  child: const Padding(
+                    padding: EdgeInsets.only(
+                      top: 30,
+                      bottom: 31,
                     ),
-                    textAlign: TextAlign.center,
+                    child: Text(
+                      '가입 계속하기',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 22,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ),
@@ -154,9 +180,13 @@ class _JoinScreenState extends State<JoinScreen> {
                     contentPadding: const EdgeInsets.only(left: 190),
                     title: const Text('약관에 동의합니다'),
                     leading: Radio(
-                      value: 'Yes',
-                      groupValue: _agreement,
-                      onChanged: (value) {},
+                      value: Choice.Yes,
+                      groupValue: _agreement1,
+                      onChanged: (value) {
+                        setState(() {
+                          _agreement1 = value;
+                        });
+                      },
                     ),
                   ),
                   const SizedBox(
@@ -202,9 +232,13 @@ class _JoinScreenState extends State<JoinScreen> {
                     contentPadding: const EdgeInsets.only(left: 190),
                     title: const Text('약관에 동의합니다'),
                     leading: Radio(
-                      value: 'Yes',
-                      groupValue: _agreement,
-                      onChanged: (value) {},
+                      value: Choice.Yes,
+                      groupValue: _agreement2,
+                      onChanged: (value) {
+                        setState(() {
+                          _agreement2 = value;
+                        });
+                      },
                     ),
                   ),
                   const SizedBox(
@@ -228,9 +262,13 @@ class _JoinScreenState extends State<JoinScreen> {
                     contentPadding: const EdgeInsets.only(left: 190),
                     title: const Text('약관에 동의합니다'),
                     leading: Radio(
-                      value: 'AgreeYes',
-                      groupValue: _adagreement,
-                      onChanged: (value) {},
+                      value: Choice.Yes,
+                      groupValue: _agreement3,
+                      onChanged: (value) {
+                        setState(() {
+                          _agreement3 = value;
+                        });
+                      },
                     ),
                   ),
                 ],

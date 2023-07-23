@@ -17,4 +17,16 @@ class UserInfoUpdate {
 
     return userInstances;
   }
+
+  static Future<int> addData(Map<String, dynamic> userInfo) async {
+    bool check = false;
+    await firestore
+        .collection('userINFO')
+        .add(userInfo)
+        .then((value) => {check = true});
+    if (check) {
+      return 0;
+    }
+    return 1;
+  }
 }
