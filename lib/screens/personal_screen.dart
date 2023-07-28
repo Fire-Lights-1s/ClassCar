@@ -5,6 +5,7 @@ import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// ignore: must_be_immutable
 class PersonalScreen extends StatefulWidget {
   late Map<String, dynamic> NBTN;
   PersonalScreen({

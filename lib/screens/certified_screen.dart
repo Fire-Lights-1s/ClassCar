@@ -3,6 +3,7 @@ import 'package:classcar/screens/personal_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+// ignore: must_be_immutable
 class CertifiedScreen extends StatefulWidget {
   late Map<String, dynamic> NBTN;
   CertifiedScreen({
