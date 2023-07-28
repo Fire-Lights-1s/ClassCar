@@ -21,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final firestore = FirebaseFirestore.instance;
 
+  bool userInfoChecked = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,15 +152,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () async {
                     final List<UserInfoModel> userData =
                         await UserInfoUpdate.getData();
-                    if (_idController.text == userData[0].userId &&
-                        _passwordController.text == userData[0].passWord) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MainScreen()));
-                    } else {
-                      //showToast 는 밑에 만들어뒀습니다.
-                      showToast('아이디 또는 비밀번호를 확인하세요');
+                    for (int i = 0; i < userData.length; i++) {
+                      if (_idController.text == userData[i].userId &&
+                          _passwordController.text == userData[i].passWord) {
+                        userInfoChecked = true;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    MainScreen(documentID: userData[i].docID)));
+                        break;
+                      }
+                    }
+                    if (userInfoChecked == false) {
+                      showToast('아이디 또는 비밀번호를 확인해주세요');
                     }
                   },
                   child: Container(

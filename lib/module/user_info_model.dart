@@ -1,4 +1,5 @@
 class UserInfoModel {
+  late String docID;
   late String name;
   late String userId;
   late String passWord;
@@ -14,8 +15,9 @@ class UserInfoModel {
   late String backNum;
   late String telecom;
 
-  UserInfoModel.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
+  UserInfoModel.fromJson(String documentID, Map<String, dynamic> json)
+      : docID = documentID,
+        name = json['name'],
         userId = json['userId'],
         passWord = json['passWord'],
         telecom = json['telecom'],

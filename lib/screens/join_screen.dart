@@ -22,8 +22,6 @@ class _JoinScreenState extends State<JoinScreen> {
 
   final ScrollController controllerTwo = ScrollController();
 
-  final bool _trigger = false; //밑에 파란색 애니메이션 바 크기 조절
-
   Map<String, dynamic> NBTN = {};
 
   @override
@@ -50,16 +48,39 @@ class _JoinScreenState extends State<JoinScreen> {
           children: [
             Row(
               children: [
-                AnimatedContainer(
-                  width: _trigger
-                      ? (MediaQuery.of(context).size.width / 4) * 2
-                      : (MediaQuery.of(context).size.width / 4) * 1,
-                  duration: const Duration(seconds: 1),
-                  curve: Curves.easeIn,
+                Flexible(
+                  flex: 1,
                   child: Container(
                     height: 10,
                     decoration: const BoxDecoration(
                       color: Color(0xFF74B2F2),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
                     ),
                   ),
                 ),
