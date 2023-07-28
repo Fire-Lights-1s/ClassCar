@@ -7,7 +7,8 @@ import 'package:flutter/services.dart';
 import '../widgets/underbar_icon.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final String documentID;
+  const MainScreen({super.key, required this.documentID});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -135,8 +136,8 @@ class _MainScreenState extends State<MainScreen> {
                 child: const Text('Empty Body 2'),
               ),
             ),
-            const Center(
-              child: MyPageScreen(),
+            Center(
+              child: MyPageScreen(documentID: widget.documentID),
             )
           ],
         ),
