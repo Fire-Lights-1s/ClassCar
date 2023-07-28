@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import 'package:classcar/screens/passwordChange_screen.dart';
+>>>>>>> 8e4df4723c4a68f85e03690fe639f761eeca8d44
 import 'package:classcar/screens/start_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';

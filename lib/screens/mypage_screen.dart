@@ -1,10 +1,13 @@
 import 'package:classcar/screens/login_screen.dart';
 import 'package:classcar/screens/mywallet_screen.dart';
 import 'package:classcar/screens/notice_screen.dart';
+import 'package:classcar/screens/notification_setting.dart';
+import 'package:classcar/screens/passwordChange_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyPageScreen extends StatefulWidget {
-  const MyPageScreen({super.key});
+  final String documentID;
+  const MyPageScreen({super.key, required this.documentID});
 
   @override
   State<MyPageScreen> createState() => _MyPageScreenState();
@@ -51,7 +54,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
+                              builder: (context) => const LoginScreen()));
                     },
                     child: Container(
                       padding: const EdgeInsets.only(
@@ -358,37 +361,46 @@ class _MyPageScreenState extends State<MyPageScreen> {
                     const SizedBox(height: 10),
                     Column(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                alignment: Alignment.centerLeft,
-                                child: const Icon(
-                                    Icons.notifications_active_outlined,
-                                    size: 45),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const NotificationSetting()));
+                          },
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: const Icon(
+                                      Icons.notifications_active_outlined,
+                                      size: 45),
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Container(
-                                alignment: Alignment.centerLeft,
-                                child: const Text(
-                                  '알림',
-                                  style: TextStyle(
-                                    fontSize: 24,
+                              Expanded(
+                                flex: 5,
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: const Text(
+                                    '알림',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                  alignment: Alignment.centerRight,
-                                  child: const Icon(
-                                      Icons.arrow_forward_ios_rounded)),
-                            ),
-                          ],
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: const Icon(
+                                        Icons.arrow_forward_ios_rounded)),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 5),
                         Row(
@@ -409,35 +421,44 @@ class _MyPageScreenState extends State<MyPageScreen> {
                     ),
                     Column(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                alignment: Alignment.centerLeft,
-                                child: const Icon(Icons.lock_open, size: 45),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PasswordChangeScreen(
+                                        documentID: widget.documentID)));
+                          },
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: const Icon(Icons.lock_open, size: 45),
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Container(
-                                alignment: Alignment.centerLeft,
-                                child: const Text(
-                                  '비밀번호 변경',
-                                  style: TextStyle(
-                                    fontSize: 24,
+                              Expanded(
+                                flex: 5,
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: const Text(
+                                    '비밀번호 변경',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                  alignment: Alignment.centerRight,
-                                  child: const Icon(
-                                      Icons.arrow_forward_ios_rounded)),
-                            ),
-                          ],
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: const Icon(
+                                        Icons.arrow_forward_ios_rounded)),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 5),
                         Row(
