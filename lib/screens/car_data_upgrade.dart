@@ -1,4 +1,5 @@
 import 'package:classcar/module/car_data_state_controll.dart';
+import 'package:classcar/widgets/year_picker_dialog.dart';
 import 'package:daum_postcode_search/data_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -33,25 +34,13 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Select Year"),
-          content: SizedBox(
-            // Need to use container to add size constraint.
-            width: 300,
-            height: 300,
-            child: YearPicker(
-              firstDate: DateTime(DateTime.now().year - 100, 1),
-              lastDate: DateTime(DateTime.now().year, 1),
-              initialDate: _carState.selectedDate,
-              selectedDate: _carState.selectedDate,
-              onChanged: (DateTime dateTime) {
-                setState(() {
-                  _carState.selectedDate = dateTime;
-                });
-                Navigator.pop(context);
-              },
-            ),
-          ),
+        return YearPickerDialog(
+          selectedDate: _carState.selectedDate,
+          selectYear: (value) {
+            setState(() {
+              _carState.selectedDate = value;
+            });
+          },
         );
       },
     );
