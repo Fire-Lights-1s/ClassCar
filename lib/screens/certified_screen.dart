@@ -68,14 +68,39 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
           children: [
             Row(
               children: [
-                AnimatedContainer(
-                  width: (MediaQuery.of(context).size.width / 2),
-                  duration: const Duration(seconds: 1),
-                  curve: Curves.easeIn,
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
                   child: Container(
                     height: 10,
                     decoration: const BoxDecoration(
                       color: Color(0xFF74B2F2),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
                     ),
                   ),
                 ),

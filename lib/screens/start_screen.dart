@@ -48,7 +48,7 @@ class StartScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   Text(
-                    '클래스카',
+                    '클라스카',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -96,7 +96,7 @@ class StartScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => JoinScreen()));
+                              builder: (context) => const JoinScreen()));
                     },
                     child: Container(
                       decoration: const BoxDecoration(
