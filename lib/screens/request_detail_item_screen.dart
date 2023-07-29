@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 
 class RequestDetailItemScreen extends StatefulWidget {
   final String RentalDate;
+  final String Name;
 
+  //fianl 추가해야함
   const RequestDetailItemScreen({
     super.key,
     required this.RentalDate,
+    required this.Name,
   });
 
   @override
@@ -143,21 +146,21 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                         const SizedBox(
                           width: 20,
                         ),
-                        const Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "홍길동",
-                              style: TextStyle(
+                              widget.Name,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
-                            Text(
+                            const Text(
                               "010-4417-8841",
                               style: TextStyle(
                                 color: Colors.black,
@@ -165,10 +168,10 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
-                            Text(
+                            const Text(
                               "주소--------",
                               style: TextStyle(
                                 color: Colors.black,
@@ -176,10 +179,10 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
-                            Text(
+                            const Text(
                               "2023년 05월 05일 요청함",
                               style: TextStyle(
                                 color: Colors.black,
