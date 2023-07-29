@@ -39,6 +39,7 @@ class RequestDetailListItem extends StatelessWidget {
             pageBuilder: (context, animation, secondaryAnimation) =>
                 RequestDetailItemScreen(
               RentalDate: RentalDate,
+              Name: Name,
             ),
           ),
         );
