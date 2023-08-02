@@ -656,7 +656,7 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                                                           onPressed: () {
                                                             setState(() {
                                                               widget.Situation =
-                                                                  "수락";
+                                                                  "취소";
                                                             });
                                                             Navigator.of(
                                                                     context)
