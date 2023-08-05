@@ -1,4 +1,5 @@
 import 'package:classcar/module/car_data_state_controll.dart';
+import 'package:classcar/widgets/check_box_dialog.dart';
 import 'package:classcar/widgets/year_picker_dialog.dart';
 import 'package:daum_postcode_search/data_model.dart';
 import 'package:flutter/foundation.dart';
@@ -27,8 +28,26 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
       carLocTF,
       carCasTF,
       carSeatsTF,
-      carMakerTF;
+      carMakerTF,
+      carDescriptionTF;
   final _carState = CarInfoStateControll.format();
+
+  Text optionTextBuild(Map<String, bool> options) {
+    final buffer = StringBuffer();
+    late String result;
+    for (var option in options.keys.toList()) {
+      if (options[option]!) {
+        buffer.write(' $option /');
+      }
+    }
+    result = buffer.toString();
+    buffer.clear();
+    return Text(
+      ' $result ',
+      style: const TextStyle(fontSize: 18),
+      overflow: TextOverflow.ellipsis,
+    );
+  }
 
   void selectYear(context) async {
     showDialog(
@@ -46,8 +65,24 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
     );
   }
 
+  void selctCheckBox(context, String title, Map<String, bool> options) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CheckBoxDialog(
+          title: title,
+          options: options,
+          onChanged: (value) {
+            setState(() {});
+          },
+        );
+      },
+    );
+  }
+
   DataModel? _dataModel;
   late GoogleMapController mapController;
+  final String GMaps = 'AIzaSyDCx0q_CxVUpZ2Bq_JjlHAPNW2P1AoyRfM';
 
   final LatLng _center = const LatLng(45.521563, -122.677433);
 
@@ -65,6 +100,9 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
     carCasTF = TextEditingController(text: '연비 값');
     carSeatsTF = TextEditingController(text: '승차인원 값');
     carMakerTF = TextEditingController(text: '제조사 현대');
+    carDescriptionTF = TextEditingController(text: ''''기타사항
+     기타사항
+     기타사항''');
   }
 
   @override
@@ -143,6 +181,7 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                             maxLength: 5,
                             textfiledController: carCasTF,
                             hintText: '연비를 입력해주세요',
+                            regExp: '[0-9|.]',
                           ),
                         ),
                       ],
@@ -186,6 +225,7 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                             maxLength: 5,
                             textfiledController: carSeatsTF,
                             hintText: '승차인원',
+                            regExp: '[0-9]',
                           ),
                         ),
                       ],
@@ -273,52 +313,58 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          fit: FlexFit.tight,
-                          child: GestureDetector(
-                            onTap: () {
-                              selectYear(context);
-                            },
-                            child: DecoratedBox(
-                              decoration: const ShapeDecoration(
-                                color: Color(0xFFE9F1FF),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0)),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 4),
-                                child: Container(
-                                  padding: const EdgeInsets.all(15),
-                                  child: const Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '내장',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    optionSelectBox(
+                      context: context,
+                      title: '내장 옵션',
+                      options: _carState.carInsideOption,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    optionSelectBox(
+                      context: context,
+                      title: '안전 옵션',
+                      options: _carState.carSafeOption,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    optionSelectBox(
+                      context: context,
+                      title: '편의 옵션',
+                      options: _carState.carUsablityOption,
                     ),
                   ],
                 ),
               ),
-              const Text('연식/ 기타사항 만들어야함 '),
-              const Text('내장, 안전, 편의 옵션 모달창 만들어야함 '),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "기타 사항",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: TextFormFieldDecoration(
+                            maxLength: 5,
+                            textfiledController: carDescriptionTF,
+                            hintText: '기타입력값',
+                            size: 10,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
               CarInfoLocation(
                 context: context,
                 title: '차량 위치',
@@ -331,6 +377,47 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                 child: const Text('test'),
               )
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  GestureDetector optionSelectBox(
+      {required BuildContext context,
+      required String title,
+      required Map<String, bool> options}) {
+    return GestureDetector(
+      onTap: () {
+        selctCheckBox(context, title, options);
+      },
+      child: DecoratedBox(
+        decoration: const ShapeDecoration(
+          color: Color(0xFFE9F1FF),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4),
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Flexible(
+                  child: optionTextBuild(options),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -491,12 +578,15 @@ class TextFormFieldDecoration extends StatelessWidget {
   final TextEditingController textfiledController;
   final String hintText;
   final int maxLength;
-
+  final int? size;
+  final String? regExp;
   const TextFormFieldDecoration({
     super.key,
     required this.textfiledController,
     required this.hintText,
     required this.maxLength,
+    this.regExp,
+    this.size,
   });
 
   @override
@@ -504,7 +594,21 @@ class TextFormFieldDecoration extends StatelessWidget {
     return TextFormField(
       controller: textfiledController,
       maxLength: maxLength,
-      keyboardType: TextInputType.text,
+      maxLines: size,
+      inputFormatters: [
+        if (regExp != null) ...[
+          FilteringTextInputFormatter(
+            RegExp(regExp!),
+            allow: true,
+          ),
+        ] else ...[
+          FilteringTextInputFormatter(
+            RegExp('[a-z A-Z ㄱ-ㅎ|가-힣|·|：|/|+|-|*|~|!|@|#|%|^|&|(|)|_|<|>]'),
+            allow: true,
+          ),
+        ]
+      ],
+      keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
         counterText: '',
         border: InputBorder.none,
