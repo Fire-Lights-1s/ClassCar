@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:classcar/module/car_data_state_controll.dart';
 import 'package:classcar/widgets/check_box_dialog.dart';
 import 'package:classcar/widgets/year_picker_dialog.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 
 import '../Api/daum_post_screen_view.dart';
 
@@ -82,9 +85,25 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
 
   DataModel? _dataModel;
   late GoogleMapController mapController;
-  final String GMaps = 'AIzaSyDCx0q_CxVUpZ2Bq_JjlHAPNW2P1AoyRfM';
 
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+  Future<Map<String, dynamic>?> loadLoc(String addrees) async {
+    const String GMaps = 'AIzaSyDCx0q_CxVUpZ2Bq_JjlHAPNW2P1AoyRfM';
+    //  주소로 좌표 구하기
+    String gpsUrl =
+        'https://maps.googleapis.com/maps/api/geocode/json?address=$addrees&key=$GMaps&language=ko';
+
+    final responseGps = await http.get(Uri.parse(gpsUrl));
+    Map<String, dynamic> location =
+        jsonDecode(responseGps.body)['results'][0]['geometry']['location'];
+    print(location);
+    return location;
+  }
+
+  var lat = 37.4267861;
+  var lng = -122.0806032;
+  List<Marker> mark = [];
+
+  late final LatLng _center = LatLng(lat, lng);
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -470,6 +489,7 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
     );
   }
 
+  // 주소와 지도를 보여주는 컨테이너
   Container CarInfoLocation({
     required BuildContext context,
     required TextEditingController textfiledController,
@@ -492,11 +512,27 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
               HapticFeedback.mediumImpact();
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                 return const LibraryDaumPostcodeScreen();
-              })).then((value) {
+              })).then((value) async {
                 if (value != null) {
-                  setState(() {
-                    _dataModel = value;
-                  });
+                  _dataModel = value;
+                  //주소로 위도,경도를 얻는 Geocode API
+                  var loc = await loadLoc(_dataModel!.address);
+                  lat = loc!['lat'];
+                  lng = loc['lng'];
+                  // 카메라 이동
+                  mapController.animateCamera(CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      bearing: 0,
+                      target: LatLng(lat, lng),
+                      zoom: 14.0,
+                    ),
+                  ));
+                  mark.add(Marker(
+                    markerId: const MarkerId("1"),
+                    draggable: true,
+                    position: LatLng(lat, lng),
+                  ));
+                  setState(() {});
                 }
               });
             },
@@ -561,9 +597,10 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                 },
                 zoomGesturesEnabled: true,
                 onMapCreated: _onMapCreated,
+                markers: Set.from(mark),
                 initialCameraPosition: CameraPosition(
                   target: _center,
-                  zoom: 11.0,
+                  zoom: 15.0,
                 ),
               ),
             ),
@@ -574,11 +611,14 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
   }
 }
 
+// 꾸며진 Text 입력 상자
 class TextFormFieldDecoration extends StatelessWidget {
   final TextEditingController textfiledController;
   final String hintText;
   final int maxLength;
+  //크기
   final int? size;
+  // 입력 제한 조건
   final String? regExp;
   const TextFormFieldDecoration({
     super.key,
