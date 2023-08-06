@@ -14,6 +14,7 @@ class RequestDetailListItem extends StatelessWidget {
   final String CarNum;
   final String SharePlaceName;
   final String ShareDetailPlace;
+  final String documentID;
 
   RequestDetailListItem({
     super.key,
@@ -29,6 +30,7 @@ class RequestDetailListItem extends StatelessWidget {
     required this.PhoneNum,
     required this.SharePlaceName,
     required this.ShareDetailPlace,
+    required this.documentID,
   });
 
   @override
@@ -64,6 +66,7 @@ class RequestDetailListItem extends StatelessWidget {
               CarNum: CarNum,
               SharePlaceName: SharePlaceName,
               ShareDetailPlace: ShareDetailPlace,
+              documentID: documentID,
             ),
           ),
         );

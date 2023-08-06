@@ -15,10 +15,12 @@ import '../Api/daum_post_screen_view.dart';
 
 class CarDataUpgrade extends StatefulWidget {
   final String carName;
+  final String documentID;
 
   const CarDataUpgrade({
     super.key,
     required this.carName,
+    required this.documentID,
   });
 
   @override

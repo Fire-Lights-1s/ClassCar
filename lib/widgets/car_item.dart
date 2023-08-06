@@ -5,12 +5,14 @@ class CarListItem extends StatelessWidget {
   final String carName;
   final int shareCount;
   final bool park;
+  final String documentID;
 
   const CarListItem({
     super.key,
     required this.carName,
     required this.shareCount,
     required this.park,
+    required this.documentID,
   });
 
   @override
@@ -35,6 +37,7 @@ class CarListItem extends StatelessWidget {
             pageBuilder: (context, animation, secondaryAnimation) =>
                 CarDetailScreen(
               carName: carName,
+              documentID: documentID,
             ),
           ),
         );
