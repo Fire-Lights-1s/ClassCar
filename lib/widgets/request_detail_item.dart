@@ -2,21 +2,33 @@ import '../screens/request_detail_item_screen.dart';
 import 'package:flutter/material.dart';
 
 class RequestDetailListItem extends StatelessWidget {
-  final String Situation;
-  final String Name;
   final String RentalDate;
+  final String Name;
+  String Situation;
   final String RequestDate;
   final int RentalCost;
-  final String documentID;
+  final String DuringTime;
+  final String PhoneNum;
+  final String UserAddress;
+  final String CarName;
+  final String CarNum;
+  final String SharePlaceName;
+  final String ShareDetailPlace;
 
-  const RequestDetailListItem({
+  RequestDetailListItem({
     super.key,
-    required this.Situation,
-    required this.Name,
     required this.RentalDate,
+    required this.Name,
+    required this.Situation,
     required this.RequestDate,
     required this.RentalCost,
-    required this.documentID,
+    required this.DuringTime,
+    required this.UserAddress,
+    required this.CarName,
+    required this.CarNum,
+    required this.PhoneNum,
+    required this.SharePlaceName,
+    required this.ShareDetailPlace,
   });
 
   @override
@@ -42,7 +54,16 @@ class RequestDetailListItem extends StatelessWidget {
                 RequestDetailItemScreen(
               RentalDate: RentalDate,
               Name: Name,
-              documentID: documentID,
+              Situation: Situation,
+              RequestDate: RequestDate,
+              RentalCost: RentalCost,
+              DuringTime: DuringTime,
+              PhoneNum: PhoneNum,
+              UserAddress: UserAddress,
+              CarName: CarName,
+              CarNum: CarNum,
+              SharePlaceName: SharePlaceName,
+              ShareDetailPlace: ShareDetailPlace,
             ),
           ),
         );
@@ -69,7 +90,9 @@ class RequestDetailListItem extends StatelessWidget {
                               ? Colors.yellow
                               : Situation == "수락"
                                   ? Colors.grey
-                                  : null,
+                                  : Situation == "취소"
+                                      ? Colors.red
+                                      : null,
                     ),
                     child: Text(
                       Situation,
@@ -81,7 +104,9 @@ class RequestDetailListItem extends StatelessWidget {
                                 ? Colors.black
                                 : Situation == "수락"
                                     ? Colors.black
-                                    : null,
+                                    : Situation == "취소"
+                                        ? Colors.white
+                                        : null,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
