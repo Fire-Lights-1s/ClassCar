@@ -1,5 +1,6 @@
 import 'package:classcar/module/user_info_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class UserInfoUpdate {
   static final firestore = FirebaseFirestore.instance;
@@ -45,6 +46,24 @@ class UserInfoUpdate {
         .update({'passWord': passWord}).then((event) {
       print('업데이트 성공!');
     });
+    return 0;
+  }
+
+  static Future<int> setUserImage(
+      String documentID, dynamic userUpdateProfileAddress) async {
+    await firestore
+        .collection('userINFO')
+        .doc(documentID)
+        .update({'profileUrl': userUpdateProfileAddress}).then((value) {},
+            onError: (e) => print(e));
+    return 0;
+  }
+
+  static Future<int> updatePhoto(documentID) async {
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child('user-profile/')
+        .child(documentID + '.jpg');
     return 0;
   }
 }

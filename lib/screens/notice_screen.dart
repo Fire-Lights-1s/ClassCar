@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class NoticeScreen extends StatefulWidget {
-  const NoticeScreen({super.key});
+  final String documentID;
+  const NoticeScreen({
+    super.key,
+    required this.documentID,
+  });
 
   @override
   State<NoticeScreen> createState() => _NoticeScreenState();

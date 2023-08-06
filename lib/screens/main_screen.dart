@@ -1,10 +1,9 @@
 import 'package:classcar/screens/car_list_screen.dart';
 import 'package:classcar/screens/home_screen.dart';
 import 'package:classcar/screens/mypage_screen.dart';
+import 'package:classcar/screens/request_detail_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../widgets/underbar_icon.dart';
 
 class MainScreen extends StatefulWidget {
   final String documentID;
@@ -48,6 +47,19 @@ class _MainScreenState extends State<MainScreen> {
         });
   }
 
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      _myPage.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -55,91 +67,58 @@ class _MainScreenState extends State<MainScreen> {
         return _onBackKey();
       },
       child: Scaffold(
-        bottomNavigationBar: BottomAppBar(
-          child: SizedBox(
-            height: 80,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _myPage.jumpToPage(0);
-                      });
-                    },
-                    child: const UnderBarIcon(
-                      icon: Icons.home_rounded,
-                      iconColor: Colors.black,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _myPage.jumpToPage(1);
-                      });
-                    },
-                    child: const UnderBarIcon(
-                      icon: Icons.directions_car_rounded,
-                      iconColor: Colors.grey,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _myPage.jumpToPage(2);
-                      });
-                    },
-                    child: const UnderBarIcon(
-                      icon: Icons.description,
-                      iconColor: Colors.grey,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _myPage.jumpToPage(3);
-                      });
-                    },
-                    child: const UnderBarIcon(
-                      icon: Icons.person_rounded,
-                      iconColor: Colors.grey,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          selectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
-        ),
-        body: PageView(
-          controller: _myPage,
-          children: [
-            const Center(
-              child: HomeScreen(),
+          selectedItemColor: Colors.black,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              label: '홈페이지',
+              icon: Icon(Icons.home_rounded, size: 35),
+              backgroundColor: Colors.lightBlue,
             ),
-            const Center(
-              child: CarListScreen(),
+            BottomNavigationBarItem(
+              label: '차량관리',
+              icon: Icon(Icons.directions_car_rounded, size: 35),
+              backgroundColor: Colors.lightBlue,
             ),
-            Center(
-              child: Container(
-                child: const Text('Empty Body 2'),
-              ),
+            BottomNavigationBarItem(
+              label: '요청내역',
+              icon: Icon(Icons.description, size: 35),
+              backgroundColor: Colors.lightBlue,
             ),
-            Center(
-              child: MyPageScreen(documentID: widget.documentID),
-            )
+            BottomNavigationBarItem(
+              label: '마이페이지',
+              icon: Icon(Icons.person_rounded, size: 35),
+              backgroundColor: Colors.lightBlue,
+            ),
           ],
+        ),
+        body: SizedBox.expand(
+          child: PageView(
+            controller: _myPage,
+            onPageChanged: (index) {
+              setState(() => _selectedIndex = index);
+            },
+            children: [
+              Center(
+                child: HomeScreen(documentID: widget.documentID),
+              ),
+              Center(
+                child: CarListScreen(documentID: widget.documentID),
+              ),
+              Center(
+                child: RequestDetailListScreen(documentID: widget.documentID),
+              ),
+              Center(
+                child: MyPageScreen(documentID: widget.documentID),
+              )
+            ],
+          ),
         ),
       ),
     );

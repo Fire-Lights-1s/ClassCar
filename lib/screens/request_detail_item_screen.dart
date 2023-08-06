@@ -14,6 +14,7 @@ class RequestDetailItemScreen extends StatefulWidget {
   final String CarNum;
   final String SharePlaceName;
   final String ShareDetailPlace;
+  final String documentID;
 
   //fianl 추가해야함
   RequestDetailItemScreen({
@@ -30,6 +31,7 @@ class RequestDetailItemScreen extends StatefulWidget {
     required this.PhoneNum,
     required this.SharePlaceName,
     required this.ShareDetailPlace,
+    required this.documentID,
   });
 
   @override
@@ -259,8 +261,9 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CarListScreen()));
+                                      builder: (context) => CarListScreen(
+                                            documentID: widget.documentID,
+                                          )));
                             },
                             child: Container(
                                 width: 390,
