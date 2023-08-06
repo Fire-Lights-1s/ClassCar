@@ -14,6 +14,7 @@ class RequestDetailItemScreen extends StatefulWidget {
   final String CarNum;
   final String SharePlaceName;
   final String ShareDetailPlace;
+  final String documentID;
 
   //fianl 추가해야함
   RequestDetailItemScreen({
@@ -30,6 +31,7 @@ class RequestDetailItemScreen extends StatefulWidget {
     required this.PhoneNum,
     required this.SharePlaceName,
     required this.ShareDetailPlace,
+    required this.documentID,
   });
 
   @override

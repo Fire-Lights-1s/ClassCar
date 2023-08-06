@@ -44,6 +44,7 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
               CarNum: "부산98배1234",
               ShareDetailPlace: "e편한세상 금정산 아파트",
               SharePlaceName: "부산광역시 북구 상학로 36",
+              documentID: widget.documentID,
             ),
             RequestDetailListItem(
               Name: "김심청",
@@ -58,6 +59,7 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
               CarNum: "부산98배1234",
               ShareDetailPlace: "e편한세상 금정산 아파트",
               SharePlaceName: "부산광역시 북구 상학로 36",
+              documentID: widget.documentID,
             ),
             RequestDetailListItem(
               Name: "김심청",
@@ -72,6 +74,7 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
               CarNum: "부산98배1234",
               ShareDetailPlace: "e편한세상 금정산 아파트",
               SharePlaceName: "부산광역시 북구 상학로 36",
+              documentID: widget.documentID,
             ),
             RequestDetailListItem(
               Name: "김이박",
@@ -86,6 +89,7 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
               CarNum: "부산98배1234",
               ShareDetailPlace: "e편한세상 금정산 아파트",
               SharePlaceName: "부산광역시 북구 상학로 36",
+              documentID: widget.documentID,
             ),
           ],
         ),
