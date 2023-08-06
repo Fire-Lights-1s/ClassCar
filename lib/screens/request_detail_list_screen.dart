@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../widgets/request_detail_item.dart';
 
 class RequestDetailListScreen extends StatefulWidget {
-  const RequestDetailListScreen({super.key});
+  final String documentID;
+  const RequestDetailListScreen({super.key, required this.documentID});
 
   @override
   State<RequestDetailListScreen> createState() =>
@@ -27,7 +28,7 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
         ),
         centerTitle: true,
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             RequestDetailListItem(
@@ -36,6 +37,7 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
               RentalDate: "05/19(금)13:00~05/19(금)22:00",
               RequestDate: "2023년 05월 05일",
               RentalCost: 50000,
+              documentID: widget.documentID,
             ),
             RequestDetailListItem(
               Name: "김심청",
@@ -43,6 +45,7 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
               RentalDate: "05/11(목)13:00~05/11(목)22:00",
               RequestDate: "2023년 05월 03일",
               RentalCost: 50000,
+              documentID: widget.documentID,
             ),
             RequestDetailListItem(
               Name: "김심청",
@@ -50,6 +53,7 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
               RentalDate: "05/05(금)13:00~05/05(금)22:00",
               RequestDate: "2023년 05월 03일",
               RentalCost: 50000,
+              documentID: widget.documentID,
             ),
           ],
         ),

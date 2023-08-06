@@ -7,6 +7,7 @@ class RequestDetailListItem extends StatelessWidget {
   final String RentalDate;
   final String RequestDate;
   final int RentalCost;
+  final String documentID;
 
   const RequestDetailListItem({
     super.key,
@@ -15,6 +16,7 @@ class RequestDetailListItem extends StatelessWidget {
     required this.RentalDate,
     required this.RequestDate,
     required this.RentalCost,
+    required this.documentID,
   });
 
   @override
@@ -40,6 +42,7 @@ class RequestDetailListItem extends StatelessWidget {
                 RequestDetailItemScreen(
               RentalDate: RentalDate,
               Name: Name,
+              documentID: documentID,
             ),
           ),
         );

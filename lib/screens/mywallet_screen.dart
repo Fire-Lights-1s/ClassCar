@@ -3,7 +3,11 @@ import 'package:classcar/widgets/recent_list.dart';
 import 'package:flutter/material.dart';
 
 class MyWalletScreen extends StatefulWidget {
-  const MyWalletScreen({super.key});
+  final String documentID;
+  const MyWalletScreen({
+    super.key,
+    required this.documentID,
+  });
 
   @override
   State<MyWalletScreen> createState() => _MyWalletScreenState();
