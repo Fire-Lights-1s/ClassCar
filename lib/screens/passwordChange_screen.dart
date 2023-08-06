@@ -1,5 +1,6 @@
 import 'package:classcar/module/user_info_model.dart';
 import 'package:classcar/module/user_model.dart';
+import 'package:classcar/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class PasswordChangeScreen extends StatelessWidget {
@@ -13,6 +14,8 @@ class PasswordChangeScreen extends StatelessWidget {
   var nowPasswordController = TextEditingController();
   var changePasswordController = TextEditingController();
   var passwordCheckController = TextEditingController();
+
+  bool passwordCheck = false;
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +176,12 @@ class PasswordChangeScreen extends StatelessWidget {
                               passwordChange = changePasswordController.text;
                               UserInfoUpdate.updataData(
                                   passwordChange, documentID);
+                              passwordCheck = true;
+                              Navigator.pop(context, false);
                             }
+                          }
+                          if (passwordCheck == false) {
+                            showToast('비밀번호를 확인 해 주세요');
                           }
                         },
                         child: Container(

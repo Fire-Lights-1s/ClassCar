@@ -2,8 +2,10 @@ import 'package:classcar/screens/mywallet_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
+  final String documentID;
   const HomeScreen({
     super.key,
+    required this.documentID,
   });
 
   @override
@@ -69,7 +71,8 @@ class HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const MyWalletScreen()));
+                                builder: (context) => MyWalletScreen(
+                                    documentID: widget.documentID)));
                       },
                       child: Container(
                         decoration: BoxDecoration(

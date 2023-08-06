@@ -5,10 +5,12 @@ import '../widgets/underbar_icon.dart';
 
 class CarDetailScreen extends StatefulWidget {
   final String carName;
+  final String documentID;
 
   const CarDetailScreen({
     super.key,
     required this.carName,
+    required this.documentID,
   });
 
   @override
@@ -208,6 +210,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                   (context, animation, secondaryAnimation) =>
                                       CarDataUpgrade(
                                         carName: widget.carName,
+                                        documentID: widget.documentID,
                                       )),
                         );
                       },

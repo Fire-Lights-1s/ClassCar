@@ -1,9 +1,16 @@
+import 'dart:io';
+
+import 'package:classcar/module/user_info_model.dart';
+import 'package:classcar/module/user_model.dart';
 import 'package:classcar/screens/login_screen.dart';
 import 'package:classcar/screens/mywallet_screen.dart';
 import 'package:classcar/screens/notice_screen.dart';
 import 'package:classcar/screens/notification_setting.dart';
 import 'package:classcar/screens/passwordChange_screen.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MyPageScreen extends StatefulWidget {
   final String documentID;
@@ -80,7 +87,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
               height: 65,
             ),
             // 프로필부분
-            const Profile(),
+            Profile(
+              documentID: widget.documentID,
+            ),
             const SizedBox(
               height: 20,
             ),
@@ -115,7 +124,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const MyWalletScreen()));
+                                                MyWalletScreen(
+                                                    documentID:
+                                                        widget.documentID)));
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -236,8 +247,8 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              const NoticeScreen()));
+                                          builder: (context) => NoticeScreen(
+                                              documentID: widget.documentID)));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -366,8 +377,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const NotificationSetting()));
+                                    builder: (context) => NotificationSetting(
+                                          documentID: widget.documentID,
+                                        )));
                           },
                           child: Row(
                             children: [
@@ -488,31 +500,165 @@ class _MyPageScreenState extends State<MyPageScreen> {
   }
 }
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  final String documentID;
+
   const Profile({
     super.key,
+    required this.documentID,
   });
 
   @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  final picker = ImagePicker();
+
+  XFile? image;
+  // 카메라로 촬영한 이미지를 저장할 변수
+  List<XFile?> multiImage = [];
+  // 갤러리에서 여러 장의 사진을 선택해서 저장할 변수
+  List<XFile?> images = [];
+  // 가져온 사진들을 보여주기 위한 변수
+
+  Future<String> getPhoto() async {
+    String result = '';
+    UserInfoModel user = await UserInfoUpdate.getUser(widget.documentID);
+    if (user.profileUrl != null) {
+      result = user.profileUrl!;
+    }
+
+    return result;
+  }
+
+  //카메라 불러오는 함수
+  _getCameraImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref =
+        storage.ref("userProfile/").child('${widget.documentID}.jpg');
+    if (pickedFile != null) {
+      setState(() {
+        image = pickedFile;
+      });
+      await ref.putFile(File(image!.path));
+      var downloadUrl = await ref.getDownloadURL();
+      UserInfoUpdate.setUserImage(widget.documentID, downloadUrl);
+      print("이미지 url = $downloadUrl");
+      setState(() {});
+    } else {
+      if (kDebugMode) {
+        print('이미지 선택안함');
+      }
+    }
+  }
+
+  //갤러리 불러오는 함수
+  _getPhotoLibraryImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        image = image;
+      });
+    } else {
+      if (kDebugMode) {
+        print('이미지 선택안함');
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Center(
+    final imageSize = MediaQuery.of(context).size.width / 4;
+    return Center(
       child: Column(
         children: [
-          Icon(
-            Icons.account_circle_outlined,
-            size: 80,
+          Column(
+            children: [
+              Container(
+                clipBehavior: Clip.hardEdge,
+                width: 150,
+                height: 150,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 2,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (context) {
+                        return AlertDialog(
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          )),
+                          title: const Text('사진을 업로드하세요'),
+                          actions: <Widget>[
+                            IconButton(
+                              onPressed: () => _getCameraImage(),
+                              icon: const Icon(
+                                Icons.camera_alt_outlined,
+                                size: 32,
+                                color: Colors.black,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => _getPhotoLibraryImage(),
+                              icon: const Icon(
+                                Icons.add_photo_alternate_outlined,
+                                size: 30,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: FutureBuilder(
+                      future: getPhoto(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData == false) {
+                          return const Icon(
+                            Icons.account_circle,
+                            size: 100,
+                          );
+                        } else {
+                          if (snapshot.data == '') {
+                            return const Icon(
+                              Icons.account_circle,
+                              size: 200,
+                            );
+                          }
+                          return Transform.scale(
+                              scale: 2.0,
+                              child: Image.network(snapshot.data.toString()));
+                        }
+                      }),
+                ),
+              )
+            ],
           ),
-          Text(
+          const Text(
             '홍길동',
             style: TextStyle(
               fontSize: 34,
               fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
-          Text(
+          const Text(
             'abcdefg@gmail.com',
             style: TextStyle(
               fontSize: 18,

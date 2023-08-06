@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 class RequestDetailItemScreen extends StatefulWidget {
   final String RentalDate;
   final String Name;
+  final String documentID;
 
   //fianl 추가해야함
   const RequestDetailItemScreen({
     super.key,
     required this.RentalDate,
     required this.Name,
+    required this.documentID,
   });
 
   @override
@@ -221,8 +223,9 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CarListScreen()));
+                                      builder: (context) => CarListScreen(
+                                            documentID: widget.documentID,
+                                          )));
                             },
                             child: Container(
                                 width: 390,
