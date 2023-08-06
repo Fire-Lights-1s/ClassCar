@@ -4,14 +4,32 @@ import 'package:flutter/material.dart';
 class RequestDetailItemScreen extends StatefulWidget {
   final String RentalDate;
   final String Name;
-  final String documentID;
+  String Situation;
+  final String RequestDate;
+  final int RentalCost;
+  final String DuringTime;
+  final String PhoneNum;
+  final String UserAddress;
+  final String CarName;
+  final String CarNum;
+  final String SharePlaceName;
+  final String ShareDetailPlace;
 
   //fianl 추가해야함
-  const RequestDetailItemScreen({
+  RequestDetailItemScreen({
     super.key,
     required this.RentalDate,
     required this.Name,
-    required this.documentID,
+    required this.Situation,
+    required this.RequestDate,
+    required this.RentalCost,
+    required this.DuringTime,
+    required this.UserAddress,
+    required this.CarName,
+    required this.CarNum,
+    required this.PhoneNum,
+    required this.SharePlaceName,
+    required this.ShareDetailPlace,
   });
 
   @override
@@ -46,12 +64,30 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
               Container(
                 width: 80,
                 height: 23,
-                decoration: const BoxDecoration(color: Colors.black),
-                child: const Text(
-                  "수락대기",
+                decoration: BoxDecoration(
+                  color: widget.Situation == "수락대기"
+                      ? Colors.black
+                      : widget.Situation == "운행중"
+                          ? Colors.yellow
+                          : widget.Situation == "수락"
+                              ? Colors.grey
+                              : widget.Situation == "취소"
+                                  ? Colors.red
+                                  : null,
+                ),
+                child: Text(
+                  widget.Situation,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: widget.Situation == "수락대기"
+                        ? Colors.white
+                        : widget.Situation == "운행중"
+                            ? Colors.black
+                            : widget.Situation == "수락"
+                                ? Colors.black
+                                : widget.Situation == "취소"
+                                    ? Colors.white
+                                    : null,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
@@ -99,11 +135,11 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                     const SizedBox(
                       height: 4,
                     ),
-                    const Row(
+                    Row(
                       children: [
                         Text(
-                          "   총 10시간 이용",
-                          style: TextStyle(
+                          "  총 ${widget.DuringTime} 이용",
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -162,9 +198,9 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                             const SizedBox(
                               height: 10,
                             ),
-                            const Text(
-                              "010-4417-8841",
-                              style: TextStyle(
+                            Text(
+                              widget.PhoneNum,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -173,9 +209,9 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                             const SizedBox(
                               height: 10,
                             ),
-                            const Text(
-                              "주소--------",
-                              style: TextStyle(
+                            Text(
+                              "주소: ${widget.UserAddress}",
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -184,9 +220,9 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                             const SizedBox(
                               height: 10,
                             ),
-                            const Text(
-                              "2023년 05월 05일 요청함",
-                              style: TextStyle(
+                            Text(
+                              "${widget.RequestDate} 요청함",
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -236,25 +272,25 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
-                                child: const Row(
+                                child: Row(
                                   children: [
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Text(
-                                      "쏘나타 8세대",
-                                      style: TextStyle(
+                                      widget.CarName,
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Text(
-                                      "부산98배1234",
-                                      style: TextStyle(
+                                      widget.CarNum,
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -284,11 +320,11 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    const Row(
+                    Row(
                       children: [
                         Text(
-                          "   e편한세상 금정산 아파트 ",
-                          style: TextStyle(
+                          "  ${widget.ShareDetailPlace}",
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -299,11 +335,11 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    const Row(
+                    Row(
                       children: [
                         Text(
-                          "   부산광역시 북구 상학로 36 ",
-                          style: TextStyle(
+                          "  ${widget.SharePlaceName}",
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -331,9 +367,9 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                     ),
                     Row(
                       children: [
-                        const Text(
-                          "   50000원",
-                          style: TextStyle(
+                        Text(
+                          "  ${widget.RentalCost}원",
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -383,169 +419,344 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            margin: const EdgeInsets.all(10),
-                            padding: const EdgeInsets.fromLTRB(10, 30, 10, 20),
-                            width: 375,
-                            height: 160,
-                            decoration:
-                                const BoxDecoration(color: Colors.white),
-                            child: Column(children: [
-                              Column(
-                                children: [
-                                  const Text(
-                                    "수락대기 상태입니다.",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                    if (widget.Situation == "수락대기")
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              padding:
+                                  const EdgeInsets.fromLTRB(10, 30, 10, 20),
+                              width: 375,
+                              height: 160,
+                              decoration:
+                                  const BoxDecoration(color: Colors.white),
+                              child: Column(children: [
+                                Column(
+                                  children: [
+                                    const Text(
+                                      "수락대기 상태입니다.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(14),
-                                        width: 130,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            color: Color(0xFFD9D9D9)),
-                                        child: const Text(
-                                          "수락하기",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            showDialog(
+                                                context: context,
+                                                barrierDismissible: true,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                      content: const Row(
+                                                        children: [
+                                                          Text(
+                                                            "수락하시겠습니까?",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      insetPadding:
+                                                          const EdgeInsets
+                                                                  .fromLTRB(
+                                                              0, 80, 0, 80),
+                                                      actions: [
+                                                        TextButton(
+                                                          child:
+                                                              const Text("확인"),
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              widget.Situation =
+                                                                  "수락";
+                                                            });
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        )
+                                                      ]);
+                                                });
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(14),
+                                            width: 130,
+                                            height: 50,
+                                            decoration: const BoxDecoration(
+                                                color: Color(0xFFD9D9D9)),
+                                            child: const Text(
+                                              "수락하기",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        width: 20,
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.all(14),
-                                        width: 130,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            color: Color(0xFFD9D9D9)),
-                                        child: const Text(
-                                          "취소",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            showDialog(
+                                                context: context,
+                                                barrierDismissible: true,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                      content: const Row(
+                                                        children: [
+                                                          Text(
+                                                            "취소 하시겠습니까?",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      insetPadding:
+                                                          const EdgeInsets
+                                                                  .fromLTRB(
+                                                              0, 80, 0, 80),
+                                                      actions: [
+                                                        TextButton(
+                                                          child:
+                                                              const Text("확인"),
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              widget.Situation =
+                                                                  "취소";
+                                                            });
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        )
+                                                      ]);
+                                                });
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(14),
+                                            width: 130,
+                                            height: 50,
+                                            decoration: const BoxDecoration(
+                                                color: Color(0xFFD9D9D9)),
+                                            child: const Text(
+                                              "취소",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ]),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            margin: const EdgeInsets.all(10),
-                            padding: const EdgeInsets.fromLTRB(10, 30, 10, 20),
-                            width: 375,
-                            height: 160,
-                            decoration:
-                                const BoxDecoration(color: Colors.white),
-                            child: Column(children: [
-                              Column(
-                                children: [
-                                  const Text(
-                                    "수락완료 상태입니다.",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                      ],
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(14),
-                                        width: 275,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            color: Color(0xFFD9D9D9)),
-                                        child: const Text(
-                                          "취소하기",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
+                                  ],
+                                )
+                              ]),
+                            ),
+                          ),
+                        ],
+                      )
+                    else if (widget.Situation == "수락")
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              padding:
+                                  const EdgeInsets.fromLTRB(10, 30, 10, 20),
+                              width: 375,
+                              height: 160,
+                              decoration:
+                                  const BoxDecoration(color: Colors.white),
+                              child: Column(children: [
+                                Column(
+                                  children: [
+                                    const Text(
+                                      "수락완료 상태입니다.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            showDialog(
+                                                context: context,
+                                                barrierDismissible: true,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                      content: const Row(
+                                                        children: [
+                                                          Text(
+                                                            "취소 하시겠습니까?",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      insetPadding:
+                                                          const EdgeInsets
+                                                                  .fromLTRB(
+                                                              0, 80, 0, 80),
+                                                      actions: [
+                                                        TextButton(
+                                                          child:
+                                                              const Text("확인"),
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              widget.Situation =
+                                                                  "취소";
+                                                            });
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        )
+                                                      ]);
+                                                });
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(14),
+                                            width: 275,
+                                            height: 50,
+                                            decoration: const BoxDecoration(
+                                                color: Color(0xFFD9D9D9)),
+                                            child: const Text(
+                                              "취소하기",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ]),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            margin: const EdgeInsets.all(10),
-                            padding: const EdgeInsets.fromLTRB(10, 30, 10, 20),
-                            width: 375,
-                            height: 80,
-                            decoration:
-                                const BoxDecoration(color: Colors.white),
-                            child: const Column(children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    "운행중 입니다.",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              )
-                            ]),
+                                  ],
+                                )
+                              ]),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      )
+                    else if (widget.Situation == "운행중")
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              padding:
+                                  const EdgeInsets.fromLTRB(10, 30, 10, 20),
+                              width: 375,
+                              height: 80,
+                              decoration:
+                                  const BoxDecoration(color: Colors.white),
+                              child: const Column(children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      "운행중 입니다.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ]),
+                            ),
+                          ),
+                        ],
+                      )
+                    else if (widget.Situation == "취소")
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              padding:
+                                  const EdgeInsets.fromLTRB(10, 30, 10, 20),
+                              width: 375,
+                              height: 80,
+                              decoration:
+                                  const BoxDecoration(color: Colors.white),
+                              child: const Column(children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      "취소 되었습니다.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ]),
+                            ),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               )
