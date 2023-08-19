@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:classcar/module/car_data_state_controll.dart';
+import 'package:classcar/screens/login_screen.dart';
 import 'package:classcar/widgets/check_box_dialog.dart';
 import 'package:classcar/widgets/year_picker_dialog.dart';
 import 'package:daum_postcode_search/data_model.dart';
@@ -10,24 +12,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:dotted_border/dotted_border.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../Api/daum_post_screen_view.dart';
 
-class CarDataUpgrade extends StatefulWidget {
+class CarDataUpdate extends StatefulWidget {
   final String carName;
   final String documentID;
 
-  const CarDataUpgrade({
+  const CarDataUpdate({
     super.key,
     required this.carName,
     required this.documentID,
   });
 
   @override
-  State<CarDataUpgrade> createState() => _CarDataUpgradeState();
+  State<CarDataUpdate> createState() => _CarDataUpdate();
 }
 
-class _CarDataUpgradeState extends State<CarDataUpgrade> {
+class _CarDataUpdate extends State<CarDataUpdate> {
+  // 현재 페이지 텍스트 필드 관리 변수
   late TextEditingController carNameTF,
       carNumTF,
       carLocTF,
@@ -35,8 +40,24 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
       carSeatsTF,
       carMakerTF,
       carDescriptionTF;
+  // 현재 페이지 옵션 값 & 선택하는 값 관리 변수 모음
   final _carState = CarInfoStateControll.format();
+  //이미지 관련 변수 함수
+  final ImagePicker carPicker = ImagePicker();
+  Future<void> _PickImg() async {
+    final List<XFile> images = await carPicker.pickMultiImage();
+    if (images.length > 6) {
+      _carState.pickedImgs = images.sublist(0, 6);
+      // 토스트로 사용한 이미지 수를 표시해줘야함
+      showToast("6장의 이미지만 사용합니다.");
+    } else {
+      _carState.pickedImgs = images;
+    }
+    setState(() {});
+  }
 
+  late List<Widget> _imgBoxContents;
+  // 옵션 선택 Text
   Text optionTextBuild(Map<String, bool> options) {
     final buffer = StringBuffer();
     late String result;
@@ -54,6 +75,7 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
     );
   }
 
+  // 연도 선택 Dialog
   void selectYear(context) async {
     showDialog(
       context: context,
@@ -70,6 +92,7 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
     );
   }
 
+  // 드랍 다운 Dialog
   void selctCheckBox(context, String title, Map<String, bool> options) async {
     showDialog(
       context: context,
@@ -85,6 +108,8 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
     );
   }
 
+  // 차량 이미지 관련 함수
+  // 지도 관련 변수 & 함수
   DataModel? _dataModel;
   late GoogleMapController mapController;
 
@@ -128,6 +153,35 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
 
   @override
   Widget build(BuildContext context) {
+    _imgBoxContents = [
+      SizedBox(
+        width: 80,
+        height: 80,
+        child: IconButton(
+          onPressed: () {
+            _PickImg();
+          },
+          icon: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.6),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.camera_alt_outlined,
+              color: Colors.grey,
+              size: 40,
+            ),
+          ),
+        ),
+      ),
+      Container(),
+      Container(),
+      Container(),
+      Container(),
+      Container(),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -154,6 +208,60 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "차량 사진",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    GestureDetector(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: 250,
+                        child: GridView.count(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 5,
+                          crossAxisSpacing: 5,
+                          children: List.generate(
+                            6,
+                            (index) => DottedBorder(
+                              color: Colors.grey,
+                              dashPattern: const [6, 4],
+                              borderType: BorderType.RRect,
+                              radius: const Radius.circular(20),
+                              child: Container(
+                                decoration: index <=
+                                        _carState.pickedImgs.length - 1
+                                    ? BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: FileImage(
+                                            File(_carState
+                                                .pickedImgs[index].path),
+                                          ),
+                                        ),
+                                      )
+                                    : BoxDecoration(
+                                        color: const Color(0xFFE9F1FF),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                child: Center(child: _imgBoxContents[index]),
+                              ),
+                            ),
+                          ).toList(),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
               CarInfoInput(
                 maxLength: 20,
                 fractionationInfo: '차량기종',
@@ -353,7 +461,7 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                     optionSelectBox(
                       context: context,
                       title: '편의 옵션',
-                      options: _carState.carUsablityOption,
+                      options: _carState.carUsabilityOption,
                     ),
                   ],
                 ),
@@ -375,10 +483,10 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                         Flexible(
                           flex: 1,
                           child: TextFormFieldDecoration(
-                            maxLength: 5,
+                            maxLength: 250,
                             textfiledController: carDescriptionTF,
                             hintText: '기타입력값',
-                            size: 10,
+                            line: 10,
                           ),
                         ),
                       ],
@@ -391,12 +499,6 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
                 title: '차량 위치',
                 textfiledController: carLocTF,
               ),
-              TextButton(
-                onPressed: () {
-                  print(carNameTF.text);
-                },
-                child: const Text('test'),
-              )
             ],
           ),
         ),
@@ -404,10 +506,11 @@ class _CarDataUpgradeState extends State<CarDataUpgrade> {
     );
   }
 
-  GestureDetector optionSelectBox(
-      {required BuildContext context,
-      required String title,
-      required Map<String, bool> options}) {
+  GestureDetector optionSelectBox({
+    required BuildContext context,
+    required String title,
+    required Map<String, bool> options,
+  }) {
     return GestureDetector(
       onTap: () {
         selctCheckBox(context, title, options);
@@ -619,7 +722,7 @@ class TextFormFieldDecoration extends StatelessWidget {
   final String hintText;
   final int maxLength;
   //크기
-  final int? size;
+  final int? line;
   // 입력 제한 조건
   final String? regExp;
   const TextFormFieldDecoration({
@@ -628,7 +731,7 @@ class TextFormFieldDecoration extends StatelessWidget {
     required this.hintText,
     required this.maxLength,
     this.regExp,
-    this.size,
+    this.line,
   });
 
   @override
@@ -636,7 +739,7 @@ class TextFormFieldDecoration extends StatelessWidget {
     return TextFormField(
       controller: textfiledController,
       maxLength: maxLength,
-      maxLines: size,
+      maxLines: line,
       inputFormatters: [
         if (regExp != null) ...[
           FilteringTextInputFormatter(
