@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:classcar/screens/car_data_upgrade.dart';
+import 'package:classcar/screens/car_info_update.dart';
 import 'package:flutter/material.dart';
-import '../widgets/underbar_icon.dart';
 
 class CarDetailScreen extends StatefulWidget {
   final String carName;
@@ -208,7 +207,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                               },
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      CarDataUpgrade(
+                                      CarDataUpdate(
                                         carName: widget.carName,
                                         documentID: widget.documentID,
                                       )),
@@ -234,32 +233,6 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
               ),
             ),
           ],
-        ),
-      ),
-      bottomNavigationBar: const BottomAppBar(
-        color: Colors.amber,
-        child: SizedBox(
-          height: 80,
-          child: Row(
-            children: [
-              UnderBarIcon(
-                icon: Icons.home_rounded,
-                iconColor: Colors.grey,
-              ),
-              UnderBarIcon(
-                icon: Icons.directions_car_rounded,
-                iconColor: Colors.black,
-              ),
-              UnderBarIcon(
-                icon: Icons.description,
-                iconColor: Colors.grey,
-              ),
-              UnderBarIcon(
-                icon: Icons.person_rounded,
-                iconColor: Colors.grey,
-              ),
-            ],
-          ),
         ),
       ),
     );
