@@ -15,6 +15,7 @@ class UserInfoModel {
   late String backNum;
   late String telecom;
   late String? profileUrl;
+  late int? totalMoney;
 
   UserInfoModel.fromJson(String documentID, Map<String, dynamic> json)
       : docID = documentID,
@@ -32,5 +33,6 @@ class UserInfoModel {
         isCheckedAgreement = json['isCheckedAgreement'],
         isCheckedAgreement2 = json['isCheckedAgreement2'],
         isCheckedAgreementAD = json['isCheckedAgreementAD'],
-        profileUrl = json['profileUrl'];
+        profileUrl = json['profileUrl'],
+        totalMoney = json['totalMoney'];
 }
