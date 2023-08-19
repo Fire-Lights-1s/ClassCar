@@ -27,6 +27,14 @@ class UserInfoUpdate {
     return userinfo;
   }
 
+  static Future<String> getName(String documentID) async {
+    late UserInfoModel user;
+    await firestore.collection('userINFO').doc(documentID).get().then((event) {
+      user = UserInfoModel.fromJson(event.reference.id, event.data()!);
+    });
+    return user.name;
+  }
+
   static Future<int> addData(Map<String, dynamic> userInfo) async {
     bool check = false;
     await firestore
