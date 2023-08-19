@@ -514,7 +514,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final picker = ImagePicker();
-
+  String name = '...';
   XFile? image;
   // 카메라로 촬영한 이미지를 저장할 변수
   List<XFile?> multiImage = [];
@@ -559,10 +559,19 @@ class _ProfileState extends State<Profile> {
   _getPhotoLibraryImage() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref =
+        storage.ref("userProfile/").child('${widget.documentID}.jpg');
+
     if (pickedFile != null) {
       setState(() {
-        image = image;
+        image = pickedFile;
       });
+      await ref.putFile(File(image!.path));
+      var downloadUrl = await ref.getDownloadURL();
+      UserInfoUpdate.setUserImage(widget.documentID, downloadUrl);
+      print("이미지 url = $downloadUrl");
+      setState(() {});
     } else {
       if (kDebugMode) {
         print('이미지 선택안함');
@@ -570,9 +579,20 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  _getUserName() async {
+    name = await UserInfoUpdate.getName(widget.documentID);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _getUserName();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final imageSize = MediaQuery.of(context).size.width / 4;
     return Center(
       child: Column(
         children: [
@@ -648,9 +668,9 @@ class _ProfileState extends State<Profile> {
               )
             ],
           ),
-          const Text(
-            '홍길동',
-            style: TextStyle(
+          Text(
+            name,
+            style: const TextStyle(
               fontSize: 34,
               fontWeight: FontWeight.w500,
             ),
