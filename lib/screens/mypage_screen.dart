@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:classcar/Api/car_DB_connector.dart';
+import 'package:classcar/module/car_info_model.dart';
 import 'package:classcar/module/user_info_model.dart';
 import 'package:classcar/module/user_model.dart';
 import 'package:classcar/screens/login_screen.dart';
@@ -21,6 +23,20 @@ class MyPageScreen extends StatefulWidget {
 }
 
 class _MyPageScreenState extends State<MyPageScreen> {
+  late bool carState = false;
+  setCarInstances() async {
+    List<CarInfoModel> carInstances =
+        await CarDataConnector.getUuidCar(widget.documentID);
+    carState = carInstances[0].carState;
+    setState(() {});
+  }
+
+  @override
+  initState() {
+    setCarInstances();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,10 +203,10 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  child: const Row(
+                                  child: Row(
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(
+                                        padding: const EdgeInsets.only(
                                           left: 10,
                                           right: 10,
                                           top: 5,
@@ -200,20 +216,28 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
+                                            const Text(
                                               '차량확인',
                                               style: TextStyle(
                                                 fontSize: 24,
                                               ),
                                             ),
-                                            SizedBox(height: 20),
-                                            Text(
-                                              '미 운행중',
-                                              style: TextStyle(
-                                                color: Color(0xFF74B2F2),
-                                                fontSize: 20,
-                                              ),
-                                            ),
+                                            const SizedBox(height: 20),
+                                            carState
+                                                ? const Text(
+                                                    '미 운행중',
+                                                    style: TextStyle(
+                                                      color: Color(0xFF74B2F2),
+                                                      fontSize: 20,
+                                                    ),
+                                                  )
+                                                : const Text(
+                                                    '운행중',
+                                                    style: TextStyle(
+                                                      color: Color(0xFF74B2F2),
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
                                           ],
                                         ),
                                       ),
