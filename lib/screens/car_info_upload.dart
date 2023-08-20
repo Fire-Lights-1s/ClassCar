@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:classcar/Api/car_DB_connector.dart';
 import 'package:classcar/module/car_data_state_controll.dart';
 import 'package:classcar/screens/login_screen.dart';
 import 'package:classcar/widgets/check_box_dialog.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:dotted_border/dotted_border.dart';
@@ -46,9 +48,13 @@ class _CarDataUpload extends State<CarDataUpload> {
   // 현재 페이지 옵션 값 & 선택하는 값 관리 변수 모음
   final _carState = CarInfoStateControll.format();
   //이미지 관련 변수 함수
+  bool imgCheck = false;
   final ImagePicker carPicker = ImagePicker();
   Future<void> _PickImg() async {
     final List<XFile> images = await carPicker.pickMultiImage();
+    if (images.isNotEmpty) {
+      imgCheck = true;
+    }
     if (images.length > 6) {
       _carState.pickedImgs = images.sublist(0, 6);
       // 토스트로 사용한 이미지 수를 표시해줘야함
@@ -204,27 +210,91 @@ class _CarDataUpload extends State<CarDataUpload> {
             child: OutlinedButton(
               onPressed: () {
                 late Map<String, dynamic> carInfo = {};
-
+                bool check = false;
+                String showMessage = '';
+                // 각 필드의 유효성 확인 필요한 필드 확인
                 carInfo['uuid'] = widget.documentID;
                 carInfo['isExhibit'] = true;
-                carInfo['carGasMil'] = double.parse(carGasTF.text);
-                carInfo['carLocation'] =
-                    '${_dataModel!.address}/${carLocTF.text}';
-                carInfo['carModel'] = carNameTF.text;
-                carInfo['carNumber'] = carNumTF.text;
+                carInfo['carState'] = true;
+                if (carGasTF.text != '') {
+                  carInfo['carGasMil'] = double.parse(carGasTF.text);
+                  check = true;
+                } else {
+                  check = false;
+                  showMessage = "연비를 입력해주세요";
+                }
+                if (carSeatsTF.text != '') {
+                  carInfo['seats'] = double.parse(carSeatsTF.text);
+                } else if (check == true) {
+                  check = false;
+                  showMessage = "좌석을 입력해주세요";
+                }
+                if (_dataModel != null) {
+                  carInfo['carLocation'] =
+                      '${_dataModel!.address}/${carLocTF.text}';
+                } else if (check == true) {
+                  check = false;
+                  showMessage = "주소를 입력해주세요";
+                }
+                if (carNameTF.text != '') {
+                  carInfo['carModel'] = carNameTF.text;
+                } else if (check == true) {
+                  check = false;
+                  showMessage = "모델을 입력해주세요";
+                }
+                if (carNumTF.text != '') {
+                  carInfo['carNumber'] = carNumTF.text;
+                } else if (check == true) {
+                  check = false;
+                  showMessage = "차량 번호를 입력해주세요";
+                }
+                if (carMakerTF.text != '') {
+                  carInfo['maker'] = carMakerTF.text;
+                } else if (check == true) {
+                  check = false;
+                  showMessage = "제조사를 입력해주세요";
+                }
+                if (cancelPolicyDateTF.text != '') {
+                  carInfo['cancelPolicyDate'] = cancelPolicyDateTF.text;
+                } else if (check == true) {
+                  check = false;
+                  showMessage = "환불 기간을 입력해주세요";
+                }
+                if (cancelPolicyPercentTF.text != '') {
+                  carInfo['cancelPolicyPercent'] = cancelPolicyPercentTF.text;
+                } else if (check == true) {
+                  check = false;
+                  showMessage = "환불 비율을 입력해주세요";
+                }
+
+                if (sharingPriceTF.text != '') {
+                  carInfo['sharingPrice'] = int.parse(sharingPriceTF.text);
+                } else if (check == true) {
+                  check = false;
+                  showMessage = "대여 비용을 입력해주세요";
+                }
+
                 carInfo['carType'] = _carState.selctCarTpye;
                 carInfo['oilType'] = _carState.selctGas;
                 carInfo['years'] = _carState.selectedDate.year.toString();
-                carInfo['createdAt'] = DateTime.now().millisecondsSinceEpoch;
-                carInfo['cancelPolicyDate'] = cancelPolicyDateTF;
-                carInfo['cancelPolicyPercent'] = cancelPolicyPercentTF;
+                carInfo['createdAt'] = DateTime.now();
                 carInfo['score'] = 0;
                 carInfo['sharedCount'] = 0;
-                carInfo['sharingPrice'] = sharingPriceTF;
-                carInfo['description'] = carDescriptionTF;
+                carInfo['description'] = carDescriptionTF.text;
+
                 carInfo['insideOption'] = _carState.carInsideOption;
                 carInfo['safeOption'] = _carState.carSafeOption;
                 carInfo['usabilityOption'] = _carState.carUsabilityOption;
+                // 필요 입력사항 표시
+                if (imgCheck == false) {
+                  Fluttertoast.showToast(msg: '이미지를 1장 이상 넣어주세요.');
+                } else if (check == false) {
+                  Fluttertoast.showToast(msg: showMessage);
+                }
+                // 데이터 등록
+                if (check == true && imgCheck == true) {
+                  CarDataConnector.createData(carInfo, _carState.pickedImgs);
+                }
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.amber),
@@ -584,6 +654,7 @@ class _CarDataUpload extends State<CarDataUpload> {
                             maxLength: 10,
                             textfiledController: sharingPriceTF,
                             hintText: '대여 비용을 입력해주세요.',
+                            regExp: '[0-9]',
                           ),
                         ),
                       ],
@@ -873,7 +944,7 @@ class TextFormFieldDecoration extends StatelessWidget {
           ),
         ] else ...[
           FilteringTextInputFormatter(
-            RegExp('[a-z A-Z ㄱ-ㅎ|가-힣|·|：|/|+|-|*|~|!|@|#|%|^|&|(|)|_|<|>]'),
+            RegExp('[a-z A-Z ㄱ-ㅎ|가-힣|0-9|·|：|/|+|-|*|~|!|@|#|%|^|&|(|)|_|<|>]'),
             allow: true,
           ),
         ]

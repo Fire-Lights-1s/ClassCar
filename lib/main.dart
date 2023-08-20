@@ -1,4 +1,4 @@
-import 'package:classcar/screens/car_info_upload.dart';
+import 'package:classcar/screens/start_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -32,7 +32,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: CarDataUpload(carName: '소나타', documentID: 'asdasd'),
+      home: StartScreen(),
     );
   }
 }

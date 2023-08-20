@@ -8,7 +8,7 @@ class CarInfoModel {
   // 차량의 공개 여부 설정
   late bool isExhibit;
   // 차량의 사용 중인지 표시하는 필드
-  late bool carUsing;
+  late bool carState;
   // 차량 연비
   late double carGasMil;
   // 차량 주소 / 상세 주소 형태로 저장
@@ -46,6 +46,7 @@ class CarInfoModel {
       : docID = documentID,
         uuid = json['uuid'],
         isExhibit = json['isExhibit'],
+        carState = json['carState'],
         carGasMil = json['carGasMil'],
         carLocation = json['carLocation'],
         carModel = json['carModel'],
