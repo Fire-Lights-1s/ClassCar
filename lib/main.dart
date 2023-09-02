@@ -1,5 +1,4 @@
 import 'package:classcar/screens/start_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
@@ -16,14 +15,6 @@ void firebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  final firestore = FirebaseFirestore.instance;
-  print('firebase 가져오기 시작');
-  await firestore.collection('userINFO').get().then((event) {
-    for (var doc in event.docs) {
-      print("결과확인 = ${doc.data()['userId']};");
-    }
-  });
 }
 
 class MainApp extends StatelessWidget {
