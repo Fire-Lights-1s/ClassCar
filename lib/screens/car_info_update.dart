@@ -142,8 +142,24 @@ class _CarDataUpdate extends State<CarDataUpdate> {
     return location;
   }
 
-  void _onMapCreated(GoogleMapController controller) {
+  void _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
+    var loc = await loadLoc(carLocation[0]);
+    lat = loc!['lat'];
+    lng = loc['lng'];
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(lat, lng),
+        zoom: 14.0,
+      ),
+    ));
+    mark.add(Marker(
+      markerId: const MarkerId("1"),
+      draggable: true,
+      position: LatLng(lat, lng),
+    ));
+    setState(() {});
   }
 
   @override
@@ -728,9 +744,8 @@ class _CarDataUpdate extends State<CarDataUpdate> {
                 return const LibraryDaumPostcodeScreen();
               })).then((value) async {
                 if (value != null) {
-                  setState(() {
-                    _dataModel = value;
-                  });
+                  _dataModel = await value;
+                  setState(() {});
                   //주소로 위도,경도를 얻는 Geocode API
                   var loc = await loadLoc(_dataModel!.address);
                   lat = loc!['lat'];
@@ -811,25 +826,22 @@ class _CarDataUpdate extends State<CarDataUpdate> {
           const SizedBox(
             height: 10,
           ),
-          Visibility(
-            visible: _dataModel != null,
-            child: SizedBox(
-              height: 300,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                child: GoogleMap(
-                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-                    Factory<OneSequenceGestureRecognizer>(
-                      () => EagerGestureRecognizer(),
-                    ),
-                  },
-                  zoomGesturesEnabled: true,
-                  onMapCreated: _onMapCreated,
-                  markers: Set.from(mark),
-                  initialCameraPosition: CameraPosition(
-                    target: _center,
-                    zoom: 15.0,
+          SizedBox(
+            height: 300,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              child: GoogleMap(
+                gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                  Factory<OneSequenceGestureRecognizer>(
+                    () => EagerGestureRecognizer(),
                   ),
+                },
+                zoomGesturesEnabled: true,
+                onMapCreated: _onMapCreated,
+                markers: Set.from(mark),
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 15.0,
                 ),
               ),
             ),
