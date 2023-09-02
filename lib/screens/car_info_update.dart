@@ -728,13 +728,12 @@ class _CarDataUpdate extends State<CarDataUpdate> {
                 return const LibraryDaumPostcodeScreen();
               })).then((value) async {
                 if (value != null) {
-                  setState(() {
-                    _dataModel = value;
-                  });
+                  _dataModel = value;
                   //주소로 위도,경도를 얻는 Geocode API
                   var loc = await loadLoc(_dataModel!.address);
                   lat = loc!['lat'];
                   lng = loc['lng'];
+                  setState(() {});
                   // 카메라 이동
                   mapController.animateCamera(CameraUpdate.newCameraPosition(
                     CameraPosition(
