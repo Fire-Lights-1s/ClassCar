@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:classcar/Api/car_DB_connector.dart';
 import 'package:classcar/module/car_data_state_controll.dart';
+import 'package:classcar/module/car_info_model.dart';
 import 'package:classcar/screens/login_screen.dart';
 import 'package:classcar/widgets/check_box_dialog.dart';
 import 'package:classcar/widgets/year_picker_dialog.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:dotted_border/dotted_border.dart';
@@ -18,13 +21,13 @@ import 'package:image_picker/image_picker.dart';
 import '../Api/daum_post_screen_view.dart';
 
 class CarDataUpdate extends StatefulWidget {
-  final String carName;
   final String documentID;
+  final CarInfoModel carModel;
 
   const CarDataUpdate({
     super.key,
-    required this.carName,
     required this.documentID,
+    required this.carModel,
   });
 
   @override
@@ -36,16 +39,23 @@ class _CarDataUpdate extends State<CarDataUpdate> {
   late TextEditingController carNameTF,
       carNumTF,
       carLocTF,
-      carCasTF,
+      carGasTF,
       carSeatsTF,
       carMakerTF,
       carDescriptionTF;
   // 현재 페이지 옵션 값 & 선택하는 값 관리 변수 모음
   final _carState = CarInfoStateControll.format();
+  late List<String> carLocation = widget.carModel.carLocation.split('/');
+  late List<dynamic> carImgURL = widget.carModel.carImgURL!;
   //이미지 관련 변수 함수
+  bool imgCheck = false;
   final ImagePicker carPicker = ImagePicker();
+
   Future<void> _PickImg() async {
     final List<XFile> images = await carPicker.pickMultiImage();
+    if (images.isNotEmpty) {
+      imgCheck = true;
+    }
     if (images.length > 6) {
       _carState.pickedImgs = images.sublist(0, 6);
       // 토스트로 사용한 이미지 수를 표시해줘야함
@@ -58,7 +68,7 @@ class _CarDataUpdate extends State<CarDataUpdate> {
 
   late List<Widget> _imgBoxContents;
   // 옵션 선택 Text
-  Text optionTextBuild(Map<String, bool> options) {
+  Text optionTextBuild(Map<String, dynamic> options) {
     final buffer = StringBuffer();
     late String result;
     for (var option in options.keys.toList()) {
@@ -92,8 +102,9 @@ class _CarDataUpdate extends State<CarDataUpdate> {
     );
   }
 
-  // 드랍 다운 Dialog
-  void selctCheckBox(context, String title, Map<String, bool> options) async {
+  // 옵션 선택 Dialog
+  void selctCheckBox(
+      context, String title, Map<String, dynamic> options) async {
     showDialog(
       context: context,
       builder: (context) {
@@ -112,6 +123,11 @@ class _CarDataUpdate extends State<CarDataUpdate> {
   // 지도 관련 변수 & 함수
   DataModel? _dataModel;
   late GoogleMapController mapController;
+  var lat = 37.4267861;
+  var lng = -122.0806032;
+  List<Marker> mark = [];
+
+  late final LatLng _center = LatLng(lat, lng);
 
   Future<Map<String, dynamic>?> loadLoc(String addrees) async {
     const String GMaps = 'AIzaSyDCx0q_CxVUpZ2Bq_JjlHAPNW2P1AoyRfM';
@@ -126,12 +142,6 @@ class _CarDataUpdate extends State<CarDataUpdate> {
     return location;
   }
 
-  var lat = 37.4267861;
-  var lng = -122.0806032;
-  List<Marker> mark = [];
-
-  late final LatLng _center = LatLng(lat, lng);
-
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
@@ -140,15 +150,20 @@ class _CarDataUpdate extends State<CarDataUpdate> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    carNameTF = TextEditingController(text: "${widget.carName} 기종 값");
-    carNumTF = TextEditingController(text: "번호 값");
-    carLocTF = TextEditingController(text: "차량 위치 값");
-    carCasTF = TextEditingController(text: '연비 값');
-    carSeatsTF = TextEditingController(text: '승차인원 값');
-    carMakerTF = TextEditingController(text: '제조사 현대');
-    carDescriptionTF = TextEditingController(text: ''''기타사항
-     기타사항
-     기타사항''');
+    _carState.selctGas = widget.carModel.oilType;
+    _carState.selctCarTpye = widget.carModel.carType;
+    _carState.selectedDate = DateTime.utc(int.parse(widget.carModel.years));
+    _carState.carInsideOption = widget.carModel.insideOption;
+    _carState.carSafeOption = widget.carModel.safeOption;
+    _carState.carUsabilityOption = widget.carModel.usabilityOption;
+    carNameTF = TextEditingController(text: widget.carModel.carModel);
+    carNumTF = TextEditingController(text: widget.carModel.carNumber);
+    carGasTF =
+        TextEditingController(text: widget.carModel.carGasMil.toString());
+    carSeatsTF = TextEditingController(text: widget.carModel.seats.toString());
+    carMakerTF = TextEditingController(text: widget.carModel.maker);
+    carDescriptionTF = TextEditingController(text: widget.carModel.description);
+    carLocTF = TextEditingController(text: carLocation[1]);
   }
 
   @override
@@ -195,6 +210,92 @@ class _CarDataUpdate extends State<CarDataUpdate> {
             fontWeight: FontWeight.w600,
           ),
         ),
+        actions: [
+          Container(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: OutlinedButton(
+                onPressed: () async {
+                  bool check = false;
+                  String showMessage = '';
+                  if (carNameTF.text != '') {
+                    widget.carModel.carModel = carNameTF.text;
+                    check = true;
+                  } else {
+                    check = false;
+                    showMessage = "차량 기종을 입력해주세요";
+                  }
+                  if (carNumTF.text != '') {
+                    widget.carModel.carNumber = carNumTF.text;
+                  } else if (check == true) {
+                    check = false;
+                    showMessage = "차량 번호를 입력해주세요";
+                  }
+                  if (carGasTF.text != '') {
+                    widget.carModel.carGasMil = double.parse(carGasTF.text);
+                  } else {
+                    check = false;
+                    showMessage = "연비를 입력해주세요";
+                  }
+                  if (carSeatsTF.text != '') {
+                    widget.carModel.seats = int.parse(carSeatsTF.text);
+                  } else if (check == true) {
+                    check = false;
+                    showMessage = "좌석을 입력해주세요";
+                  }
+                  if (carMakerTF.text != '') {
+                    widget.carModel.maker = carMakerTF.text;
+                  } else if (check == true) {
+                    check = false;
+                    showMessage = "제조사를 입력해주세요";
+                  }
+                  if (_dataModel != null) {
+                    widget.carModel.carLocation =
+                        '${_dataModel!.address}/${carLocTF.text}';
+                  }
+                  if (check == true) {
+                    widget.carModel.oilType = _carState.selctGas;
+                    widget.carModel.carType = _carState.selctCarTpye;
+                    widget.carModel.years =
+                        _carState.selectedDate.year.toString();
+                    widget.carModel.insideOption = _carState.carInsideOption;
+                    widget.carModel.safeOption = _carState.carSafeOption;
+                    widget.carModel.usabilityOption =
+                        _carState.carUsabilityOption;
+                    widget.carModel.description = carDescriptionTF.text;
+                  }
+                  // 필요 입력사항 표시
+                  if (imgCheck == false && widget.carModel.carImgURL!.isEmpty) {
+                    Fluttertoast.showToast(msg: '이미지를 1장 이상 넣어주세요.');
+                  } else if (check == false) {
+                    Fluttertoast.showToast(msg: showMessage);
+                  }
+                  if (check == true) {
+                    int updateResult = await CarDataConnector.updateData(
+                        widget.carModel, _carState.pickedImgs);
+                    if (updateResult == 0) {
+                      Navigator.pop(context);
+                    } else {
+                      Fluttertoast.showToast(msg: '다시 수정 버튼을 눌러주세요');
+                    }
+                  }
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.amber),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
+                child: const Text(
+                  "수정",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+              ))
+        ],
         centerTitle: true,
       ),
       body: GestureDetector(
@@ -251,7 +352,15 @@ class _CarDataUpdate extends State<CarDataUpdate> {
                                     : BoxDecoration(
                                         color: const Color(0xFFE9F1FF),
                                         borderRadius: BorderRadius.circular(20),
-                                      ),
+                                        image: _carState.pickedImgs.isEmpty &&
+                                                index <= carImgURL.length - 1
+                                            ? DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                  carImgURL[index],
+                                                ),
+                                              )
+                                            : null),
                                 child: Center(child: _imgBoxContents[index]),
                               ),
                             ),
@@ -269,7 +378,7 @@ class _CarDataUpdate extends State<CarDataUpdate> {
                 textControll: carNameTF,
               ),
               CarInfoInput(
-                maxLength: 10,
+                maxLength: 15,
                 fractionationInfo: '차량 번호',
                 hintText: '차량 번호',
                 textControll: carNumTF,
@@ -308,7 +417,7 @@ class _CarDataUpdate extends State<CarDataUpdate> {
                           flex: 2,
                           child: TextFormFieldDecoration(
                             maxLength: 5,
-                            textfiledController: carCasTF,
+                            textfiledController: carGasTF,
                             hintText: '연비를 입력해주세요',
                             regExp: '[0-9|.]',
                           ),
@@ -509,7 +618,7 @@ class _CarDataUpdate extends State<CarDataUpdate> {
   GestureDetector optionSelectBox({
     required BuildContext context,
     required String title,
-    required Map<String, bool> options,
+    required Map<String, dynamic> options,
   }) {
     return GestureDetector(
       onTap: () {
@@ -619,7 +728,9 @@ class _CarDataUpdate extends State<CarDataUpdate> {
                 return const LibraryDaumPostcodeScreen();
               })).then((value) async {
                 if (value != null) {
-                  _dataModel = value;
+                  setState(() {
+                    _dataModel = value;
+                  });
                   //주소로 위도,경도를 얻는 Geocode API
                   var loc = await loadLoc(_dataModel!.address);
                   lat = loc!['lat'];
@@ -653,19 +764,29 @@ class _CarDataUpdate extends State<CarDataUpdate> {
                 child: Center(
                   child: Row(
                     children: [
-                      if (_dataModel != null) ...[
-                        Expanded(
-                          flex: 4,
-                          child: Text(
-                            _dataModel!.address,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              overflow: TextOverflow.ellipsis,
+                      _dataModel != null
+                          ? Expanded(
+                              flex: 4,
+                              child: Text(
+                                _dataModel!.address,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            )
+                          : Expanded(
+                              flex: 4,
+                              child: Text(
+                                carLocation[0],
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                             ),
-                          ),
-                        )
-                      ],
                       const Expanded(
                         flex: 1,
                         child: Align(
@@ -690,22 +811,25 @@ class _CarDataUpdate extends State<CarDataUpdate> {
           const SizedBox(
             height: 10,
           ),
-          SizedBox(
-            height: 300,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-              child: GoogleMap(
-                gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-                  Factory<OneSequenceGestureRecognizer>(
-                    () => EagerGestureRecognizer(),
+          Visibility(
+            visible: _dataModel != null,
+            child: SizedBox(
+              height: 300,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                child: GoogleMap(
+                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                    Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer(),
+                    ),
+                  },
+                  zoomGesturesEnabled: true,
+                  onMapCreated: _onMapCreated,
+                  markers: Set.from(mark),
+                  initialCameraPosition: CameraPosition(
+                    target: _center,
+                    zoom: 15.0,
                   ),
-                },
-                zoomGesturesEnabled: true,
-                onMapCreated: _onMapCreated,
-                markers: Set.from(mark),
-                initialCameraPosition: CameraPosition(
-                  target: _center,
-                  zoom: 15.0,
                 ),
               ),
             ),
@@ -748,7 +872,7 @@ class TextFormFieldDecoration extends StatelessWidget {
           ),
         ] else ...[
           FilteringTextInputFormatter(
-            RegExp('[a-z A-Z ㄱ-ㅎ|가-힣|·|：|/|+|-|*|~|!|@|#|%|^|&|(|)|_|<|>]'),
+            RegExp('[a-z A-Z ㄱ-ㅎ|가-힣|.|·|：|/|+|-|*|~|!|@|#|%|^|&|(|)|_|<|>]'),
             allow: true,
           ),
         ]

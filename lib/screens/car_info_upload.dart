@@ -20,12 +20,10 @@ import 'package:image_picker/image_picker.dart';
 import '../Api/daum_post_screen_view.dart';
 
 class CarDataUpload extends StatefulWidget {
-  final String carName;
   final String documentID;
 
   const CarDataUpload({
     super.key,
-    required this.carName,
     required this.documentID,
   });
 
@@ -67,7 +65,7 @@ class _CarDataUpload extends State<CarDataUpload> {
 
   late List<Widget> _imgBoxContents;
   // 옵션 선택 Text
-  Text optionTextBuild(Map<String, bool> options) {
+  Text optionTextBuild(Map<String, dynamic> options) {
     final buffer = StringBuffer();
     late String result;
     for (var option in options.keys.toList()) {
@@ -101,8 +99,9 @@ class _CarDataUpload extends State<CarDataUpload> {
     );
   }
 
-  // 드랍 다운 Dialog
-  void selctCheckBox(context, String title, Map<String, bool> options) async {
+  // 옵션 선택 Dialog
+  void selctCheckBox(
+      context, String title, Map<String, dynamic> options) async {
     showDialog(
       context: context,
       builder: (context) {
@@ -208,45 +207,36 @@ class _CarDataUpload extends State<CarDataUpload> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: OutlinedButton(
-              onPressed: () {
+              onPressed: () async {
                 late Map<String, dynamic> carInfo = {};
                 bool check = false;
                 String showMessage = '';
                 // 각 필드의 유효성 확인 필요한 필드 확인
-                carInfo['uuid'] = widget.documentID;
-                carInfo['isExhibit'] = true;
-                carInfo['carState'] = true;
-                if (carGasTF.text != '') {
-                  carInfo['carGasMil'] = double.parse(carGasTF.text);
-                  check = true;
-                } else {
-                  check = false;
-                  showMessage = "연비를 입력해주세요";
-                }
-                if (carSeatsTF.text != '') {
-                  carInfo['seats'] = double.parse(carSeatsTF.text);
-                } else if (check == true) {
-                  check = false;
-                  showMessage = "좌석을 입력해주세요";
-                }
-                if (_dataModel != null) {
-                  carInfo['carLocation'] =
-                      '${_dataModel!.address}/${carLocTF.text}';
-                } else if (check == true) {
-                  check = false;
-                  showMessage = "주소를 입력해주세요";
-                }
+
                 if (carNameTF.text != '') {
                   carInfo['carModel'] = carNameTF.text;
+                  check = true;
                 } else if (check == true) {
                   check = false;
-                  showMessage = "모델을 입력해주세요";
+                  showMessage = "차량 기종을 입력해주세요";
                 }
                 if (carNumTF.text != '') {
                   carInfo['carNumber'] = carNumTF.text;
                 } else if (check == true) {
                   check = false;
                   showMessage = "차량 번호를 입력해주세요";
+                }
+                if (carGasTF.text != '') {
+                  carInfo['carGasMil'] = double.parse(carGasTF.text);
+                } else {
+                  check = false;
+                  showMessage = "연비를 입력해주세요";
+                }
+                if (carSeatsTF.text != '') {
+                  carInfo['seats'] = int.parse(carSeatsTF.text);
+                } else if (check == true) {
+                  check = false;
+                  showMessage = "좌석을 입력해주세요";
                 }
                 if (carMakerTF.text != '') {
                   carInfo['maker'] = carMakerTF.text;
@@ -273,18 +263,29 @@ class _CarDataUpload extends State<CarDataUpload> {
                   check = false;
                   showMessage = "대여 비용을 입력해주세요";
                 }
+                if (_dataModel != null) {
+                  carInfo['carLocation'] =
+                      '${_dataModel!.address}/${carLocTF.text}';
+                } else if (check == true) {
+                  check = false;
+                  showMessage = "주소를 입력해주세요";
+                }
+                if (check == true) {
+                  carInfo['uuid'] = widget.documentID;
+                  carInfo['isExhibit'] = true;
+                  carInfo['carState'] = true;
+                  carInfo['carType'] = _carState.selctCarTpye;
+                  carInfo['oilType'] = _carState.selctGas;
+                  carInfo['years'] = _carState.selectedDate.year.toString();
+                  carInfo['createdAt'] = DateTime.now();
+                  carInfo['score'] = 0;
+                  carInfo['sharedCount'] = 0;
+                  carInfo['description'] = carDescriptionTF.text;
 
-                carInfo['carType'] = _carState.selctCarTpye;
-                carInfo['oilType'] = _carState.selctGas;
-                carInfo['years'] = _carState.selectedDate.year.toString();
-                carInfo['createdAt'] = DateTime.now();
-                carInfo['score'] = 0;
-                carInfo['sharedCount'] = 0;
-                carInfo['description'] = carDescriptionTF.text;
-
-                carInfo['insideOption'] = _carState.carInsideOption;
-                carInfo['safeOption'] = _carState.carSafeOption;
-                carInfo['usabilityOption'] = _carState.carUsabilityOption;
+                  carInfo['insideOption'] = _carState.carInsideOption;
+                  carInfo['safeOption'] = _carState.carSafeOption;
+                  carInfo['usabilityOption'] = _carState.carUsabilityOption;
+                }
                 // 필요 입력사항 표시
                 if (imgCheck == false) {
                   Fluttertoast.showToast(msg: '이미지를 1장 이상 넣어주세요.');
@@ -293,7 +294,13 @@ class _CarDataUpload extends State<CarDataUpload> {
                 }
                 // 데이터 등록
                 if (check == true && imgCheck == true) {
-                  CarDataConnector.createData(carInfo, _carState.pickedImgs);
+                  int createResult = await CarDataConnector.createData(
+                      carInfo, _carState.pickedImgs);
+                  if (createResult == 0) {
+                    Navigator.pop(context);
+                  } else {
+                    Fluttertoast.showToast(msg: '다시 등록 버튼을 눌러주세요');
+                  }
                 }
               },
               style: ButtonStyle(
@@ -388,7 +395,7 @@ class _CarDataUpload extends State<CarDataUpload> {
                 textControll: carNameTF,
               ),
               CarInfoInput(
-                maxLength: 10,
+                maxLength: 15,
                 fractionationInfo: '차량 번호',
                 hintText: '차량 번호',
                 textControll: carNumTF,
@@ -695,6 +702,9 @@ class _CarDataUpload extends State<CarDataUpload> {
                 title: '차량 위치',
                 textfiledController: carLocTF,
               ),
+              const SizedBox(
+                height: 20,
+              )
             ],
           ),
         ),
@@ -705,7 +715,7 @@ class _CarDataUpload extends State<CarDataUpload> {
   GestureDetector optionSelectBox({
     required BuildContext context,
     required String title,
-    required Map<String, bool> options,
+    required Map<String, dynamic> options,
   }) {
     return GestureDetector(
       onTap: () {
@@ -815,7 +825,8 @@ class _CarDataUpload extends State<CarDataUpload> {
                 return const LibraryDaumPostcodeScreen();
               })).then((value) async {
                 if (value != null) {
-                  _dataModel = value;
+                  _dataModel = await value;
+                  setState(() {});
                   //주소로 위도,경도를 얻는 Geocode API
                   var loc = await loadLoc(_dataModel!.address);
                   lat = loc!['lat'];
@@ -886,22 +897,25 @@ class _CarDataUpload extends State<CarDataUpload> {
           const SizedBox(
             height: 10,
           ),
-          SizedBox(
-            height: 300,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-              child: GoogleMap(
-                gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-                  Factory<OneSequenceGestureRecognizer>(
-                    () => EagerGestureRecognizer(),
+          Visibility(
+            visible: _dataModel != null,
+            child: SizedBox(
+              height: 300,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                child: GoogleMap(
+                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                    Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer(),
+                    ),
+                  },
+                  zoomGesturesEnabled: true,
+                  onMapCreated: _onMapCreated,
+                  markers: Set.from(mark),
+                  initialCameraPosition: CameraPosition(
+                    target: _center,
+                    zoom: 15.0,
                   ),
-                },
-                zoomGesturesEnabled: true,
-                onMapCreated: _onMapCreated,
-                markers: Set.from(mark),
-                initialCameraPosition: CameraPosition(
-                  target: _center,
-                  zoom: 15.0,
                 ),
               ),
             ),
@@ -944,7 +958,8 @@ class TextFormFieldDecoration extends StatelessWidget {
           ),
         ] else ...[
           FilteringTextInputFormatter(
-            RegExp('[a-z A-Z ㄱ-ㅎ|가-힣|0-9|·|：|/|+|-|*|~|!|@|#|%|^|&|(|)|_|<|>]'),
+            RegExp(
+                '[a-z A-Z ㄱ-ㅎ|가-힣|0-9|.|·|：|/|+|-|*|~|!|@|#|%|^|&|(|)|_|<|>]'),
             allow: true,
           ),
         ]

@@ -1,20 +1,23 @@
+import 'package:classcar/module/car_info_model.dart';
+
 import '../screens/car_item_screen.dart';
 import 'package:flutter/material.dart';
 
-class CarListItem extends StatelessWidget {
-  final String carName;
-  final int shareCount;
-  final bool park;
+class CarListItem extends StatefulWidget {
   final String documentID;
+  final CarInfoModel carModel;
 
   const CarListItem({
     super.key,
-    required this.carName,
-    required this.shareCount,
-    required this.park,
     required this.documentID,
+    required this.carModel,
   });
 
+  @override
+  State<CarListItem> createState() => _CarListItemState();
+}
+
+class _CarListItemState extends State<CarListItem> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -36,8 +39,8 @@ class CarListItem extends StatelessWidget {
             },
             pageBuilder: (context, animation, secondaryAnimation) =>
                 CarDetailScreen(
-              carName: carName,
-              documentID: documentID,
+              carModel: widget.carModel,
+              documentID: widget.documentID,
             ),
           ),
         );
@@ -57,7 +60,7 @@ class CarListItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              carName,
+              widget.carModel.carModel,
               style: const TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w600,
@@ -66,7 +69,12 @@ class CarListItem extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  decoration: const BoxDecoration(color: Colors.blue),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE9F1FF),
+                    image: DecorationImage(
+                      image: NetworkImage(widget.carModel.carImgURL![0]),
+                    ),
+                  ),
                   height: 150,
                   width: 150,
                 ),
@@ -88,7 +96,7 @@ class CarListItem extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "$shareCount 회",
+                            "${widget.carModel.sharedCount} 회",
                             style: const TextStyle(
                               fontSize: 40,
                               fontWeight: FontWeight.w600,
@@ -101,7 +109,7 @@ class CarListItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            park ? "주차 중" : "주행 중",
+                            widget.carModel.carState ? "주차 중" : "주행 중",
                             style: const TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w600,
@@ -110,7 +118,9 @@ class CarListItem extends StatelessWidget {
                           Icon(
                             Icons.directions_car_rounded,
                             size: 50,
-                            color: park ? Colors.green : Colors.red,
+                            color: widget.carModel.carState
+                                ? Colors.green
+                                : Colors.red,
                           ),
                         ],
                       ),

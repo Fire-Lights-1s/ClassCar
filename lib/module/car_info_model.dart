@@ -41,6 +41,8 @@ class CarInfoModel {
   late Map<String, dynamic> insideOption;
   late Map<String, dynamic> safeOption;
   late Map<String, dynamic> usabilityOption;
+  // 차량 이미지
+  late List<dynamic>? carImgURL;
 
   CarInfoModel.fromJson(String documentID, Map<String, dynamic> json)
       : docID = documentID,
@@ -63,7 +65,27 @@ class CarInfoModel {
         sharedCount = json['sharedCount'],
         sharingPrice = json['sharingPrice'],
         description = json['description'],
-        safeOption = json['safeOption'],
         insideOption = json['insideOption'],
-        usabilityOption = json['usabilityOption'];
+        safeOption = json['safeOption'],
+        usabilityOption = json['usabilityOption'],
+        carImgURL = json['carImgURL'];
+
+  getUpdateMap() {
+    return {
+      'carModel': carModel,
+      'carNumber': carNumber,
+      'oilType': oilType,
+      'carGasMil': carGasMil,
+      'carType': carType,
+      'seats': seats,
+      'years': years,
+      'maker': maker,
+      'insideOption': insideOption,
+      'safeOption': safeOption,
+      'usabilityOption': usabilityOption,
+      'description': description,
+      'carLocation': carLocation,
+      'carImgURL': carImgURL
+    };
+  }
 }

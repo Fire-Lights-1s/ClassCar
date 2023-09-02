@@ -6,9 +6,9 @@ class CarInfoStateControll {
   String selctCarTpye;
   List<String> carTpye;
   late DateTime selectedDate;
-  Map<String, bool> carInsideOption;
-  Map<String, bool> carSafeOption;
-  Map<String, bool> carUsabilityOption;
+  Map<String, dynamic> carInsideOption;
+  Map<String, dynamic> carSafeOption;
+  Map<String, dynamic> carUsabilityOption;
   //이미지 저장 위치
   List<XFile> pickedImgs = [];
 
