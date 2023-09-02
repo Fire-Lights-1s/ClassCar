@@ -70,11 +70,13 @@ class _CarListItemState extends State<CarListItem> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE9F1FF),
-                    image: DecorationImage(
-                      image: NetworkImage(widget.carModel.carImgURL![0]),
-                    ),
-                  ),
+                      color: const Color(0xFFE9F1FF),
+                      image: widget.carModel.carImgURL != null
+                          ? DecorationImage(
+                              image:
+                                  NetworkImage(widget.carModel.carImgURL![0]),
+                            )
+                          : null),
                   height: 150,
                   width: 150,
                 ),
