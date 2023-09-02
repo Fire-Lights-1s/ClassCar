@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CheckBoxDialog extends StatefulWidget {
   final String title;
-  late Map<String, bool> options;
+  late Map<String, dynamic> options;
   Function onChanged;
 
   CheckBoxDialog({

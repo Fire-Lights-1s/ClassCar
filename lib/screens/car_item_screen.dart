@@ -1,15 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:classcar/Api/car_DB_connector.dart';
+import 'package:classcar/module/car_info_model.dart';
 import 'package:classcar/screens/car_info_update.dart';
+import 'package:classcar/widgets/car_item_delete.dart';
 import 'package:flutter/material.dart';
 
 class CarDetailScreen extends StatefulWidget {
-  final String carName;
   final String documentID;
+  final CarInfoModel carModel;
 
   const CarDetailScreen({
     super.key,
-    required this.carName,
     required this.documentID,
+    required this.carModel,
   });
 
   @override
@@ -18,40 +21,9 @@ class CarDetailScreen extends StatefulWidget {
 
 class _CarDetailScreenState extends State<CarDetailScreen> {
   int _currentImgIdx = 0;
-  var optionText = ['옵션 텍스트', '옵션 텍스트', '옵션 텍스트'];
   final CarouselController _controller = CarouselController();
-  List<Widget> conList = [
-    Container(
-      decoration: const BoxDecoration(
-        color: Colors.amber,
-      ),
-    ),
-    Container(
-      decoration: const BoxDecoration(
-        color: Colors.blue,
-      ),
-    ),
-    Container(
-      decoration: const BoxDecoration(
-        color: Colors.amber,
-      ),
-    ),
-    Container(
-      decoration: const BoxDecoration(
-        color: Colors.blue,
-      ),
-    ),
-    Container(
-      decoration: const BoxDecoration(
-        color: Colors.amber,
-      ),
-    ),
-    Container(
-      decoration: const BoxDecoration(
-        color: Colors.blue,
-      ),
-    ),
-  ];
+  late String carLoc = widget.carModel.carLocation;
+  late bool isExhibit = widget.carModel.isExhibit;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +41,51 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: OutlinedButton(
+              onPressed: () async {
+                isExhibit = await CarDataConnector.fieldUpdate(
+                  docID: widget.carModel.docID,
+                  field: 'isExhibit',
+                  value: !isExhibit,
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(isExhibit
+                    ? const Color.fromARGB(255, 255, 223, 129)
+                    : Colors.white),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                side: MaterialStateProperty.all(
+                  const BorderSide(
+                    color: Colors.amber,
+                    width: 2,
+                  ),
+                ),
+              ),
+              child: isExhibit
+                  ? const Text(
+                      "ON",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
+                    )
+                  : const Text(
+                      "OFF",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
+                    ),
+            ),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -78,8 +95,8 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
               height: 200,
               child: Stack(
                 children: [
-                  imgSlider(),
-                  imgIndicator(),
+                  imgSlider(widget.carModel.carImgURL!),
+                  imgIndicator(widget.carModel.carImgURL!),
                 ],
               ),
             ),
@@ -109,17 +126,27 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                     decoration: const BoxDecoration(color: Color(0xffD1E4FF)),
                     child: Column(
                       children: [
-                        NameValue(name: "모델", value: widget.carName),
-                        NameValue(name: "차량번호", value: widget.carName),
-                        NameValue(name: "차종", value: widget.carName),
-                        NameValue(name: "연료", value: widget.carName),
-                        NameValue(name: "연비", value: widget.carName),
-                        NameValue(name: "승차인원", value: widget.carName),
-                        NameValue(name: "제조사", value: widget.carName),
-                        NameValue(name: "구동방식", value: widget.carName),
-                        const NameContent(
-                            name: "차량 위치",
-                            content: "차량 주소 차량 주소 차량 주소 차량 주소 차량 주소 차량 주소"),
+                        NameValue(name: "모델", value: widget.carModel.carModel),
+                        NameValue(
+                            name: "차량번호", value: widget.carModel.carNumber),
+                        NameValue(name: "차종", value: widget.carModel.carType),
+                        NameValue(name: "연료", value: widget.carModel.oilType),
+                        NameValue(
+                            name: "연비",
+                            value: widget.carModel.carGasMil.toString()),
+                        NameValue(
+                            name: "승차인원",
+                            value: widget.carModel.seats.toString()),
+                        NameValue(name: "제조사", value: widget.carModel.maker),
+                        NameContent(
+                          name: "차량 위치",
+                          content: carLoc.replaceAllMapped(
+                            '/',
+                            (match) {
+                              return '\n';
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -145,11 +172,14 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        NameValue(name: "평점", value: widget.carName),
-                        NameValue(name: "대여횟수", value: widget.carName),
-                        const NameContent(
-                            name: "기타사항",
-                            content: "기타사항 내용 기타사항 내용 기타사항 내용 기타사항 내용 기타사항 내용"),
+                        NameValue(
+                            name: "평점",
+                            value: widget.carModel.score.toString()),
+                        NameValue(
+                            name: "대여횟수",
+                            value: widget.carModel.sharedCount.toString()),
+                        NameContent(
+                            name: "기타사항", content: widget.carModel.description),
                       ],
                     ),
                   ),
@@ -177,54 +207,103 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                       children: [
                         OptionValue(
                           name: "내장",
-                          valueList: optionText,
+                          optionsList: widget.carModel.insideOption,
                         ),
-                        NameValue(name: "안전", value: widget.carName),
-                        NameValue(name: "편의", value: widget.carName),
+                        OptionValue(
+                          name: "안전",
+                          optionsList: widget.carModel.safeOption,
+                        ),
+                        OptionValue(
+                          name: "편의",
+                          optionsList: widget.carModel.usabilityOption,
+                        ),
                       ],
                     ),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  Center(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                var begin = const Offset(1.0, 0.0);
-                                var end = Offset.zero;
-                                var curve = Curves.ease;
-                                var tween = Tween(begin: begin, end: end)
-                                    .chain(CurveTween(curve: curve));
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
+                  Row(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    var begin = const Offset(1.0, 0.0);
+                                    var end = Offset.zero;
+                                    var curve = Curves.ease;
+                                    var tween = Tween(begin: begin, end: end)
+                                        .chain(CurveTween(curve: curve));
+                                    return SlideTransition(
+                                      position: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
                                       CarDataUpdate(
-                                        carName: widget.carName,
+                                        carModel: widget.carModel,
                                         documentID: widget.documentID,
                                       )),
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: const Color(0xff74B2F2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: const Color(0xff74B2F2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            minimumSize: const Size.fromHeight(50),
+                          ),
+                          child: const Text(
+                            "수정하기",
+                            style: TextStyle(color: Colors.white, fontSize: 30),
+                          ),
                         ),
-                        minimumSize: const Size.fromHeight(50),
                       ),
-                      child: const Text(
-                        "수정하기",
-                        style: TextStyle(color: Colors.white, fontSize: 30),
+                      const SizedBox(
+                        width: 20,
                       ),
-                    ),
+                      Flexible(
+                        flex: 1,
+                        child: TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return CarItemDeleteDialog(
+                                  carModel: widget.carModel,
+                                  title: '삭제하시겠습니까?',
+                                  onClick: (value) {
+                                    if (value == '삭제') {
+                                      Navigator.pop(context);
+                                    } else if (value == '취소') {}
+                                  },
+                                );
+                              },
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  width: 2, color: Color(0xFF003257)),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            minimumSize: const Size.fromHeight(50),
+                          ),
+                          child: const Text(
+                            "삭제하기",
+                            style: TextStyle(
+                                color: Color(0xFF003257), fontSize: 30),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: 20,
@@ -238,12 +317,12 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
     );
   }
 
-  Widget imgIndicator() {
+  Widget imgIndicator(List<dynamic> imgURL) {
     return Align(
       alignment: AlignmentDirectional.bottomStart,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: conList.asMap().entries.map(
+        children: imgURL.asMap().entries.map(
           (entry) {
             return GestureDetector(
               onTap: () => _controller.animateToPage(entry.key),
@@ -264,15 +343,21 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
     );
   }
 
-  Widget imgSlider() {
+  Widget imgSlider(List<dynamic> imgURL) {
     return CarouselSlider(
-      items: conList.map(
-        (img) {
+      items: imgURL.map(
+        (url) {
           return Builder(
             builder: (context) {
               return SizedBox(
                 width: MediaQuery.of(context).size.width,
-                child: img,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(url),
+                    ),
+                  ),
+                ),
               );
             },
           );
@@ -329,11 +414,11 @@ class OptionValue extends StatelessWidget {
   const OptionValue({
     super.key,
     required this.name,
-    required this.valueList,
+    required this.optionsList,
   });
 
   final String name;
-  final List<String> valueList;
+  final Map<String, dynamic> optionsList;
 
   @override
   Widget build(BuildContext context) {
@@ -349,8 +434,11 @@ class OptionValue extends StatelessWidget {
           ),
           Flexible(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (String text in valueList) CarInfoText(text: text),
+                for (String key in optionsList.keys.toList()) ...[
+                  if (optionsList[key]) CarInfoText(text: key),
+                ]
               ],
             ),
           ),
