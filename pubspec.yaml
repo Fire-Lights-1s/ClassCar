@@ -16,12 +16,15 @@ dependencies:
   google_maps_flutter: ^2.3.0
   url_launcher: ^6.1.12
   cloud_firestore: ^4.8.3
-  firebase_auth: ^4.7.0
+  firebase_auth: ^4.7.3
   fluttertoast: ^8.2.2
   mask_text_input_formatter: ^2.5.0
   image_picker: ^1.0.1
   firebase_storage: ^11.2.5
   http: ^1.1.0
+  firebase_auth_platform_interface: ^6.16.2
+  pigeon: ^10.1.6
+  firebase_messaging: ^14.6.6
 
 dev_dependencies:
   flutter_test:
