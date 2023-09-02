@@ -1,12 +1,16 @@
+import 'package:image_picker/image_picker.dart';
+
 class CarInfoStateControll {
   String selctGas;
   List<String> gasList;
   String selctCarTpye;
   List<String> carTpye;
   late DateTime selectedDate;
-  Map<String, bool> carInsideOption;
-  Map<String, bool> carSafeOption;
-  Map<String, bool> carUsablityOption;
+  Map<String, dynamic> carInsideOption;
+  Map<String, dynamic> carSafeOption;
+  Map<String, dynamic> carUsabilityOption;
+  //이미지 저장 위치
+  List<XFile> pickedImgs = [];
 
   CarInfoStateControll.format()
       : selctGas = '휘발유-가솔린',
@@ -37,7 +41,7 @@ class CarInfoStateControll {
           '후방감지센서': false,
           '후방카메라': false,
         },
-        carUsablityOption = {
+        carUsabilityOption = {
           'AV시스템': false,
           'USB단자': false,
           '네비게이션': false,
