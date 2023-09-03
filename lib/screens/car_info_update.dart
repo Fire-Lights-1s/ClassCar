@@ -750,6 +750,7 @@ class _CarDataUpdate extends State<CarDataUpdate> {
                   var loc = await loadLoc(_dataModel!.address);
                   lat = loc!['lat'];
                   lng = loc['lng'];
+                  setState(() {});
                   // 카메라 이동
                   mapController.animateCamera(CameraUpdate.newCameraPosition(
                     CameraPosition(
