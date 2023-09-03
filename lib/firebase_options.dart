@@ -45,12 +45,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDnE7hRNFJhGeMDaurlg0nfSVTblvXGti8',
-    appId: '1:439982033780:web:68806a64392375e6903a21',
+    appId: '1:439982033780:web:8ebb4599b0bd59e0903a21',
     messagingSenderId: '439982033780',
     projectId: 'class-car-test',
     authDomain: 'class-car-test.firebaseapp.com',
     storageBucket: 'class-car-test.appspot.com',
-    measurementId: 'G-T43W2H1XHZ',
+    measurementId: 'G-EYQ8X0ER9M',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyATdcUg_k4QLN-ej1G0RuAp6rfDcEVwqCM',
-    appId: '1:439982033780:ios:2bec4671f5e93f15903a21',
+    appId: '1:439982033780:ios:9199db0ab421a467903a21',
     messagingSenderId: '439982033780',
     projectId: 'class-car-test',
     storageBucket: 'class-car-test.appspot.com',
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyATdcUg_k4QLN-ej1G0RuAp6rfDcEVwqCM',
-    appId: '1:439982033780:ios:2bec4671f5e93f15903a21',
+    appId: '1:439982033780:ios:9199db0ab421a467903a21',
     messagingSenderId: '439982033780',
     projectId: 'class-car-test',
     storageBucket: 'class-car-test.appspot.com',
