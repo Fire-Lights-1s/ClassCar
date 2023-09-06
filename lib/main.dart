@@ -13,6 +13,7 @@ void main() async {
 void firebase() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+    name: "classcar_provider",
     options: DefaultFirebaseOptions.currentPlatform,
   );
 }
