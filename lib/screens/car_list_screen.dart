@@ -46,7 +46,7 @@ class _CarListScreenState extends State<CarListScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection('CarINFO')
+              .collection('Car')
               .where("uuid", isEqualTo: widget.documentID)
               .snapshots(),
           builder: (context, snapshot) {

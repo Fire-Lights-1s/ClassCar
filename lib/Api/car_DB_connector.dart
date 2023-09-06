@@ -13,7 +13,7 @@ class CarDataConnector {
 // 차량 컬렉션의 모든 차량 정보를 가져옴
   static Future<List<CarInfoModel>> getData() async {
     List<CarInfoModel> carInstances = [];
-    await fireStore.collection('CarINFO').get().then((event) {
+    await fireStore.collection('Car').get().then((event) {
       for (var doc in event.docs) {
         carInfo = CarInfoModel.fromJson(doc.reference.id, doc.data());
         carInstances.add(carInfo);
@@ -27,7 +27,7 @@ class CarDataConnector {
   static Future<List<CarInfoModel>> getUuidCar(String UUID) async {
     List<CarInfoModel> carInstances = [];
     await fireStore
-        .collection('CarINFO')
+        .collection('Car')
         .where("uuid", isEqualTo: UUID)
         .get()
         .then((event) {
@@ -42,7 +42,7 @@ class CarDataConnector {
 
   static Future<Stream<QuerySnapshot>> getUuidCarStream(String UUID) async {
     return fireStore
-        .collection('CarINFO')
+        .collection('Car')
         .where("uuid", isEqualTo: UUID)
         .snapshots();
   }
@@ -64,7 +64,7 @@ class CarDataConnector {
     late String docID;
     List<String> imgURL = [];
 
-    await fireStore.collection('CarINFO').add(carInfo).then(
+    await fireStore.collection('Car').add(carInfo).then(
       (value) => {
         docID = value.id,
       },
@@ -80,7 +80,7 @@ class CarDataConnector {
       imgURL.add(await imgRef.child('$i.jpg').getDownloadURL());
     }
     await fireStore
-        .collection('CarINFO')
+        .collection('Car')
         .doc(docID)
         .update({'carImgURL': imgURL}).then(
       (value) {},
@@ -119,7 +119,7 @@ class CarDataConnector {
       updateData.carImgURL = imgURL;
       // fireStore에 등록
       await fireStore
-          .collection('CarINFO')
+          .collection('Car')
           .doc(updateData.docID)
           .update(updateData.getUpdateMap())
           .then(
@@ -131,7 +131,7 @@ class CarDataConnector {
     } else {
       // fireStore에 등록
       await fireStore
-          .collection('CarINFO')
+          .collection('Car')
           .doc(updateData.docID)
           .update(updateData.getUpdateMap())
           .then(
