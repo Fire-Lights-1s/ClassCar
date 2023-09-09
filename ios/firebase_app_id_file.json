@@ -1,7 +1,7 @@
 {
   "file_generated_by": "FlutterFire CLI",
   "purpose": "FirebaseAppID & ProjectID for this Firebase app in this directory",
-  "GOOGLE_APP_ID": "1:439982033780:ios:9199db0ab421a467903a21",
-  "FIREBASE_PROJECT_ID": "class-car-test",
-  "GCM_SENDER_ID": "439982033780"
+  "GOOGLE_APP_ID": "1:505038605485:ios:7219d9f94f8da0d38a0a24",
+  "FIREBASE_PROJECT_ID": "carsharingdatabase-f3ff2",
+  "GCM_SENDER_ID": "505038605485"
 }

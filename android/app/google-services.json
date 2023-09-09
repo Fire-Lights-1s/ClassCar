@@ -20,7 +20,7 @@
       ],
       "api_key": [
         {
-          "current_key": "${googleMapApiKey}"
+          "current_key": "AIzaSyA6YScERJefk6F4T3xqWA8jgNeYKg2An60"
         }
       ],
       "services": {
@@ -64,7 +64,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA6YScERJefk6F4T3xqWA8jgNeYKg2An60"
+          "current_key": "${googleMapApiKey}"
         }
       ],
       "services": {
