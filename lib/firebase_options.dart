@@ -17,24 +17,15 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -52,11 +43,43 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBUi3Z5lQMxVo4xdtDzSUwN3r0W-HKgpig',
+    appId: '1:505038605485:web:cdcd305630f3298f8a0a24',
+    messagingSenderId: '505038605485',
+    projectId: 'carsharingdatabase-f3ff2',
+    authDomain: 'carsharingdatabase-f3ff2.firebaseapp.com',
+    storageBucket: 'carsharingdatabase-f3ff2.appspot.com',
+    measurementId: 'G-X5CZKPQSH5',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyA6YScERJefk6F4T3xqWA8jgNeYKg2An60',
     appId: '1:505038605485:android:baff129fa12dd8078a0a24',
     messagingSenderId: '505038605485',
     projectId: 'carsharingdatabase-f3ff2',
     storageBucket: 'carsharingdatabase-f3ff2.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCQvHuHnw_RSONjaQBZD_vAu0Cydmc3JEw',
+    appId: '1:505038605485:ios:7219d9f94f8da0d38a0a24',
+    messagingSenderId: '505038605485',
+    projectId: 'carsharingdatabase-f3ff2',
+    storageBucket: 'carsharingdatabase-f3ff2.appspot.com',
+    androidClientId: '505038605485-rupk947cbi5edcr9vb8aca3bjjejmfoq.apps.googleusercontent.com',
+    iosClientId: '505038605485-mnsmuktatcpp2la9llm01qvkgh0un1bv.apps.googleusercontent.com',
+    iosBundleId: 'com.example.classcar',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCQvHuHnw_RSONjaQBZD_vAu0Cydmc3JEw',
+    appId: '1:505038605485:ios:7219d9f94f8da0d38a0a24',
+    messagingSenderId: '505038605485',
+    projectId: 'carsharingdatabase-f3ff2',
+    storageBucket: 'carsharingdatabase-f3ff2.appspot.com',
+    androidClientId: '505038605485-rupk947cbi5edcr9vb8aca3bjjejmfoq.apps.googleusercontent.com',
+    iosClientId: '505038605485-mnsmuktatcpp2la9llm01qvkgh0un1bv.apps.googleusercontent.com',
+    iosBundleId: 'com.example.classcar',
   );
 }

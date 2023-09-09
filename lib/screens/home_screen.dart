@@ -1,5 +1,6 @@
 import 'package:classcar/screens/mywallet_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeScreen extends StatefulWidget {
   final String documentID;
@@ -21,7 +22,14 @@ class HomeScreenState extends State<HomeScreen> {
         child: AppBar(
           //앱바 로고
           backgroundColor: const Color(0xFF74B2F2),
-          title: const Text('Icon space'),
+          title: Center(
+            child: SvgPicture.asset(
+              'assets/icons/Logo.svg',
+              width: 55,
+              height: 50,
+            ),
+          ),
+          automaticallyImplyLeading: false,
           centerTitle: true,
         ),
       ),

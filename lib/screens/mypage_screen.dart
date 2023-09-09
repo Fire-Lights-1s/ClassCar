@@ -13,6 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyPageScreen extends StatefulWidget {
   final String documentID;
@@ -27,8 +28,20 @@ class _MyPageScreenState extends State<MyPageScreen> {
   setCarInstances() async {
     List<CarInfoModel> carInstances =
         await CarDataConnector.getUuidCar(widget.documentID);
-    carState = carInstances[0].carState;
+    if (carInstances.isNotEmpty) {
+      carState = carInstances[0].carState;
+    }
     setState(() {});
+  }
+
+  _launchButton(String url) {
+    return InkWell(onTap: () async {
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    });
   }
 
   @override
@@ -330,6 +343,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           child: Stack(
                             children: [
                               GestureDetector(
+                                onTap: () {
+                                  launch("tel://01012345678");
+                                },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -678,9 +694,12 @@ class _ProfileState extends State<Profile> {
                           );
                         } else {
                           if (snapshot.data == '') {
-                            return const Icon(
-                              Icons.account_circle,
-                              size: 200,
+                            return Transform.translate(
+                              offset: const Offset(-26, -25),
+                              child: const Icon(
+                                Icons.account_circle,
+                                size: 200,
+                              ),
                             );
                           }
                           return Transform.scale(
