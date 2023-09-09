@@ -48,7 +48,7 @@ class _CarDataUpload extends State<CarDataUpload> {
   //이미지 관련 변수 함수
   bool imgCheck = false;
   final ImagePicker carPicker = ImagePicker();
-  Future<void> _PickImg() async {
+  Future<void> _pickImg() async {
     final List<XFile> images = await carPicker.pickMultiImage();
     if (images.isNotEmpty) {
       imgCheck = true;
@@ -167,7 +167,7 @@ class _CarDataUpload extends State<CarDataUpload> {
         height: 80,
         child: IconButton(
           onPressed: () {
-            _PickImg();
+            _pickImg();
           },
           icon: Container(
             alignment: Alignment.center,
