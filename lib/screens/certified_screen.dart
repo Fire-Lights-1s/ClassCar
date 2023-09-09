@@ -44,10 +44,10 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
 
   String backNum = "";
   var userNameController = TextEditingController();
-  var FirstBirthController = TextEditingController();
-  var SecondBirthController = TextEditingController();
+  var firstBirthController = TextEditingController();
+  var secondBirthController = TextEditingController();
 
-  var PhoneNumberController = TextEditingController();
+  var phoneNumberController = TextEditingController();
   var otpController = TextEditingController();
   bool _codeSent = false;
   late String _verificationId;
@@ -120,16 +120,16 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
             InkWell(
               onTap: () {
                 widget.NBTN['name'] = userNameController.text;
-                widget.NBTN['birthday'] = FirstBirthController.text;
-                widget.NBTN['backNum'] = SecondBirthController.text;
+                widget.NBTN['birthday'] = firstBirthController.text;
+                widget.NBTN['backNum'] = secondBirthController.text;
                 widget.NBTN['telecom'] = _selectedValue2;
-                widget.NBTN['phoneNumber'] = PhoneNumberController.text;
+                widget.NBTN['phoneNumber'] = phoneNumberController.text;
 
                 if (userNameController.text.isNotEmpty &&
-                    FirstBirthController.text.isNotEmpty &&
-                    SecondBirthController.text.isNotEmpty &&
+                    firstBirthController.text.isNotEmpty &&
+                    secondBirthController.text.isNotEmpty &&
                     _selectedValue.isNotEmpty &&
-                    PhoneNumberController.text.isNotEmpty) {
+                    phoneNumberController.text.isNotEmpty) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -348,7 +348,7 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: TextFormField(
-                            controller: FirstBirthController,
+                            controller: firstBirthController,
                             maxLength: 6,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
@@ -391,7 +391,7 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                               SizedBox(
                                 width: 35,
                                 child: TextFormField(
-                                  controller: SecondBirthController,
+                                  controller: secondBirthController,
                                   inputFormatters: [privateFormatter],
                                   maxLength: 1,
                                   keyboardType: TextInputType.number,
@@ -504,7 +504,7 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                             ),
                           ),
                           child: TextFormField(
-                            controller: PhoneNumberController,
+                            controller: phoneNumberController,
                             inputFormatters: [maskFormatter],
                             textAlign: TextAlign.center,
                             maxLength: 13,
@@ -525,29 +525,35 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                         child: InkWell(
                           onTap: () async {
                             if (_key.currentState!.validate()) {
-                              FirebaseAuth auth = FirebaseAuth.instance;
+                              //FirebaseAuth auth = FirebaseAuth.instance;
                               List<String> phoneList =
-                                  PhoneNumberController.text.split('-');
-                              await auth.verifyPhoneNumber(
+                                  phoneNumberController.text.split('-');
+                              await _auth.verifyPhoneNumber(
+                                  timeout: const Duration(seconds: 60),
                                   phoneNumber:
                                       "+82 10${phoneList[1]}${phoneList[2]}",
                                   verificationCompleted:
                                       (PhoneAuthCredential credential) async {
-                                    await auth.signInWithCredential(credential);
+                                    await _auth
+                                        .signInWithCredential(credential);
+                                    print(' 문자 보냄');
                                   },
                                   verificationFailed:
                                       (FirebaseAuthException e) {
                                     if (e.code == 'invalid-phone-number') {
                                       print(
                                           "The provided phone number is not valid.");
+                                      print(' 문자 보냄 실패');
                                     }
                                   },
                                   codeSent: (String verificationId,
                                       forceResendingToken) async {
-                                    String otpCode = otpController.text;
                                     setState(() {
+                                      //확인버튼 나오게하는 bool 변수
                                       _codeSent = true;
                                       _verificationId = verificationId;
+                                      print(
+                                          '_verificationId 입니다 : $_verificationId');
                                     });
                                   },
                                   codeAutoRetrievalTimeout: (verificationId) {
@@ -611,6 +617,7 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                                   bottomLeft: Radius.circular(20)),
                             ),
                             child: TextFormField(
+                              controller: otpController,
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,
                               decoration: const InputDecoration(
@@ -630,14 +637,13 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                           flex: 1,
                           child: InkWell(
                             onTap: () async {
-                              FirebaseAuth auth = FirebaseAuth.instance;
+                              //FirebaseAuth auth = FirebaseAuth.instance;
                               PhoneAuthCredential credential =
                                   PhoneAuthProvider.credential(
                                 verificationId: _verificationId,
                                 smsCode: otpController.text,
                               );
-                              await auth.signInWithCredential(credential).then(
-                                  (_) => Navigator.pushNamed(context, "/"));
+                              await _auth.signInWithCredential(credential);
                             },
                             child: Container(
                               padding: const EdgeInsets.only(

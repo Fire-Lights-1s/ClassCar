@@ -51,7 +51,7 @@ class _CarDataUpdate extends State<CarDataUpdate> {
   bool imgCheck = false;
   final ImagePicker carPicker = ImagePicker();
 
-  Future<void> _PickImg() async {
+  Future<void> _pickImg() async {
     final List<XFile> images = await carPicker.pickMultiImage();
     if (images.isNotEmpty) {
       imgCheck = true;
@@ -190,7 +190,7 @@ class _CarDataUpdate extends State<CarDataUpdate> {
         height: 80,
         child: IconButton(
           onPressed: () {
-            _PickImg();
+            _pickImg();
           },
           icon: Container(
             alignment: Alignment.center,
