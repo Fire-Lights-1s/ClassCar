@@ -3,6 +3,7 @@ import 'package:classcar/Api/car_DB_connector.dart';
 import 'package:classcar/module/car_info_model.dart';
 import 'package:classcar/screens/car_info_update.dart';
 import 'package:classcar/widgets/car_item_delete.dart';
+import 'package:classcar/widgets/img_slider.dart';
 import 'package:flutter/material.dart';
 
 class CarDetailScreen extends StatefulWidget {
@@ -95,8 +96,18 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
               height: 200,
               child: Stack(
                 children: [
-                  imgSlider(widget.carModel.carImgURL!),
-                  imgIndicator(widget.carModel.carImgURL!),
+                  ImgSlider(
+                    imgURL: widget.carModel.carImgURL!,
+                    onChanged: (index) {
+                      _currentImgIdx = index;
+                      setState(() {});
+                    },
+                  ),
+                  ImgIndicator(
+                    imgURL: widget.carModel.carImgURL!,
+                    controller: _controller,
+                    currentImgIdx: _currentImgIdx,
+                  ),
                 ],
               ),
             ),
@@ -317,65 +328,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
     );
   }
 
-  Widget imgIndicator(List<dynamic> imgURL) {
-    return Align(
-      alignment: AlignmentDirectional.bottomStart,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: imgURL.asMap().entries.map(
-          (entry) {
-            return GestureDetector(
-              onTap: () => _controller.animateToPage(entry.key),
-              child: Container(
-                width: 12,
-                height: 12,
-                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white
-                      .withAlpha(_currentImgIdx == entry.key ? 200 : 50),
-                ),
-              ),
-            );
-          },
-        ).toList(),
-      ),
-    );
-  }
-
-  Widget imgSlider(List<dynamic> imgURL) {
-    return CarouselSlider(
-      items: imgURL.map(
-        (url) {
-          return Builder(
-            builder: (context) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(url),
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ).toList(),
-      options: CarouselOptions(
-        height: 200,
-        viewportFraction: 1.0,
-        autoPlay: true,
-        autoPlayInterval: const Duration(seconds: 4),
-        onPageChanged: (index, reason) {
-          setState(() {
-            _currentImgIdx = index;
-          });
-        },
-      ),
-    );
-  }
+  //
 }
 
 class NameValue extends StatelessWidget {
