@@ -2,6 +2,7 @@ import 'package:classcar/screens/login_screen.dart';
 import 'package:classcar/screens/personal_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 // ignore: must_be_immutable
@@ -38,8 +39,9 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
       MaskTextInputFormatter(mask: '#', filter: {"#": RegExp(r'[0-4]')});
 
   bool obText = false;
-  final bool _phoneTrue = false;
-  bool requrestedAuth = false;
+  // 인증번호 입력 칸 보여줄지 말지
+  bool requestedAuth = false;
+  // 인증 되었는지 확인
   bool authOk = false;
 
   String backNum = "";
@@ -49,9 +51,42 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
 
   var phoneNumberController = TextEditingController();
   var otpController = TextEditingController();
-  bool _codeSent = false;
   late String _verificationId;
   final _key = GlobalKey<FormState>();
+
+  // 전화번호가 유효한지 확인한는 코드
+  void signInWithPhoneAuthCredential(
+      PhoneAuthCredential phoneAuthCredential) async {
+    try {
+      final authCredential =
+          await _auth.signInWithCredential(phoneAuthCredential);
+
+      if (authCredential.user != null) {
+        setState(() {
+          print("인증완료 및 로그인성공");
+          authOk = true;
+          requestedAuth = false;
+        });
+        await _auth.currentUser!.delete();
+        print("auth정보삭제");
+        _auth.signOut();
+        print("phone로그인된것 로그아웃");
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        print("인증실패..로그인실패");
+        // 전송 버튼 로딩 여부
+        //showLoading = false;
+      });
+
+      await Fluttertoast.showToast(
+          msg: e.message!,
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          fontSize: 16.0);
+    }
+  }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -504,6 +539,7 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                             ),
                           ),
                           child: TextFormField(
+                            enabled: authOk ? false : true,
                             controller: phoneNumberController,
                             inputFormatters: [maskFormatter],
                             textAlign: TextAlign.center,
@@ -524,7 +560,9 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                         flex: 1,
                         child: InkWell(
                           onTap: () async {
-                            if (_key.currentState!.validate()) {
+                            if (_key.currentState!.validate() && authOk
+                                ? false
+                                : true) {
                               //FirebaseAuth auth = FirebaseAuth.instance;
                               List<String> phoneList =
                                   phoneNumberController.text.split('-');
@@ -550,7 +588,7 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                                       forceResendingToken) async {
                                     setState(() {
                                       //확인버튼 나오게하는 bool 변수
-                                      _codeSent = true;
+                                      requestedAuth = true;
                                       _verificationId = verificationId;
                                       print(
                                           '_verificationId 입니다 : $_verificationId');
@@ -593,7 +631,7 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                   height: 10,
                 ),
                 Visibility(
-                  visible: true,
+                  visible: requestedAuth,
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 15,
@@ -643,7 +681,7 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                                 verificationId: _verificationId,
                                 smsCode: otpController.text,
                               );
-                              await _auth.signInWithCredential(credential);
+                              signInWithPhoneAuthCredential(credential);
                             },
                             child: Container(
                               padding: const EdgeInsets.only(
