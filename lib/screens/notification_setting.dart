@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../module/user_info_model.dart';
+import '../module/user_model.dart';
+
 class NotificationSetting extends StatefulWidget {
   final String documentID;
   const NotificationSetting({
@@ -13,7 +16,24 @@ class NotificationSetting extends StatefulWidget {
 
 class _NotificationSettingState extends State<NotificationSetting> {
   bool _isSwitched1 = false;
-  bool _isSwitched2 = false;
+
+  bool result = false;
+  getAD() async {
+    UserInfoModel user = await UserInfoUpdate.getUser(widget.documentID);
+    if (user.isCheckedAgreementAD != false) {
+      result = user.isCheckedAgreementAD;
+    }
+    setState(() {});
+
+    return result;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getAD();
+    super.initState();
+  }
 
   void _notificationTap() {
     setState(() {
@@ -23,7 +43,9 @@ class _NotificationSettingState extends State<NotificationSetting> {
 
   void _notificationTap2() {
     setState(() {
-      _isSwitched2 = !_isSwitched2;
+      result = !result;
+      UserInfoUpdate.updataData(
+          'isCheckedAgreementAD', result, widget.documentID);
     });
   }
 
@@ -108,7 +130,7 @@ class _NotificationSettingState extends State<NotificationSetting> {
             trailing: Transform.scale(
               scale: 1.7,
               child: Switch(
-                value: _isSwitched2,
+                value: result,
                 onChanged: (value) {
                   setState(() {
                     _notificationTap2();

@@ -27,12 +27,22 @@ class UserInfoUpdate {
     return userinfo;
   }
 
+  //유저 이름 리턴
   static Future<String> getName(String documentID) async {
     late UserInfoModel user;
     await firestore.collection('userINFO').doc(documentID).get().then((event) {
       user = UserInfoModel.fromJson(event.reference.id, event.data()!);
     });
     return user.name;
+  }
+
+  //유저 이메일 리턴
+  static Future<String> getEmail(String documentID) async {
+    late UserInfoModel email;
+    await firestore.collection('userINFO').doc(documentID).get().then((event) {
+      email = UserInfoModel.fromJson(event.reference.id, event.data()!);
+    });
+    return email.email;
   }
 
   static Future<int> addData(Map<String, dynamic> userInfo) async {
@@ -47,11 +57,12 @@ class UserInfoUpdate {
     return 1;
   }
 
-  static Future<int> updataData(String passWord, String documentID) async {
+  static Future<int> updataData(
+      String field, dynamic value, String documentID) async {
     await firestore
         .collection('userINFO')
         .doc(documentID)
-        .update({'passWord': passWord}).then((event) {
+        .update({field: value}).then((event) {
       print('업데이트 성공!');
     });
     return 0;

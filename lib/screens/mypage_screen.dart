@@ -555,6 +555,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final picker = ImagePicker();
   String name = '...';
+  String email = '...';
   XFile? image;
   // 카메라로 촬영한 이미지를 저장할 변수
   List<XFile?> multiImage = [];
@@ -624,10 +625,16 @@ class _ProfileState extends State<Profile> {
     setState(() {});
   }
 
+  _getUserEmail() async {
+    email = await UserInfoUpdate.getEmail(widget.documentID);
+    setState(() {});
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     _getUserName();
+    _getUserEmail();
     super.initState();
   }
 
@@ -721,9 +728,9 @@ class _ProfileState extends State<Profile> {
           const SizedBox(
             height: 5,
           ),
-          const Text(
-            'abcdefg@gmail.com',
-            style: TextStyle(
+          Text(
+            email,
+            style: const TextStyle(
               fontSize: 18,
               color: Color(0xFFB3B3B3),
             ),

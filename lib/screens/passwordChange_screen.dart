@@ -175,7 +175,7 @@ class PasswordChangeScreen extends StatelessWidget {
                                 passwordCheckController.text) {
                               passwordChange = changePasswordController.text;
                               UserInfoUpdate.updataData(
-                                  passwordChange, documentID);
+                                  'passWord', passwordChange, documentID);
                               passwordCheck = true;
                               Navigator.pop(context, false);
                             }

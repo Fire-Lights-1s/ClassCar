@@ -1,9 +1,13 @@
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:classcar/screens/mywallet_screen.dart';
+import 'package:classcar/widgets/img_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeScreen extends StatefulWidget {
   final String documentID;
+
   const HomeScreen({
     super.key,
     required this.documentID,
@@ -14,6 +18,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  int _currentImgIdx = 0;
+  final CarouselController _controller = CarouselController();
+
+  Future<List<dynamic>> getAdImg() async {
+    List<dynamic> adImg = [];
+    await FirebaseFirestore.instance.collection('Event').get().then((event) {
+      for (var doc in event.docs) {
+        adImg = doc.data()['eventImg'];
+      }
+    });
+    print(adImg);
+    return adImg;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,14 +65,37 @@ class HomeScreenState extends State<HomeScreen> {
               ),
               child: SizedBox(
                 width: double.infinity,
+                height: 200,
                 child: Container(
-                  padding: const EdgeInsets.only(
-                    top: 50,
-                    bottom: 50,
-                  ),
                   decoration: BoxDecoration(
                     color: Colors.grey,
                     borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: FutureBuilder(
+                    future: getAdImg(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData == false) {
+                        return const CircularProgressIndicator();
+                      } else {
+                        return Stack(
+                          children: [
+                            ImgSlider(
+                              //출처 <a href="https://kr.freepik.com/free-vector/lovely-set-of-colorful-banners_3354722.htm#query=%EB%B0%B0%EB%84%88&position=5&from_view=search&track=sph">Freepik</a>
+                              imgURL: snapshot.data!,
+                              onChanged: (index) {
+                                _currentImgIdx = index;
+                                setState(() {});
+                              },
+                            ),
+                            ImgIndicator(
+                              imgURL: snapshot.data!,
+                              controller: _controller,
+                              currentImgIdx: _currentImgIdx,
+                            ),
+                          ],
+                        );
+                      }
+                    },
                   ),
                 ),
               ),

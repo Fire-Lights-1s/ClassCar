@@ -64,6 +64,7 @@ class ImgSlider extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
+                      fit: BoxFit.fitWidth,
                       image: NetworkImage(url),
                     ),
                   ),
