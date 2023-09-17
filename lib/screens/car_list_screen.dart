@@ -40,6 +40,7 @@ class _CarListScreenState extends State<CarListScreen> {
             fontWeight: FontWeight.w600,
           ),
         ),
+        automaticallyImplyLeading: false,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
