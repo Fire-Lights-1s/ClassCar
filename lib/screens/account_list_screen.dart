@@ -133,13 +133,18 @@ class _AccountListScreenState extends State<AccountListScreen> {
                                                   });
                                                 },
                                                 child: const BankContainer(
-                                                    bankNames: '국민은행',
-                                                    bankColor: Colors.yellow),
+                                                  bankImage: Image(
+                                                    image: AssetImage(
+                                                        "assets/images/국민은행_로고.png"),
+                                                    width: 120,
+                                                    height: 40,
+                                                  ),
+                                                ),
                                               ),
                                               const SizedBox(height: 10),
                                               //UnderLine 아래 위젯분리
                                               const UnderLine(),
-                                              const SizedBox(height: 10),
+                                              const SizedBox(height: 15),
 
                                               //농협은행
                                               GestureDetector(
@@ -150,11 +155,15 @@ class _AccountListScreenState extends State<AccountListScreen> {
                                                   });
                                                 },
                                                 child: const BankContainer(
-                                                  bankNames: '농협은행',
-                                                  bankColor: Colors.green,
+                                                  bankImage: Image(
+                                                    image: AssetImage(
+                                                        "assets/images/농협_로고.png"),
+                                                    width: 120,
+                                                    height: 25,
+                                                  ),
                                                 ),
                                               ),
-                                              const SizedBox(height: 10),
+                                              const SizedBox(height: 15),
                                               const UnderLine(),
                                               const SizedBox(height: 10),
 
@@ -166,10 +175,13 @@ class _AccountListScreenState extends State<AccountListScreen> {
                                                       _color = Colors.black;
                                                     });
                                                   },
-                                                  child: BankContainer(
-                                                    bankNames: '부산은행',
-                                                    bankColor:
-                                                        Colors.red.shade300,
+                                                  child: const BankContainer(
+                                                    bankImage: Image(
+                                                      image: AssetImage(
+                                                          "assets/images/부산은행_로고.png"),
+                                                      width: 120,
+                                                      height: 40,
+                                                    ),
                                                   )),
                                               const SizedBox(height: 10),
                                               const UnderLine(),
@@ -184,8 +196,12 @@ class _AccountListScreenState extends State<AccountListScreen> {
                                                   });
                                                 },
                                                 child: const BankContainer(
-                                                  bankNames: '신한은행',
-                                                  bankColor: Colors.blue,
+                                                  bankImage: Image(
+                                                    image: AssetImage(
+                                                        "assets/images/신한뱅크_로고.png"),
+                                                    width: 120,
+                                                    height: 40,
+                                                  ),
                                                 ),
                                               ),
                                               const SizedBox(height: 10),
@@ -200,10 +216,13 @@ class _AccountListScreenState extends State<AccountListScreen> {
                                                     _color = Colors.black;
                                                   });
                                                 },
-                                                child: BankContainer(
-                                                  bankNames: '우리은행',
-                                                  bankColor:
-                                                      Colors.blue.shade300,
+                                                child: const BankContainer(
+                                                  bankImage: Image(
+                                                    image: AssetImage(
+                                                        "assets/images/우리은행_로고.png"),
+                                                    width: 120,
+                                                    height: 40,
+                                                  ),
                                                 ),
                                               ),
                                               const SizedBox(height: 10),
@@ -218,10 +237,13 @@ class _AccountListScreenState extends State<AccountListScreen> {
                                                     _color = Colors.black;
                                                   });
                                                 },
-                                                child: BankContainer(
-                                                  bankNames: '카카오뱅크',
-                                                  bankColor:
-                                                      Colors.yellow.shade500,
+                                                child: const BankContainer(
+                                                  bankImage: Image(
+                                                    image: AssetImage(
+                                                        "assets/images/카카오뱅크_로고.png"),
+                                                    width: 300,
+                                                    height: 40,
+                                                  ),
                                                 ),
                                               ),
                                               const SizedBox(height: 10),
@@ -237,8 +259,12 @@ class _AccountListScreenState extends State<AccountListScreen> {
                                                   });
                                                 },
                                                 child: const BankContainer(
-                                                  bankNames: '토스뱅크',
-                                                  bankColor: Colors.lightBlue,
+                                                  bankImage: Image(
+                                                    image: AssetImage(
+                                                        "assets/images/토스뱅크_로고.png"),
+                                                    width: 120,
+                                                    height: 40,
+                                                  ),
                                                 ),
                                               ),
                                               const SizedBox(height: 10),
@@ -254,8 +280,12 @@ class _AccountListScreenState extends State<AccountListScreen> {
                                                   });
                                                 },
                                                 child: const BankContainer(
-                                                  bankNames: '하나은행',
-                                                  bankColor: Colors.blue,
+                                                  bankImage: Image(
+                                                    image: AssetImage(
+                                                        "assets/images/하나은행_로고.png"),
+                                                    width: 120,
+                                                    height: 40,
+                                                  ),
                                                 ),
                                               ),
                                               const SizedBox(height: 10),
@@ -271,8 +301,12 @@ class _AccountListScreenState extends State<AccountListScreen> {
                                                   });
                                                 },
                                                 child: const BankContainer(
-                                                  bankNames: 'IBK 기업은행',
-                                                  bankColor: Colors.lightBlue,
+                                                  bankImage: Image(
+                                                    image: AssetImage(
+                                                        "assets/images/기업은행_로고.png"),
+                                                    width: 120,
+                                                    height: 40,
+                                                  ),
                                                 ),
                                               ),
                                               const SizedBox(height: 10),
@@ -287,10 +321,14 @@ class _AccountListScreenState extends State<AccountListScreen> {
                                                       _color = Colors.black;
                                                     });
                                                   },
-                                                  child: BankContainer(
-                                                      bankNames: 'SC제일은행',
-                                                      bankColor: Colors
-                                                          .blue.shade100)),
+                                                  child: const BankContainer(
+                                                    bankImage: Image(
+                                                      image: AssetImage(
+                                                          "assets/images/SC제일은행_로고.png"),
+                                                      width: 120,
+                                                      height: 40,
+                                                    ),
+                                                  )),
                                               const SizedBox(height: 10),
                                               const UnderLine(),
                                               const SizedBox(height: 10),
@@ -527,13 +565,13 @@ class UnderLine extends StatelessWidget {
 }
 
 class BankContainer extends StatefulWidget {
-  final String bankNames;
-  final Color bankColor;
+  final String? bankNames;
+  final Image bankImage;
 
   const BankContainer({
     super.key,
-    required this.bankNames,
-    required this.bankColor,
+    this.bankNames,
+    required this.bankImage,
   });
 
   @override
@@ -547,13 +585,9 @@ class _BankContainerState extends State<BankContainer> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.house_rounded,
-            size: 26,
-            color: widget.bankColor,
-          ),
+          widget.bankImage,
           Text(
-            widget.bankNames,
+            widget.bankNames == null ? "" : widget.bankNames!,
             style: const TextStyle(
               fontSize: 24,
             ),
