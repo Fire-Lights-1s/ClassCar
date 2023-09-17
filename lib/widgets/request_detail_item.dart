@@ -1,40 +1,57 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
+
 import '../screens/request_detail_item_screen.dart';
 import 'package:flutter/material.dart';
 
 class RequestDetailListItem extends StatelessWidget {
-  final String RentalDate;
+  final Timestamp RentalStartTime;
+  final Timestamp RentalEndTime;
   final String Name;
   String Situation;
-  final String RequestDate;
+  final Timestamp RequestDate;
   final int RentalCost;
-  final String DuringTime;
   final String PhoneNum;
-  final String UserAddress;
   final String CarName;
   final String CarNum;
   final String SharePlaceName;
-  final String ShareDetailPlace;
+  final String ProfileUrl;
+  final String OwnerUid;
+  final String CarUID;
+  final String DriverUID;
   final String documentID;
 
   RequestDetailListItem({
     super.key,
-    required this.RentalDate,
+    required this.RentalStartTime,
+    required this.RentalEndTime,
     required this.Name,
     required this.Situation,
     required this.RequestDate,
     required this.RentalCost,
-    required this.DuringTime,
-    required this.UserAddress,
     required this.CarName,
     required this.CarNum,
     required this.PhoneNum,
     required this.SharePlaceName,
-    required this.ShareDetailPlace,
+    required this.ProfileUrl,
+    required this.OwnerUid,
+    required this.CarUID,
+    required this.DriverUID,
     required this.documentID,
   });
 
   @override
   Widget build(BuildContext context) {
+    DateTime currentTime = DateTime.now();
+
+    DateTime rentalEndTime = RentalEndTime.toDate();
+
+    DateTime oneWeekLater = rentalEndTime.add(const Duration(days: 7));
+
+    if (oneWeekLater.isBefore(currentTime)) {
+      return const SizedBox.shrink();
+    }
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -54,19 +71,21 @@ class RequestDetailListItem extends StatelessWidget {
             },
             pageBuilder: (context, animation, secondaryAnimation) =>
                 RequestDetailItemScreen(
-              RentalDate: RentalDate,
+              RentalStartTime: RentalStartTime,
+              RentalEndTime: RentalEndTime,
               Name: Name,
               Situation: Situation,
               RequestDate: RequestDate,
               RentalCost: RentalCost,
-              DuringTime: DuringTime,
               PhoneNum: PhoneNum,
-              UserAddress: UserAddress,
               CarName: CarName,
               CarNum: CarNum,
               SharePlaceName: SharePlaceName,
-              ShareDetailPlace: ShareDetailPlace,
               documentID: documentID,
+              ProfileUrl: ProfileUrl,
+              OwnerUid: OwnerUid,
+              CarUID: CarUID,
+              DriverUID: DriverUID,
             ),
           ),
         );
@@ -95,7 +114,9 @@ class RequestDetailListItem extends StatelessWidget {
                                   ? Colors.grey
                                   : Situation == "취소"
                                       ? Colors.red
-                                      : null,
+                                      : Situation == "운행완료"
+                                          ? Colors.green
+                                          : null,
                     ),
                     child: Text(
                       Situation,
@@ -109,7 +130,9 @@ class RequestDetailListItem extends StatelessWidget {
                                     ? Colors.black
                                     : Situation == "취소"
                                         ? Colors.white
-                                        : null,
+                                        : Situation == "운행완료"
+                                            ? Colors.white
+                                            : null,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
@@ -125,11 +148,17 @@ class RequestDetailListItem extends StatelessWidget {
                     margin: const EdgeInsets.all(10),
                     width: 87,
                     height: 90,
-                    decoration: ShapeDecoration(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ),
+                    child: ClipOval(
+                      child: ProfileUrl.isNotEmpty
+                          ? Image.network(
+                              ProfileUrl,
+                              fit: BoxFit.cover,
+                            )
+                          : Container(
+                              color: Colors.white,
+                              width: double.infinity,
+                              height: double.infinity,
+                            ),
                     ),
                   ),
                 ),
@@ -166,7 +195,7 @@ class RequestDetailListItem extends StatelessWidget {
                   width: 250,
                   height: 25,
                   child: Text(
-                    RentalDate,
+                    "${DateFormat('MM/dd(E)HH:mm', 'ko').format(RentalStartTime.toDate())}~${DateFormat('MM/dd(E)HH:mm', 'ko').format(RentalEndTime.toDate())}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.black,
@@ -179,7 +208,8 @@ class RequestDetailListItem extends StatelessWidget {
                   height: 10,
                 ),
                 Flexible(
-                    child: Text("$RequestDate 요청함",
+                    child: Text(
+                        "${DateFormat('yyyy년 MM월 dd일').format(RequestDate.toDate())} 요청함",
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 14,

@@ -1,9 +1,14 @@
+import 'package:classcar/module/request_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../module/request_info_model.dart';
 import '../widgets/request_detail_item.dart';
 
 class RequestDetailListScreen extends StatefulWidget {
+  final firestore = FirebaseFirestore.instance;
   final String documentID;
-  const RequestDetailListScreen({super.key, required this.documentID});
+
+  RequestDetailListScreen({super.key, required this.documentID});
 
   @override
   State<RequestDetailListScreen> createState() =>
@@ -11,6 +16,9 @@ class RequestDetailListScreen extends StatefulWidget {
 }
 
 class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
+  late Future<List<RequestInfoModel>> requestInfoList;
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,69 +38,42 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            RequestDetailListItem(
-              Name: "홍길동",
-              Situation: "수락대기",
-              RentalDate: "05/19(금)13:00~05/19(금)22:00",
-              RequestDate: "2023년 05월 05일",
-              RentalCost: 50000,
-              DuringTime: "10시간",
-              PhoneNum: "010-4417-8841",
-              UserAddress: "부산광역시 해운대구----",
-              CarName: "쏘나타 8세대",
-              CarNum: "부산98배1234",
-              ShareDetailPlace: "e편한세상 금정산 아파트",
-              SharePlaceName: "부산광역시 북구 상학로 36",
-              documentID: widget.documentID,
-            ),
-            RequestDetailListItem(
-              Name: "김심청",
-              Situation: "수락",
-              RentalDate: "05/11(목)13:00~05/11(목)22:00",
-              RequestDate: "2023년 05월 03일",
-              RentalCost: 50000,
-              DuringTime: "10시간",
-              PhoneNum: "010-1234-8841",
-              UserAddress: "부산광역시 해운대구----",
-              CarName: "쏘나타 8세대",
-              CarNum: "부산98배1234",
-              ShareDetailPlace: "e편한세상 금정산 아파트",
-              SharePlaceName: "부산광역시 북구 상학로 36",
-              documentID: widget.documentID,
-            ),
-            RequestDetailListItem(
-              Name: "김심청",
-              Situation: "운행중",
-              RentalDate: "05/05(금)13:00~05/05(금)23:00",
-              RequestDate: "2023년 05월 03일",
-              RentalCost: 55000,
-              DuringTime: "11시간",
-              PhoneNum: "010-1234-8841",
-              UserAddress: "부산광역시 해운대구----",
-              CarName: "쏘나타 8세대",
-              CarNum: "부산98배1234",
-              ShareDetailPlace: "e편한세상 금정산 아파트",
-              SharePlaceName: "부산광역시 북구 상학로 36",
-              documentID: widget.documentID,
-            ),
-            RequestDetailListItem(
-              Name: "김이박",
-              Situation: "취소",
-              RentalDate: "05/02(화)13:00~05/02(화)23:00",
-              RequestDate: "2023년 05월 01일",
-              RentalCost: 55000,
-              DuringTime: "11시간",
-              PhoneNum: "010-1234-5678",
-              UserAddress: "부산광역시 북구----",
-              CarName: "쏘나타 8세대",
-              CarNum: "부산98배1234",
-              ShareDetailPlace: "e편한세상 금정산 아파트",
-              SharePlaceName: "부산광역시 북구 상학로 36",
-              documentID: widget.documentID,
-            ),
-          ],
+        child: StreamBuilder<List<RequestInfoModel>>(
+          stream: RequestInfoUpdate.getStreamDataUid5(widget.documentID),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              RequestInfoUpdate.updateRequestSituationCancel();
+              RequestInfoUpdate.updateRequestSituationDriving();
+              RequestInfoUpdate.updateRequestSituationDrivingComplete();
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              List<RequestInfoModel> requestInstances = snapshot.data ?? [];
+
+              return Column(
+                children: requestInstances.map((requestInfo) {
+                  return RequestDetailListItem(
+                    Name: requestInfo.Name,
+                    Situation: requestInfo.Situation,
+                    CarName: requestInfo.CarName,
+                    CarNum: requestInfo.CarNum,
+                    PhoneNum: requestInfo.PhoneNum,
+                    RentalCost: requestInfo.RentalCost,
+                    RentalStartTime: requestInfo.RentalStartTime,
+                    RentalEndTime: requestInfo.RentalEndTime,
+                    RequestDate: requestInfo.RequestDate,
+                    SharePlaceName: requestInfo.SharePlaceName,
+                    ProfileUrl: requestInfo.ProfileUrl,
+                    OwnerUid: requestInfo.OwnerUid,
+                    documentID: requestInfo.documentID,
+                    CarUID: requestInfo.CarUID,
+                    DriverUID: requestInfo.DriverUID,
+                  );
+                }).toList(),
+              );
+            }
+          },
         ),
       ),
     );
