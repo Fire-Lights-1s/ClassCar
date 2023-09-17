@@ -40,6 +40,15 @@ class CarDataConnector {
     return carInstances;
   }
 
+  //차량 docId로 차량 정보 가져오기
+  static Future<List<CarInfoModel>> getCarDocId(String carDocId) async {
+    List<CarInfoModel> carInstances = [];
+    await fireStore.collection('Car').doc(carDocId).get().then((value) {
+      carInstances.add(CarInfoModel.fromJson(carDocId, value.data()!));
+    });
+    return carInstances;
+  }
+
   static Future<Stream<QuerySnapshot>> getUuidCarStream(String UUID) async {
     return fireStore
         .collection('Car')

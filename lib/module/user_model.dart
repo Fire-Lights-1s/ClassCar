@@ -9,7 +9,7 @@ class UserInfoUpdate {
   static Future<List<UserInfoModel>> getData() async {
     List<UserInfoModel> userInstances = [];
     print('firebase 가져오기 시작');
-    await firestore.collection('userINFO').get().then((event) {
+    await firestore.collection('OwnerInfo').get().then((event) {
       for (var doc in event.docs) {
         userIdInfo = UserInfoModel.fromJson(doc.reference.id, doc.data());
         userInstances.add(userIdInfo);
@@ -21,7 +21,7 @@ class UserInfoUpdate {
 
   static Future<UserInfoModel> getUser(String documentID) async {
     late UserInfoModel userinfo;
-    await firestore.collection('userINFO').doc(documentID).get().then((event) {
+    await firestore.collection('OwnerInfo').doc(documentID).get().then((event) {
       userinfo = UserInfoModel.fromJson(event.reference.id, event.data()!);
     });
     return userinfo;
@@ -30,7 +30,7 @@ class UserInfoUpdate {
   //유저 이름 리턴
   static Future<String> getName(String documentID) async {
     late UserInfoModel user;
-    await firestore.collection('userINFO').doc(documentID).get().then((event) {
+    await firestore.collection('OwnerInfo').doc(documentID).get().then((event) {
       user = UserInfoModel.fromJson(event.reference.id, event.data()!);
     });
     return user.name;
@@ -39,7 +39,7 @@ class UserInfoUpdate {
   //유저 이메일 리턴
   static Future<String> getEmail(String documentID) async {
     late UserInfoModel email;
-    await firestore.collection('userINFO').doc(documentID).get().then((event) {
+    await firestore.collection('OwnerInfo').doc(documentID).get().then((event) {
       email = UserInfoModel.fromJson(event.reference.id, event.data()!);
     });
     return email.email;
@@ -48,7 +48,7 @@ class UserInfoUpdate {
   static Future<int> addData(Map<String, dynamic> userInfo) async {
     bool check = false;
     await firestore
-        .collection('userINFO')
+        .collection('OwnerInfo')
         .add(userInfo)
         .then((value) => {check = true});
     if (check) {
@@ -60,7 +60,7 @@ class UserInfoUpdate {
   static Future<int> updataData(
       String field, dynamic value, String documentID) async {
     await firestore
-        .collection('userINFO')
+        .collection('OwnerInfo')
         .doc(documentID)
         .update({field: value}).then((event) {
       print('업데이트 성공!');
@@ -71,7 +71,7 @@ class UserInfoUpdate {
   static Future<int> setUserImage(
       String documentID, dynamic userUpdateProfileAddress) async {
     await firestore
-        .collection('userINFO')
+        .collection('OwnerInfo')
         .doc(documentID)
         .update({'profileUrl': userUpdateProfileAddress}).then((value) {},
             onError: (e) => print(e));
