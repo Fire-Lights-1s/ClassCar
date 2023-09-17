@@ -26,6 +26,7 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
             fontWeight: FontWeight.w600,
           ),
         ),
+        automaticallyImplyLeading: false,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
