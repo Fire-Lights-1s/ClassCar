@@ -59,18 +59,11 @@ class _MyPageScreenState extends State<MyPageScreen> {
           style: TextStyle(
             color: Colors.black,
             fontSize: 24,
+            fontWeight: FontWeight.w600,
           ),
         ),
+        automaticallyImplyLeading: false,
         centerTitle: true,
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () {
-            Navigator.pop(context, false);
-          },
-        ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
@@ -695,9 +688,12 @@ class _ProfileState extends State<Profile> {
                       future: getPhoto(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.hasData == false) {
-                          return const Icon(
-                            Icons.account_circle,
-                            size: 100,
+                          return Transform.translate(
+                            offset: const Offset(-26, -25),
+                            child: const Icon(
+                              Icons.account_circle,
+                              size: 200,
+                            ),
                           );
                         } else {
                           if (snapshot.data == '') {
