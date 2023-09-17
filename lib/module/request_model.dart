@@ -47,6 +47,7 @@ class RequestInfoUpdate {
     return firestore
         .collection('Rent')
         .orderBy('RequestDate', descending: true)
+        .where('RequestEndDate')
         .where("OwnerUID", isEqualTo: OwnerUID)
         .snapshots()
         .asyncMap((snapshot) async {
