@@ -17,7 +17,6 @@ class RequestDetailListScreen extends StatefulWidget {
 
 class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
   late Future<List<RequestInfoModel>> requestInfoList;
-  
 
   @override
   Widget build(BuildContext context) {
