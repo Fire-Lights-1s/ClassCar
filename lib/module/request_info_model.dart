@@ -12,7 +12,7 @@ class RequestInfoModel {
   late String CarName;
   late String CarNum;
   late String SharePlaceName;
-  late String ProfileUrl;
+  late String? ProfileUrl;
   late String OwnerUid;
   late String documentID;
   late String CarUID;
@@ -49,16 +49,18 @@ class RequestInfoModel {
       var driverInfoData = driverInfoSnapshot.data() as Map<String, dynamic>;
       Name = driverInfoData['name'];
       PhoneNum = driverInfoData['phoneNumber'];
-      ProfileUrl = driverInfoData['profilePicLinjk'];
-
-      await _loadImage(ProfileUrl);
+      ProfileUrl = driverInfoData['profilePicLink'];
+      if (ProfileUrl != null) {
+        if (ProfileUrl!.isNotEmpty) {
+          await _loadImage(ProfileUrl!);
+        }
+      }
     }
   }
 
-  Future<void> _loadImage(String imagePath) async {
+  Future<void> _loadImage(String? imagePath) async {
     final ref = FirebaseStorage.instance.ref(imagePath);
     final url = await ref.getDownloadURL();
     ProfileUrl = url;
   }
-  
 }

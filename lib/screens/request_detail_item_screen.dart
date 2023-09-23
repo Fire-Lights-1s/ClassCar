@@ -20,7 +20,7 @@ class RequestDetailItemScreen extends StatefulWidget {
   final String CarName;
   final String CarNum;
   final String SharePlaceName;
-  final String ProfileUrl;
+  final String? ProfileUrl;
   final String OwnerUid;
   final String CarUID;
   final String DriverUID;
@@ -214,9 +214,9 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                                 width: 103,
                                 height: 99,
                                 child: ClipOval(
-                                  child: widget.ProfileUrl.isNotEmpty
+                                  child: widget.ProfileUrl != null && widget.ProfileUrl!.isNotEmpty
                                       ? Image.network(
-                                          widget.ProfileUrl,
+                                          widget.ProfileUrl!,
                                           fit: BoxFit.cover,
                                         )
                                       : Container(
