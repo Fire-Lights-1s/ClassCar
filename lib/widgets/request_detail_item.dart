@@ -16,7 +16,7 @@ class RequestDetailListItem extends StatelessWidget {
   final String CarName;
   final String CarNum;
   final String SharePlaceName;
-  final String ProfileUrl;
+  final String? ProfileUrl;
   final String OwnerUid;
   final String CarUID;
   final String DriverUID;
@@ -149,9 +149,9 @@ class RequestDetailListItem extends StatelessWidget {
                     width: 87,
                     height: 90,
                     child: ClipOval(
-                      child: ProfileUrl.isNotEmpty
+                      child: ProfileUrl != null && ProfileUrl!.isNotEmpty
                           ? Image.network(
-                              ProfileUrl,
+                              ProfileUrl!,
                               fit: BoxFit.cover,
                             )
                           : Container(
