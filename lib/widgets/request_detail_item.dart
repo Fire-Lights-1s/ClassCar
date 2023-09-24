@@ -43,15 +43,6 @@ class RequestDetailListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime currentTime = DateTime.now();
-
-    DateTime rentalEndTime = RentalEndTime.toDate();
-
-    DateTime oneWeekLater = rentalEndTime.add(const Duration(days: 7));
-
-    if (oneWeekLater.isBefore(currentTime)) {
-      return const SizedBox.shrink();
-    }
     return GestureDetector(
       onTap: () {
         Navigator.push(
