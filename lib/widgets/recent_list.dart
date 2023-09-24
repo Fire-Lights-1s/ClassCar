@@ -5,6 +5,7 @@ class RecentList extends StatelessWidget {
   final String carName;
   final String dateTime;
   final int pricePay;
+  final bool withdraw;
 
   const RecentList({
     super.key,
@@ -12,6 +13,7 @@ class RecentList extends StatelessWidget {
     required this.carName,
     required this.dateTime,
     required this.pricePay,
+    required this.withdraw,
   });
 
   @override
@@ -61,7 +63,7 @@ class RecentList extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "+$pricePay원",
+                  withdraw ? '-$pricePay원' : '+$pricePay원',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,

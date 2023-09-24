@@ -69,7 +69,7 @@ class RequestInfoUpdate {
 
   static getCar(String CarUID) async {
     List<CarInfoModel> carInstances = [];
-    await firestore.collection('CarINFO').doc(CarUID).get().then((value) =>
+    await firestore.collection('Car').doc(CarUID).get().then((value) =>
         {carInstances.add(CarInfoModel.fromJson(value.id, value.data()!))});
 
     return carInstances;
