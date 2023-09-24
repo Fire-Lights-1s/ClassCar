@@ -159,7 +159,7 @@ class CarDataConnector {
     required String field,
     dynamic value,
   }) async {
-    await fireStore.collection('CarINFO').doc(docID).update({field: value});
+    await fireStore.collection('Car').doc(docID).update({field: value});
     return value;
   }
 
@@ -176,7 +176,7 @@ class CarDataConnector {
             fireStorage.ref(file.fullPath).delete();
           })
         });
-    fireStore.collection('CarINFO').doc(CarUID).delete().then(
+    fireStore.collection('Car').doc(CarUID).delete().then(
           (doc) => print("Document deleted"),
           onError: (e) => print("Error updating document $e"),
         );

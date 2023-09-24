@@ -1,6 +1,8 @@
+import 'package:classcar/Api/rent_history.dart';
 import 'package:classcar/screens/account_list_screen.dart';
 import 'package:classcar/widgets/recent_list.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MyWalletScreen extends StatefulWidget {
   final String documentID;
@@ -181,8 +183,9 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const AccountListScreen()));
+                                      builder: (context) => AccountListScreen(
+                                            documentID: widget.documentID,
+                                          )));
                             },
                             child: Container(
                               padding: const EdgeInsets.only(
@@ -261,29 +264,43 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
             ),
 
             // 내역 표시하는 부분
-            const Padding(
-              padding: EdgeInsets.only(left: 15, right: 15),
-              child: Column(
-                children: [
-                  RecentList(
-                    recentDate: "5.5",
-                    carName: "차량A",
-                    dateTime: "15:00 ~ 18:00",
-                    pricePay: 15000,
-                  ),
-                  RecentList(
-                    recentDate: "5.5",
-                    carName: "차량A",
-                    dateTime: "12:00 ~ 15:00",
-                    pricePay: 15000,
-                  ),
-                  RecentList(
-                    recentDate: "5.4",
-                    carName: "차량B",
-                    dateTime: "11:00 ~ 12:00",
-                    pricePay: 5000,
-                  ),
-                ],
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15),
+              child: FutureBuilder(
+                future: RentHistory.rentHistoryList(widget.documentID),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return Column(
+                      children: [
+                        for (var rent in snapshot.data!) ...[
+                          if (!rent.withdraw)
+                            RecentList(
+                              recentDate: DateFormat('MM/dd', 'ko')
+                                  .format(rent.ResultTime.toDate()),
+                              carName: rent.CarName!,
+                              dateTime:
+                                  "${DateFormat('HH:mm', 'ko').format(rent.RentalStartTime!.toDate())}~${DateFormat('HH:mm', 'ko').format(rent.RentalEndTime!.toDate())}",
+                              pricePay: rent.RentalCost!,
+                              withdraw: rent.withdraw,
+                            ),
+                          if (rent.withdraw)
+                            RecentList(
+                              recentDate: DateFormat('MM/dd', 'ko')
+                                  .format(rent.ResultTime.toDate()),
+                              carName: rent.bank!,
+                              dateTime: "",
+                              pricePay: rent.withdrawMoney!,
+                              withdraw: rent.withdraw,
+                            ),
+                        ]
+                      ],
+                    );
+                  }
+                },
               ),
             ),
           ],
