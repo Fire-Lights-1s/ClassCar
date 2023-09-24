@@ -1,8 +1,12 @@
+import 'package:classcar/module/user_info_model.dart';
+import 'package:classcar/module/user_model.dart';
 import 'package:flutter/material.dart';
 
 class AccountListScreen extends StatefulWidget {
+  final documentID;
   const AccountListScreen({
     super.key,
+    this.documentID,
   });
 
   @override
@@ -12,17 +16,23 @@ class AccountListScreen extends StatefulWidget {
 class _AccountListScreenState extends State<AccountListScreen> {
   var _text = '은행선택';
   Color _color = Colors.grey;
-  bool make = false;
+  bool make = true;
   int counter = 0;
   String inputText = '';
 
-  List<Map<String, dynamic>> account = [
-    {"bank": "국민은행", "bankNum": 1234567890112},
-    {"bank": "신한은행", "bankNum": 1231231231231},
-    {"bank": "농협은행", "bankNum": 1234512345123},
-  ];
+  List<dynamic> account = [];
 
   final _accountNumberEditController = TextEditingController();
+
+  Future<UserInfoModel> getUser() async {
+    final UserInfoModel userData =
+        await UserInfoUpdate.getUser(widget.documentID);
+    if (userData.bankList != null) {
+      account = userData.bankList!;
+    }
+
+    return userData;
+  }
 
   @override
   void dispose() {
@@ -410,7 +420,7 @@ class _AccountListScreenState extends State<AccountListScreen> {
                   children: [
                     Expanded(
                       child: GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           setState(() {
                             for (int i = 0; i < account.length; i++) {
                               if (_accountNumberEditController.text ==
@@ -428,6 +438,9 @@ class _AccountListScreenState extends State<AccountListScreen> {
                                 "bank": _text,
                                 "bankNum": _accountNumberEditController.text
                               });
+                              UserInfoUpdate.updataData(
+                                  "bankList", account, widget.documentID);
+                              print('업데이트');
                             }
                           });
                         },
@@ -456,85 +469,100 @@ class _AccountListScreenState extends State<AccountListScreen> {
                   ],
                 ),
               ),
-              Column(
-                children: [
-                  const SizedBox(height: 20),
-                  for (int i = 0; i < account.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      child: Row(
+              const SizedBox(height: 20),
+              FutureBuilder(
+                  future: getUser(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      print(snapshot.hasError);
+                      return const Text("정보가져오기 실패");
+                    } else {
+                      return Column(
                         children: [
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                                top: 10,
-                                bottom: 10,
-                              ),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFE9F1FF),
-                              ),
+                          const SizedBox(height: 20),
+                          for (var bank in account) ...[
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 15, right: 15),
                               child: Row(
                                 children: [
-                                  const Expanded(
-                                    flex: 1,
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Icon(Icons.money),
-                                    ),
-                                  ),
                                   Expanded(
-                                    flex: 2,
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        account[i]['bank'],
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                        ),
+                                    child: Container(
+                                      padding: const EdgeInsets.only(
+                                        left: 10,
+                                        right: 10,
+                                        top: 10,
+                                        bottom: 10,
                                       ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 5,
-                                    child: Text(
-                                      account[i]['bankNum'].toString(),
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFFE9F1FF),
                                       ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Container(
-                                        padding: const EdgeInsets.only(
-                                          left: 2,
-                                          right: 2,
-                                          top: 2,
-                                          bottom: 2,
-                                        ),
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFFFBA45),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: const Text('주계좌'),
+                                      child: Row(
+                                        children: [
+                                          const Expanded(
+                                            flex: 1,
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Icon(Icons.money),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                bank['bank'],
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 5,
+                                            child: Text(
+                                              bank['bankNum'].toString(),
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Container(
+                                                padding: const EdgeInsets.only(
+                                                  left: 2,
+                                                  right: 2,
+                                                  top: 2,
+                                                  bottom: 2,
+                                                ),
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      const Color(0xFFFFBA45),
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: const Text('주계좌'),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
+                          ]
                         ],
-                      ),
-                    ),
-                ],
-              ),
+                      );
+                    }
+                  }),
             ],
           ),
         ),
