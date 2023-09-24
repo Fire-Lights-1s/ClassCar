@@ -831,19 +831,23 @@ class _CarDataUpload extends State<CarDataUpload> {
                   var loc = await loadLoc(_dataModel!.address);
                   lat = loc!['lat'];
                   lng = loc['lng'];
+                  try {
+                    mapController.animateCamera(CameraUpdate.newCameraPosition(
+                      CameraPosition(
+                        bearing: 0,
+                        target: LatLng(lat, lng),
+                        zoom: 14.0,
+                      ),
+                    ));
+                    mark.add(Marker(
+                      markerId: const MarkerId("1"),
+                      draggable: true,
+                      position: LatLng(lat, lng),
+                    ));
+                  } catch (e) {
+                    print('mapcontroller 없음');
+                  }
                   // 카메라 이동
-                  mapController.animateCamera(CameraUpdate.newCameraPosition(
-                    CameraPosition(
-                      bearing: 0,
-                      target: LatLng(lat, lng),
-                      zoom: 14.0,
-                    ),
-                  ));
-                  mark.add(Marker(
-                    markerId: const MarkerId("1"),
-                    draggable: true,
-                    position: LatLng(lat, lng),
-                  ));
                   setState(() {});
                 }
               });
