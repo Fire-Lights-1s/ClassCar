@@ -49,6 +49,7 @@ class _CarListScreenState extends State<CarListScreen> {
           stream: FirebaseFirestore.instance
               .collection('Car')
               .where("uuid", isEqualTo: widget.documentID)
+              .where('carExist', isEqualTo: true)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

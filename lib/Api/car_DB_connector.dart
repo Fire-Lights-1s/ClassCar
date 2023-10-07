@@ -29,6 +29,7 @@ class CarDataConnector {
     await fireStore
         .collection('Car')
         .where("uuid", isEqualTo: UUID)
+        .where('carExist', isEqualTo: true)
         .get()
         .then((event) {
       for (var doc in event.docs) {
@@ -53,6 +54,7 @@ class CarDataConnector {
     return fireStore
         .collection('Car')
         .where("uuid", isEqualTo: UUID)
+        .where('carExist', isEqualTo: true)
         .snapshots();
   }
 
@@ -168,18 +170,25 @@ class CarDataConnector {
     required String UUID,
     required String CarUID,
   }) async {
-    Reference imgRef;
-    imgRef = fireStorage.ref().child('carIMG/$UUID/$CarUID/');
+    // 차량 데이터를 완전히 삭제하지 않고 보여주지만 않게 만듬
+    await fireStore
+        .collection('Car')
+        .doc(CarUID)
+        .update({'carExist': false, 'isExhibit': false});
+
+    //Reference imgRef;
+    //imgRef = fireStorage.ref().child('carIMG/$UUID/$CarUID/');
+
     // 경로의 이미지를 전부 삭제
-    imgRef.listAll().then((res) => {
-          res.items.forEach((file) async {
-            fireStorage.ref(file.fullPath).delete();
-          })
-        });
-    fireStore.collection('Car').doc(CarUID).delete().then(
-          (doc) => print("Document deleted"),
-          onError: (e) => print("Error updating document $e"),
-        );
+    // imgRef.listAll().then((res) => {
+    //       res.items.forEach((file) async {
+    //         fireStorage.ref(file.fullPath).delete();
+    //       })
+    //     });
+    // fireStore.collection('Car').doc(CarUID).delete().then(
+    //       (doc) => print("Document deleted"),
+    //       onError: (e) => print("Error updating document $e"),
+    //     );
   }
 
   static test(CarInfoModel updateData, List<XFile>? images) async {

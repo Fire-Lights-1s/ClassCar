@@ -274,6 +274,7 @@ class _CarDataUpload extends State<CarDataUpload> {
                   carInfo['uuid'] = widget.documentID;
                   carInfo['isExhibit'] = true;
                   carInfo['carState'] = true;
+                  carInfo['carExist'] = true;
                   carInfo['carType'] = _carState.selctCarTpye;
                   carInfo['oilType'] = _carState.selctGas;
                   carInfo['years'] = _carState.selectedDate.year.toString();
