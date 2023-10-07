@@ -3,6 +3,7 @@ import 'package:classcar/module/user_model.dart';
 import 'package:classcar/screens/join_screen.dart';
 import 'package:classcar/screens/main_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,8 +21,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   final firestore = FirebaseFirestore.instance;
+  final fireauth = FirebaseAuth.instance;
 
   bool userInfoChecked = false;
+  String errorString = '';
+  //firebase auth login 함수, 이멜 + 비번으로 로그인
+  void fireAuthLogin() async {
+    await fireauth.signInWithEmailAndPassword(
+        email: _idController.text, password: _passwordController.text);
+    print("${FirebaseAuth.instance.currentUser}"); //괜히 출력해 봄.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,20 +159,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 InkWell(
                   onTap: () async {
-                    final List<UserInfoModel> userData =
-                        await UserInfoUpdate.getData();
-                    for (int i = 0; i < userData.length; i++) {
-                      if (_idController.text == userData[i].userId &&
-                          _passwordController.text == userData[i].passWord) {
-                        userInfoChecked = true;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    MainScreen(documentID: userData[i].docID)));
-                        break;
-                      }
+                    fireAuthLogin();
+                    if (fireauth.currentUser != null) {
+                      userInfoChecked = true;
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MainScreen(
+                                  documentID: fireauth.currentUser!.uid)));
                     }
+
                     if (userInfoChecked == false) {
                       showToast('아이디 또는 비밀번호를 확인해주세요');
                     }

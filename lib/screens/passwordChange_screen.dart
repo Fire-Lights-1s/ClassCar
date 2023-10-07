@@ -167,22 +167,22 @@ class PasswordChangeScreen extends StatelessWidget {
                     Expanded(
                       child: InkWell(
                         onTap: () async {
-                          final UserInfoModel userData =
-                              await UserInfoUpdate.getUser(documentID);
-                          if (nowPasswordController.text == userData.passWord) {
-                            //입력한 데이터값을 updateData로 넘겨야함
-                            if (changePasswordController.text ==
-                                passwordCheckController.text) {
-                              passwordChange = changePasswordController.text;
-                              UserInfoUpdate.updataData(
-                                  'passWord', passwordChange, documentID);
-                              passwordCheck = true;
-                              Navigator.pop(context, false);
-                            }
-                          }
-                          if (passwordCheck == false) {
-                            showToast('비밀번호를 확인 해 주세요');
-                          }
+                          // final UserInfoModel userData =
+                          //     await UserInfoUpdate.getUser(documentID);
+                          // if (nowPasswordController.text == userData.passWord) {
+                          //   //입력한 데이터값을 updateData로 넘겨야함
+                          //   if (changePasswordController.text ==
+                          //       passwordCheckController.text) {
+                          //     passwordChange = changePasswordController.text;
+                          //     UserInfoUpdate.updataData(
+                          //         'passWord', passwordChange, documentID);
+                          //     passwordCheck = true;
+                          //     Navigator.pop(context, false);
+                          //   }
+                          // }
+                          // if (passwordCheck == false) {
+                          //   showToast('비밀번호를 확인 해 주세요');
+                          // }
                         },
                         child: Container(
                           padding: const EdgeInsets.only(

@@ -96,23 +96,25 @@ class _PersonalScreenState extends State<PersonalScreen> {
               ),
               child: InkWell(
                 onTap: () {
-                  widget.NBTN['userId'] = _userIdController.text;
-                  widget.NBTN['passWord'] = _userPasswordController.text;
+                  //widget.NBTN['userId'] = _userIdController.text;
+                  //widget.NBTN['passWord'] = _userPasswordController.text;
                   widget.NBTN['email'] = _userEmailController.text;
                   widget.NBTN['address'] = adress;
                   widget.NBTN['detailAddress'] = _detailAddressController.text;
 
-                  if (_userIdController.text.isNotEmpty &&
-                      _userPasswordController.text.isNotEmpty &&
+                  if (_userPasswordController.text.isNotEmpty &&
                       _userEmailController.text.isNotEmpty &&
                       _dataModel!.address.isNotEmpty &&
                       _detailAddressController.text.isNotEmpty) {
+                    UserInfoUpdate.signUpUserCredential(
+                        email: widget.NBTN['email'],
+                        password: _userPasswordController.text,
+                        userInfo: widget.NBTN);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const LoginScreen()));
 
-                    UserInfoUpdate.addData(widget.NBTN);
                     print("데이터확인 = ${widget.NBTN}");
                   } else {
                     showToast('입력칸을 확인 해주세요');
@@ -179,8 +181,45 @@ class _PersonalScreenState extends State<PersonalScreen> {
                     ),
 
                     //아이디 입력칸
+                    // const Text(
+                    //   '아이디',
+                    //   style: TextStyle(
+                    //     fontSize: 20,
+                    //     fontWeight: FontWeight.w300,
+                    //   ),
+                    // ),
+                    // const SizedBox(
+                    //   height: 10,
+                    // ),
+                    // Container(
+                    //   padding: const EdgeInsets.only(
+                    //     left: 15,
+                    //     right: 15,
+                    //     top: 5,
+                    //     bottom: 5,
+                    //   ),
+                    //   decoration: BoxDecoration(
+                    //     color: const Color(0xFFE9F1FF),
+                    //     borderRadius: BorderRadius.circular(15),
+                    //   ),
+                    //   child: TextFormField(
+                    //     controller: _userIdController,
+                    //     keyboardType: TextInputType.text,
+                    //     decoration: const InputDecoration(
+                    //       counterText: '',
+                    //       hintText: '아이디 입력',
+                    //       enabledBorder: UnderlineInputBorder(
+                    //         borderSide: BorderSide(
+                    //           color: Colors.transparent,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+
+                    //이메일 입력칸
                     const Text(
-                      '아이디',
+                      '이메일',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w300,
@@ -201,11 +240,11 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: TextFormField(
-                        controller: _userIdController,
+                        controller: _userEmailController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           counterText: '',
-                          hintText: '아이디 입력',
+                          hintText: '예) Hongildong123@gmail.com',
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.transparent,
@@ -213,6 +252,9 @@ class _PersonalScreenState extends State<PersonalScreen> {
                           ),
                         ),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 10,
                     ),
 
                     //비밀번호 입력칸
@@ -244,46 +286,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         decoration: const InputDecoration(
                           counterText: '',
                           hintText: '비밀번호를 입력해주세요',
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-
-                    //이메일 입력칸
-                    const Text(
-                      '이메일',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(
-                        left: 15,
-                        right: 15,
-                        top: 5,
-                        bottom: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE9F1FF),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: TextFormField(
-                        controller: _userEmailController,
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          counterText: '',
-                          hintText: '예) Hongildong123@gmail.com',
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.transparent,
