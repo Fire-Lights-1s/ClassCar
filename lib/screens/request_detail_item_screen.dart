@@ -417,30 +417,7 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(
-                              width: 50,
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Container(
-                                padding: const EdgeInsets.all(7),
-                                width: 171,
-                                height: 38,
-                                decoration: ShapeDecoration(
-                                  color: const Color(0xFFD9D9D9),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: const Text("상세내역 보기",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                    )),
-                              ),
-                            ),
+                           
                           ],
                         ),
                         const SizedBox(

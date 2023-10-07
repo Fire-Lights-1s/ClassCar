@@ -44,11 +44,14 @@ class RequestInfoUpdate {
   }
 
   static Stream<List<RequestInfoModel>> getStreamDataUid5(String OwnerUID) {
+    DateTime currentTime = DateTime.now();
+    DateTime oneWeekAgo = currentTime.subtract(const Duration(days: 7));
+
     return firestore
         .collection('Rent')
-        .orderBy('RequestDate', descending: true)
-        .where('RequestEndDate')
         .where("OwnerUID", isEqualTo: OwnerUID)
+        .where("RentalEndTime",
+            isGreaterThanOrEqualTo: Timestamp.fromDate(oneWeekAgo))
         .snapshots()
         .asyncMap((snapshot) async {
       List<RequestInfoModel> requestInstances = [];
@@ -59,6 +62,7 @@ class RequestInfoUpdate {
         await requestInfo.fetchDriverInfo(doc['DriverUID']);
         requestInstances.add(requestInfo);
       }
+      requestInstances.sort((a, b) => b.RequestDate.compareTo(a.RequestDate));
       return requestInstances;
     });
   }
