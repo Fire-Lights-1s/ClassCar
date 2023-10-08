@@ -4,6 +4,7 @@ import 'package:classcar/screens/join_screen.dart';
 import 'package:classcar/screens/main_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,6 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final firestore = FirebaseFirestore.instance;
   final fireauth = FirebaseAuth.instance;
+  String userInfo = ""; //
+  static const storage = FlutterSecureStorage();
 
   bool userInfoChecked = false;
   String errorString = '';
@@ -162,6 +165,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     fireAuthLogin();
                     if (fireauth.currentUser != null) {
                       userInfoChecked = true;
+                      await storage.write(
+                          key: "login",
+                          value:
+                              "id ${_idController.text} password ${_passwordController.text}");
                       Navigator.push(
                           context,
                           MaterialPageRoute(

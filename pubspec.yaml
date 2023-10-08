@@ -28,7 +28,11 @@ dependencies:
   intl: ^0.18.1
   flutter_localizations:
     sdk: flutter
+<<<<<<< HEAD
   flutter_local_notifications: ^15.1.2
+=======
+  flutter_secure_storage: ^9.0.0
+>>>>>>> b503ece541bd99ad41b345d6ea76aa597180705d
 
 dev_dependencies:
   flutter_test:
