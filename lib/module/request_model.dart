@@ -46,7 +46,7 @@ class RequestInfoUpdate {
 
   static Stream<List<RequestInfoModel>> getStreamDataUid5(String OwnerUID) {
     DateTime currentTime = DateTime.now();
-    DateTime oneWeekAgo = currentTime.subtract(const Duration(days: 8));
+    DateTime oneWeekAgo = currentTime.subtract(const Duration(days: 7));
 
     return firestore
         .collection('Rent')
@@ -77,11 +77,30 @@ class RequestInfoUpdate {
     return carInstances;
   }
 
-  static Future<void> updateRequestSituation(
+  static Future<void> updateRequestSituation1(
       String documentID, String newStatus) async {
     await firestore.collection('Rent').doc(documentID).update({
       'Situation': newStatus,
     });
+  }
+
+  static Future<void> updateRequestSituation(
+      String documentID, String newStatus) async {
+    await FirebaseFirestore.instance.collection('Rent').doc(documentID).update({
+      'Situation': newStatus,
+    });
+
+    if (newStatus == '취소') {
+      DocumentSnapshot rentDoc = await FirebaseFirestore.instance
+          .collection('Rent')
+          .doc(documentID)
+          .get();
+      String carUID = rentDoc.get('CarUID');
+
+      await FirebaseFirestore.instance.collection('Car').doc(carUID).update({
+        'isExhibit': true,
+      });
+    }
   }
 
   static Future<void> updateRequestSituationDriving() async {
@@ -113,16 +132,22 @@ class RequestInfoUpdate {
         .where('RentalEndTime', isLessThan: currentTime)
         .where('Situation', whereIn: ['운행중', '수락']).get();
 
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
     for (QueryDocumentSnapshot doc in rentDocs.docs) {
       String documentID = doc.id;
 
-      await FirebaseFirestore.instance
-          .collection('Rent')
-          .doc(documentID)
-          .update({
+      batch.update(
+          FirebaseFirestore.instance.collection('Rent').doc(documentID), {
         'Situation': '운행완료',
       });
+
+      String CarUID = doc.get('CarUID');
+      DocumentReference carDocRef =
+          FirebaseFirestore.instance.collection('Car').doc(CarUID);
+      batch.update(carDocRef, {'isExhibit': true});
     }
+    await batch.commit();
   }
 
   static Future<void> updateRequestSituationCancel() async {
@@ -134,15 +159,21 @@ class RequestInfoUpdate {
         .where('Situation', isEqualTo: '수락대기')
         .get();
 
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
     for (QueryDocumentSnapshot doc in rentDocs.docs) {
       String documentID = doc.id;
 
-      await FirebaseFirestore.instance
-          .collection('Rent')
-          .doc(documentID)
-          .update({
+      batch.update(
+          FirebaseFirestore.instance.collection('Rent').doc(documentID), {
         'Situation': '취소',
       });
+
+      String CarUID = doc.get('CarUID');
+      DocumentReference carDocRef =
+          FirebaseFirestore.instance.collection('Car').doc(CarUID);
+      batch.update(carDocRef, {'isExhibit': true});
     }
+    await batch.commit();
   }
 }

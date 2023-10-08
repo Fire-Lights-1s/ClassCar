@@ -51,11 +51,11 @@ class FlutterLocalNotification {
         android: androidNotificationDetails,
         iOS: DarwinNotificationDetails(badgeNumber: 1));
 
-    await flutterLocalNotificationsPlugin.show(
+   /* await flutterLocalNotificationsPlugin.show(
       0,
       '클라스카 알림',
       TextMessage,
       notificationDetails,
-    );
+    );*/
   }
 }
