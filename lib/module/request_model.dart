@@ -64,7 +64,6 @@ class RequestInfoUpdate {
         requestInstances.add(requestInfo);
       }
       requestInstances.sort((a, b) => b.RequestDate.compareTo(a.RequestDate));
-      FlutterLocalNotification.showNotification('요청내역 알림보냄');
       return requestInstances;
     });
   }

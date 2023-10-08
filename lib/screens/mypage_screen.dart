@@ -49,11 +49,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
   initState() {
     setCarInstances();
 
-    FlutterLocalNotification.init();
-
-    Future.delayed(const Duration(seconds: 3),
-        FlutterLocalNotification.requestNotificationPermission());
-
     super.initState();
   }
 
@@ -345,8 +340,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                               GestureDetector(
                                 onTap: () {
                                   launch("tel://01012345678");
-                                  FlutterLocalNotification.showNotification(
-                                      '상담버튼눌러서 알림보냄');
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
