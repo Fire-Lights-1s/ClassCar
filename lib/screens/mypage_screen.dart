@@ -13,6 +13,7 @@ import 'package:classcar/screens/passwordChange_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,7 +26,9 @@ class MyPageScreen extends StatefulWidget {
 }
 
 class _MyPageScreenState extends State<MyPageScreen> {
+  static const storage = FlutterSecureStorage();
   late bool carState = false;
+
   setCarInstances() async {
     List<CarInfoModel> carInstances =
         await CarDataConnector.getUuidCar(widget.documentID);
@@ -82,6 +85,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 children: [
                   InkWell(
                     onTap: () {
+                      storage.delete(key: "login");
                       Navigator.push(
                           context,
                           MaterialPageRoute(

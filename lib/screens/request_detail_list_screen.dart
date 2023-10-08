@@ -91,11 +91,13 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
               return Column(
                 children: requestInstances.map((requestInfo) {
                   return RequestDetailListItem(
-                    Name: requestInfo.Name,
+                    Name: requestInfo.Name != null ? requestInfo.Name! : "계정삭제",
                     Situation: requestInfo.Situation,
                     CarName: requestInfo.CarName,
                     CarNum: requestInfo.CarNum,
-                    PhoneNum: requestInfo.PhoneNum,
+                    PhoneNum: requestInfo.PhoneNum != null
+                        ? requestInfo.PhoneNum!
+                        : '계정 삭제',
                     RentalCost: requestInfo.RentalCost,
                     RentalStartTime: requestInfo.RentalStartTime,
                     RentalEndTime: requestInfo.RentalEndTime,

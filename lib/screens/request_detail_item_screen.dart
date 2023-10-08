@@ -138,6 +138,13 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
               int DuringHours = totalMinutes ~/ 60;
               int DuringMinutes = totalMinutes % 60;
 
+              String formatPhoneNumber(String phoneNumber) {
+                if (phoneNumber.length != 11) {
+                  return phoneNumber;
+                }
+                return "${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 7)}-${phoneNumber.substring(7)}";
+              }
+
               return Column(
                 children: [
                   Container(
@@ -214,7 +221,8 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                                 width: 103,
                                 height: 99,
                                 child: ClipOval(
-                                  child: widget.ProfileUrl != null && widget.ProfileUrl!.isNotEmpty
+                                  child: widget.ProfileUrl != null &&
+                                          widget.ProfileUrl!.isNotEmpty
                                       ? Image.network(
                                           widget.ProfileUrl!,
                                           fit: BoxFit.cover,
@@ -245,7 +253,7 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                                   height: 10,
                                 ),
                                 Text(
-                                  widget.PhoneNum,
+                                  formatPhoneNumber(widget.PhoneNum),
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
@@ -417,7 +425,6 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                           
                           ],
                         ),
                         const SizedBox(
@@ -609,7 +616,7 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
 
                                                                 setState(() {
                                                                   widget.Situation =
-                                                                      "취소";
+                                                                      '취소';
                                                                 });
 
                                                                 Navigator.of(
