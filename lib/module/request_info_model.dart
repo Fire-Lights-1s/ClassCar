@@ -2,21 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class RequestInfoModel {
-  late Timestamp RentalStartTime;
-  late Timestamp RentalEndTime;
-  late String Name;
-  late String Situation;
-  late Timestamp RequestDate;
-  late int RentalCost;
-  late String PhoneNum;
+  late String documentID;
+  late String OwnerUid;
+  late String CarUID;
   late String CarName;
   late String CarNum;
-  late String SharePlaceName;
-  late String? ProfileUrl;
-  late String OwnerUid;
-  late String documentID;
-  late String CarUID;
   late String DriverUID;
+  late String? Name; //
+  late String? PhoneNum; //
+  late String? ProfileUrl;
+  late int RentalCost;
+  late Timestamp RentalStartTime;
+  late Timestamp RentalEndTime;
+  late Timestamp RequestDate;
+  late String SharePlaceName;
+  late String Situation;
 
   RequestInfoModel.fromJson(String documentID, Map<String, dynamic> json)
       : documentID = documentID,
