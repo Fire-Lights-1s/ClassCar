@@ -53,20 +53,17 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: EdgeInsets.only(
               left: 15,
             ),
-            child: Expanded(
-              flex: 1,
-              child: Row(
-                children: [
-                  Text(
-                    '클라스카',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 52,
-                      fontWeight: FontWeight.w600,
-                    ),
+            child: Row(
+              children: [
+                Text(
+                  '클라스카',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 52,
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           Expanded(flex: 4, child: Container()),

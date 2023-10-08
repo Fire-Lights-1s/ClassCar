@@ -267,42 +267,39 @@ class _CertifiedScreenState extends State<CertifiedScreen> {
                       padding: const EdgeInsets.only(
                         left: 15,
                       ),
-                      child: Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                            left: 15,
-                            right: 15,
-                            top: 5,
-                            bottom: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFE9F1FF),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: DropdownButton(
-                            underline: const SizedBox.shrink(),
-                            dropdownColor: const Color(0xFFE9F1FF),
-                            value: _selectedValue,
-                            items: _valueList.map(
-                              (value) {
-                                return DropdownMenuItem(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                    ),
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                          left: 15,
+                          right: 15,
+                          top: 5,
+                          bottom: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE9F1FF),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: DropdownButton(
+                          underline: const SizedBox.shrink(),
+                          dropdownColor: const Color(0xFFE9F1FF),
+                          value: _selectedValue,
+                          items: _valueList.map(
+                            (value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: const TextStyle(
+                                    fontSize: 20,
                                   ),
-                                );
-                              },
-                            ).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedValue = value!;
-                              });
+                                ),
+                              );
                             },
-                          ),
+                          ).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedValue = value!;
+                            });
+                          },
                         ),
                       ),
                     ),
