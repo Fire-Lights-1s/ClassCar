@@ -1,3 +1,4 @@
+import 'package:classcar/module/appNotification.dart';
 import 'package:classcar/module/request_info_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -63,6 +64,7 @@ class RequestInfoUpdate {
         requestInstances.add(requestInfo);
       }
       requestInstances.sort((a, b) => b.RequestDate.compareTo(a.RequestDate));
+      FlutterLocalNotification.showNotification('요청내역 알림보냄');
       return requestInstances;
     });
   }
