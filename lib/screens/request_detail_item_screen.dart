@@ -137,6 +137,13 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
 
               int DuringHours = totalMinutes ~/ 60;
               int DuringMinutes = totalMinutes % 60;
+              
+              String formatPhoneNumber(String phoneNumber) {
+                if (phoneNumber.length != 11) {
+                return phoneNumber;
+              }
+              return "${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 7)}-${phoneNumber.substring(7)}";
+              }
 
               return Column(
                 children: [
@@ -245,12 +252,12 @@ class _RequestDetailItemScreenState extends State<RequestDetailItemScreen> {
                                   height: 10,
                                 ),
                                 Text(
-                                  widget.PhoneNum,
+                                  formatPhoneNumber(widget.PhoneNum),
                                   style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                   ),
                                 ),
                                 const SizedBox(
                                   height: 10,

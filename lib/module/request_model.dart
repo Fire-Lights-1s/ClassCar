@@ -45,7 +45,7 @@ class RequestInfoUpdate {
 
   static Stream<List<RequestInfoModel>> getStreamDataUid5(String OwnerUID) {
     DateTime currentTime = DateTime.now();
-    DateTime oneWeekAgo = currentTime.subtract(const Duration(days: 7));
+    DateTime oneWeekAgo = currentTime.subtract(const Duration(days: 8));
 
     return firestore
         .collection('Rent')
