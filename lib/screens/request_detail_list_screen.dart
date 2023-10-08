@@ -1,7 +1,9 @@
 import 'package:classcar/module/appNotification.dart';
 import 'package:classcar/module/request_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../module/request_info_model.dart';
 import '../widgets/request_detail_item.dart';
 
@@ -19,6 +21,40 @@ class RequestDetailListScreen extends StatefulWidget {
 class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
   late Future<List<RequestInfoModel>> requestInfoList;
 
+  var messageString = "";
+  void getMyDeviceToken() async {
+    final token = await FirebaseMessaging.instance.getToken();
+    print("내 디바이스 토큰: $token");
+  }
+
+  @override
+  void initState() {
+    getMyDeviceToken();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      RemoteNotification? notification = message.notification;
+
+      if (notification != null) {
+        FlutterLocalNotificationsPlugin().show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'high_importance_channel',
+              'high_importance_notification',
+              importance: Importance.max,
+            ),
+          ),
+        );
+        setState(() {
+          messageString = message.notification!.body!;
+          print("Foreground 메시지 수신: $messageString");
+        });
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +63,7 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         title: const Text(
-          '요청 내역',
+          "요청 내역",
           style: TextStyle(
             color: Colors.black,
             fontSize: 24,
