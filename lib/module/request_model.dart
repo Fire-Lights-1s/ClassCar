@@ -84,7 +84,7 @@ class RequestInfoUpdate {
     });
   }
 
-  static Future<void> updateRequestSituation(
+  static Future<void> updateRequestSituation3(
       String documentID, String newStatus) async {
     await FirebaseFirestore.instance.collection('Rent').doc(documentID).update({
       'Situation': newStatus,
@@ -99,6 +99,38 @@ class RequestInfoUpdate {
 
       await FirebaseFirestore.instance.collection('Car').doc(carUID).update({
         'isExhibit': true,
+      });
+    }
+  }
+
+  static Future<void> updateRequestSituation(
+      String documentID, String newStatus) async {
+    await FirebaseFirestore.instance.collection('Rent').doc(documentID).update({
+      'Situation': newStatus,
+    });
+
+    if (newStatus == '취소') {
+      DocumentSnapshot rentDoc = await FirebaseFirestore.instance
+          .collection('Rent')
+          .doc(documentID)
+          .get();
+      String carUID = rentDoc.get('CarUID');
+      String driverUID = rentDoc.get('DriverUID');
+      int rentalCost = rentDoc.get('RentalCost');
+
+      await FirebaseFirestore.instance.collection('Car').doc(carUID).update({
+        'isExhibit': true,
+      });
+
+      // Update 'credit' field in 'userINFO' collection
+      DocumentReference userInfoDocRef =
+          FirebaseFirestore.instance.collection('userINFO').doc(driverUID);
+      DocumentSnapshot userInfoSnapshot = await userInfoDocRef.get();
+      int currentCredit = userInfoSnapshot.get('credit');
+      int newCredit = currentCredit + rentalCost;
+
+      await userInfoDocRef.update({
+        'credit': newCredit,
       });
     }
   }
@@ -163,6 +195,7 @@ class RequestInfoUpdate {
 
     for (QueryDocumentSnapshot doc in rentDocs.docs) {
       String documentID = doc.id;
+      int rentalCost = doc.get('RentalCost');
 
       batch.update(
           FirebaseFirestore.instance.collection('Rent').doc(documentID), {
@@ -173,6 +206,15 @@ class RequestInfoUpdate {
       DocumentReference carDocRef =
           FirebaseFirestore.instance.collection('Car').doc(CarUID);
       batch.update(carDocRef, {'isExhibit': true});
+
+      String DriverUID = doc.get('DriverUID');
+      DocumentReference userInfoDocRef =
+          FirebaseFirestore.instance.collection('userINFO').doc(DriverUID);
+      DocumentSnapshot userInfoSnapshot = await userInfoDocRef.get();
+      int currentCredit = userInfoSnapshot.get('credit');
+      int newCredit = currentCredit + rentalCost;
+
+      batch.update(userInfoDocRef, {'credit': newCredit});
     }
     await batch.commit();
   }
