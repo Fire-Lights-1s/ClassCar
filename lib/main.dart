@@ -35,27 +35,27 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("백그라운드 메세지처리.. ${message.notification!.body!}");
 }
 
-void initializeNotification() async {
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+// void initializeNotification() async {
+//   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(const AndroidNotificationChannel(
-          'high_importance_channel', 'high_importance_notification',
-          importance: Importance.max));
+//   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+//   await flutterLocalNotificationsPlugin
+//       .resolvePlatformSpecificImplementation<
+//           AndroidFlutterLocalNotificationsPlugin>()
+//       ?.createNotificationChannel(const AndroidNotificationChannel(
+//           'high_importance_channel', 'high_importance_notification',
+//           importance: Importance.max));
 
-  await flutterLocalNotificationsPlugin.initialize(const InitializationSettings(
-    android: AndroidInitializationSettings("@mipmap/ic_launcher"),
-  ));
+//   await flutterLocalNotificationsPlugin.initialize(const InitializationSettings(
+//     android: AndroidInitializationSettings("@mipmap/ic_launcher"),
+//   ));
 
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-}
+//   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+//     alert: true,
+//     badge: true,
+//     sound: true,
+//   );
+// }
 
 void main() async {
   runApp(const MainApp());
@@ -68,7 +68,7 @@ void firebase() async {
     name: "classcar_provider",
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  initializeNotification();
+  //initializeNotification();
 }
 
 class MainApp extends StatefulWidget {
