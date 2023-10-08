@@ -1,3 +1,4 @@
+import 'package:classcar/module/appNotification.dart';
 import 'package:classcar/module/request_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,7 @@ class _RequestDetailListScreenState extends State<RequestDetailListScreen> {
               RequestInfoUpdate.updateRequestSituationCancel();
               RequestInfoUpdate.updateRequestSituationDriving();
               RequestInfoUpdate.updateRequestSituationDrivingComplete();
+
               return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
