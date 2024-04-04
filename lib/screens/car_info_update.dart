@@ -134,10 +134,16 @@ class _CarDataUpdate extends State<CarDataUpdate> {
     //  주소로 좌표 구하기
     String gpsUrl =
         'https://maps.googleapis.com/maps/api/geocode/json?address=$addrees&key=$GMaps&language=ko';
+    Map<String, dynamic> location;
 
     final responseGps = await http.get(Uri.parse(gpsUrl));
-    Map<String, dynamic> location =
-        jsonDecode(responseGps.body)['results'][0]['geometry']['location'];
+    if (jsonDecode(responseGps.body)['results'] != null) {
+      location =
+          jsonDecode(responseGps.body)['results'][0]['geometry']['location'];
+    } else {
+      location = {'lat': 0, 'lng': 0};
+    }
+
     print(location);
     return location;
   }
