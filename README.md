@@ -25,15 +25,13 @@
 ## 실제 화면
 - 로그인
 
-![로그인](https://github.com/user-attachments/assets/83fbac08-7baf-4aea-8ab8-f634e0ff7fc1)
+![로그인](https://github.com/user-attachments/assets/8ebdfa04-991a-4624-91ea-8466b5c5de47)
 
 - 차량 관리
 - 차량 공급자의 등록 차량을 볼 수 있음
-
-![차량 관리](https://github.com/user-attachments/assets/c789f737-0498-48cc-ad49-fb7f107cb269)
-
-- 차량 상세
 - 등록 차량의 상세 정보를 보여주고 차량의 대여가능 상태를 변경 가능함
 
-![차량 상세](https://github.com/user-attachments/assets/a927d186-7d2b-4a6d-82fa-ac22b91bc588)
+![차량 관리](https://github.com/user-attachments/assets/404ee83e-43ed-4a73-acd6-8fb5141ad8f3)
+
+
 
