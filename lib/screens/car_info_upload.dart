@@ -122,7 +122,7 @@ class _CarDataUpload extends State<CarDataUpload> {
   late GoogleMapController mapController;
 
   Future<Map<String, dynamic>?> loadLoc(String addrees) async {
-    const String GMaps = 'AIzaSyDCx0q_CxVUpZ2Bq_JjlHAPNW2P1AoyRfM';
+    const String GMaps = '-----------------------------------';
     //  주소로 좌표 구하기
     String gpsUrl =
         'https://maps.googleapis.com/maps/api/geocode/json?address=$addrees&key=$GMaps&language=ko';
